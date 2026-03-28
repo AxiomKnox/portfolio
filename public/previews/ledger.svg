@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="480" viewBox="0 0 800 480">
+  <rect width="800" height="480" fill="#1a1814"/>
+  <rect x="48" y="48" width="704" height="384" fill="none" stroke="#c17f2d" stroke-width="2" opacity="0.5"/>
+  <path d="M80 360 L720 360 M80 280 L640 280 M80 200 L560 200" stroke="#2dd4bf" stroke-width="3" opacity="0.85"/>
+  <circle cx="120" cy="120" r="8" fill="#c17f2d"/>
+  <text x="140" y="126" fill="#e7e2d8" font-family="monospace" font-size="18">ledger</text>
+</svg>

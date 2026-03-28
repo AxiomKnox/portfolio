@@ -1,0 +1,150 @@
+import type { Project, ProjectCategory } from "@/types/project"
+
+export const projects: Project[] = [
+  {
+    slug: "ledger-api",
+    name: "Ledger API",
+    category: "backend",
+    summary:
+      "Double-entry bookkeeping API with idempotent posting, audit trail, and JSON Schema–driven validation.",
+    details: [
+      "Accounts and journal entries are modeled as append-only events; balances are derived via projections so replays stay deterministic.",
+      "Idempotency keys on POST /postings prevent duplicate charges when clients retry; conflict responses include the prior receipt.",
+      "OpenAPI + contract tests gate every release; load tests target steady P99 under a mixed read/write profile.",
+    ],
+    architecture: [
+      "Ingress → API (stateless) → command bus → append-only store; readers hit materialized views refreshed by a small projector.",
+      "Secrets live outside the process; config is 12-factor; migrations are forward-only with expand/contract where needed.",
+    ],
+    technologies: [
+      "Go",
+      "PostgreSQL",
+      "Redis",
+      "OpenAPI",
+      "Docker",
+    ],
+    previewImage: "/previews/ledger.svg",
+    websiteUrl: "https://example.com",
+    repositoryUrl: "https://github.com/example/ledger-api",
+  },
+  {
+    slug: "signal-ingest",
+    name: "Signal Ingest Service",
+    category: "backend",
+    summary:
+      "High-volume telemetry ingest with backpressure, batching, and at-least-once delivery to object storage and streams.",
+    details: [
+      "Adaptive batching coalesces bursty device traffic; bounded queues shed load with explicit 429 + Retry-After.",
+      "Checksums and duplicate keys dedupe replays; poison batches route to a DLQ with structured diagnostics.",
+      "Canary deploys compare lag, error budgets, and shard hot spots before full promotion.",
+    ],
+    architecture: [
+      "Edge acceptors → ring buffer workers → idempotent writers; object landings are content-addressed for reproducible replays.",
+      "Control plane issues leases and feature flags; data plane stays offline-friendly with local spooling.",
+    ],
+    technologies: ["Rust", "Kafka", "S3-compatible", "Prometheus", "Kubernetes"],
+    previewImage: "/previews/signal.svg",
+    repositoryUrl: "https://github.com/example/signal-ingest",
+  },
+  {
+    slug: "auth-federation",
+    name: "Auth Federation Gateway",
+    category: "backend",
+    summary:
+      "BFF-style auth gateway issuing session cookies, brokering OIDC, and centralizing CSRF, device binding, and step-up.",
+    details: [
+      "Supports multiple upstream IdPs with per-tenant routing; failures degrade to cached JWKS with tight TTL bounds.",
+      "Session rotation on privilege elevation; anomaly hooks feed risk scoring without blocking the hot path.",
+      "Emits structured security events for SIEM correlation.",
+    ],
+    architecture: [
+      "Small Node/Express edge with hardened cookies; private network bridge to legacy LDAP and cloud IdPs.",
+      "Redis for session stampede protection; Vault for signing keys with automatic rotation hooks.",
+    ],
+    technologies: ["Node.js", "TypeScript", "Redis", "Vault", "OpenID Connect"],
+    repositoryUrl: "https://github.com/example/auth-federation",
+  },
+  {
+    slug: "terraform-platform",
+    name: "Terraform Platform Modules",
+    category: "devops",
+    summary:
+      "Opinionated Terraform modules for VPC, EKS, observability baselines, and safe cluster upgrades with guardrails.",
+    details: [
+      "Modules encode org standards: tagging, encryption defaults, least-privilege IAM, and backup retention.",
+      "Upgrade playbook wraps terraform plan with policy-as-code (OPA) and human approvals on risky diffs.",
+      "Workspace layout separates network, data, and compute to limit blast radius.",
+    ],
+    architecture: [
+      "Remote state per layer; cross-stack references via data sources; SSO for state + registry access.",
+      "GitHub Actions matrix plans each env; applies are protected environments with four-eyes on production.",
+    ],
+    technologies: ["Terraform", "AWS", "OpenPolicyAgent", "GitHub Actions"],
+    previewImage: "/previews/terraform.svg",
+    websiteUrl: "https://example.com/tf-docs",
+    repositoryUrl: "https://github.com/example/tf-platform",
+  },
+  {
+    slug: "kube-gitops",
+    name: "Kubernetes GitOps Fleet",
+    category: "devops",
+    summary:
+      "Argo CD–driven multi-cluster delivery with progressive delivery, metrics-backed rollbacks, and secrets synced from Vault.",
+    details: [
+      "App-of-apps pattern; clusters grouped by wave with automated smoke tests before promotion.",
+      "Image updater pins digests; SBOM generation hooks into release PRs for traceability.",
+      "Synthetic probes gate canary traffic shifts; automatic rollback on SLO burn.",
+    ],
+    architecture: [
+      "Mgmt cluster hosts Argo + Argo Rollouts; spoke clusters pull only; no inbound kube API exposure.",
+      "External Secrets operator pulls short-lived credentials; network policies default deny with explicit allow lists.",
+    ],
+    technologies: [
+      "Kubernetes",
+      "Argo CD",
+      "Helm",
+      "Kustomize",
+      "Vault",
+      "Prometheus",
+    ],
+    previewImage: "/previews/gitops.svg",
+    repositoryUrl: "https://github.com/example/k8s-gitops",
+  },
+  {
+    slug: "ci-golden-images",
+    name: "CI Golden Images",
+    category: "devops",
+    summary:
+      "Packer + Ansible pipelines publishing hardened AMIs and container bases, scanned and promoted through dev/stage/prod.",
+    details: [
+      "CIS-oriented hardening with CIS-CAT spot checks; fail builds on critical CVEs or drift from golden config.",
+      "Immutable tags per git SHA; rollback by retargeting launch templates without rebuild when possible.",
+      "Weekly refresh cadence with changelog surfaced to SRE on-call.",
+    ],
+    architecture: [
+      "Build workers in isolated VPC; artifacts land in private registries; signing with cosign before promotion.",
+      "Cost guardrails: lifecycle policies prune old AMIs; SBOM stored alongside each artifact.",
+    ],
+    technologies: ["Packer", "Ansible", "cosign", "Trivy", "GitLab CI"],
+    repositoryUrl: "https://github.com/example/golden-images",
+  },
+]
+
+export function getProjectBySlug(slug: string | undefined): Project | undefined {
+  if (!slug) {
+    return undefined
+  }
+
+  return projects.find((project) => project.slug === slug)
+}
+
+export function getProjectsByCategory(category: ProjectCategory): Project[] {
+  return projects.filter((project) => project.category === category)
+}
+
+export function getFeaturedByCategory(
+  category: ProjectCategory,
+  limit: number
+): Project[] {
+  return getProjectsByCategory(category).slice(0, limit)
+}
