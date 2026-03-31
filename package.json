@@ -9,13 +9,15 @@
     "lint": "eslint .",
     "format": "prettier --write \"**/*.{ts,tsx}\"",
     "typecheck": "tsc --noEmit",
-    "preview": "bunx --bun vite preview"
+    "preview": "bunx --bun vite preview",
+    "content:sync": "bun scripts/sync-github-projects.ts",
+    "content:sync:write": "bun scripts/sync-github-projects.ts --write"
   },
   "dependencies": {
     "@base-ui/react": "^1.3.0",
     "@fontsource-variable/jetbrains-mono": "^5.2.8",
     "@fontsource/syne": "^5.2.7",
-    "@phosphor-icons/react": "^2.1.10",
+    "@iconify/react": "^6.0.2",
     "@tailwindcss/vite": "^4.2.1",
     "@types/bun": "^1.3.11",
     "class-variance-authority": "^0.7.1",

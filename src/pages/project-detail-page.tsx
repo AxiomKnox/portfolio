@@ -1,10 +1,6 @@
-import {
-  ArrowLeft,
-  ArrowSquareOut,
-  GithubLogo,
-} from "@phosphor-icons/react"
 import { Link, Navigate, useParams } from "react-router-dom"
 
+import { AppIcon } from "@/components/ui/app-icon"
 import { Badge } from "@/components/ui/badge"
 import { Button, buttonVariants } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
@@ -31,7 +27,7 @@ export function ProjectDetailPage() {
         )}
         to="/projects"
       >
-        <ArrowLeft aria-hidden className="size-3.5" weight="bold" />
+        <AppIcon aria-hidden className="size-3.5" icon="mdi:arrow-left" />
         All projects
       </Link>
 
@@ -54,7 +50,7 @@ export function ProjectDetailPage() {
               size="sm"
             >
               Live site
-              <ArrowSquareOut aria-hidden className="size-3.5" weight="bold" />
+              <AppIcon aria-hidden className="size-3.5" icon="mdi:open-in-new" />
             </Button>
           ) : null}
           <Button
@@ -65,7 +61,7 @@ export function ProjectDetailPage() {
             variant="outline"
           >
             Repository
-            <GithubLogo aria-hidden className="size-3.5" weight="bold" />
+            <AppIcon aria-hidden className="size-3.5" icon="mdi:github" />
           </Button>
         </div>
       </header>

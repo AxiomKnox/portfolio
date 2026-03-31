@@ -1,47 +1,13 @@
-import { DownloadSimple } from "@phosphor-icons/react"
-
+import { AppIcon } from "@/components/ui/app-icon"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
-
-interface SkillGroup {
-  title: string
-  items: string[]
-}
-
-const skillGroups: SkillGroup[] = [
-  {
-    title: "Backend & APIs",
-    items: [
-      "Go / Rust services",
-      "PostgreSQL modeling",
-      "Redis pub/sub & caching",
-      "REST + JSON Schema",
-    ],
-  },
-  {
-    title: "DevOps & platform",
-    items: [
-      "Terraform / OpenTofu",
-      "Kubernetes + GitOps",
-      "GitHub Actions / CI hygiene",
-      "Observability baselines",
-    ],
-  },
-  {
-    title: "Practices",
-    items: [
-      "SLOs & error budgets",
-      "Progressive delivery",
-      "Security reviews",
-      "Documentation that ages well",
-    ],
-  },
-]
-
-const resumeSrc = `${import.meta.env.BASE_URL}resume.pdf`
+import { site } from "@/lib/site"
 
 export function AboutPage() {
+  const { person, skills } = site
+  const resumeSrc = `${import.meta.env.BASE_URL}${person.resumeFile}`
+
   return (
     <div className="mx-auto max-w-6xl px-4 pb-20 pt-10 sm:px-6 sm:pt-12">
       <header className="max-w-2xl space-y-3 animate-in fade-in duration-500">
@@ -49,10 +15,10 @@ export function AboutPage() {
           About
         </p>
         <h1 className="font-display text-3xl tracking-tight text-foreground sm:text-4xl">
-          Taylor Rivera
+          {person.displayName}
         </h1>
         <p className="text-sm text-muted-foreground sm:text-base">
-          Backend engineer &amp; DevOps practitioner · shipping calm systems
+          {person.roleLine}
         </p>
       </header>
 
@@ -61,29 +27,36 @@ export function AboutPage() {
           <h2 className="font-display text-xl tracking-tight">Summary</h2>
           <Separator />
           <div className="space-y-4 text-sm leading-relaxed text-muted-foreground sm:text-base">
-            <p>
-              I have spent the last decade shipping platforms where reliability
-              is a feature: accounting-grade APIs, telemetry ingest, auth
-              gateways, and the Terraform/Argo machinery that keeps them
-              observable and recoverable.
-            </p>
-            <p>
-              I care about clear boundaries, measurable rollouts, and docs that
-              help the next person at 3am. This site is static on purpose—what
-              you see is built from data in the repo, ready for GitHub Pages.
-            </p>
+            {person.summaryParagraphs.map((paragraph) => (
+              <p key={paragraph}>{paragraph}</p>
+            ))}
           </div>
-          <Button render={<a href={resumeSrc} download />} variant="outline">
-            Download resume PDF
-            <DownloadSimple aria-hidden className="size-4" weight="bold" />
-          </Button>
+          <div className="flex flex-wrap gap-2 border border-border/40 bg-card/20 p-3">
+            <p className="w-full font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
+              Resume
+            </p>
+            <Button
+              render={
+                <a href={resumeSrc} rel="noreferrer" target="_blank" />
+              }
+              size="sm"
+              variant="default"
+            >
+              Open PDF
+              <AppIcon aria-hidden className="size-3.5" icon="mdi:open-in-new" />
+            </Button>
+            <Button render={<a href={resumeSrc} download />} size="sm" variant="outline">
+              Download
+              <AppIcon aria-hidden className="size-3.5" icon="mdi:tray-arrow-down" />
+            </Button>
+          </div>
         </section>
 
         <section className="space-y-5 animate-in fade-in slide-in-from-right-2 duration-700">
           <h2 className="font-display text-xl tracking-tight">Skills</h2>
           <Separator />
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-1">
-            {skillGroups.map((group) => (
+            {skills.map((group) => (
               <div key={group.title} className="space-y-3">
                 <h3 className="font-mono text-[11px] uppercase tracking-[0.2em] text-foreground">
                   {group.title}
@@ -101,24 +74,33 @@ export function AboutPage() {
         </section>
       </div>
 
-      <section className="mt-16 space-y-4">
-        <h2 className="font-display text-xl tracking-tight">Resume</h2>
-        <Separator />
-        <p className="text-sm text-muted-foreground">
-          Embedded PDF from{" "}
-          <code className="rounded-none bg-muted px-1 py-0.5 font-mono text-[11px]">
-            public/resume.pdf
-          </code>
-          . Replace that file with your own export.
-        </p>
-        <div className="overflow-hidden border border-border/80 bg-card/40 shadow-[0_0_0_1px_rgba(255,255,255,0.02)]">
-          <iframe
-            className="h-[min(70vh,820px)] w-full"
-            src={resumeSrc}
-            title="Resume PDF"
+      <details className="group/resume mt-14 rounded-none border border-border/35 bg-card/15 open:border-border/55">
+        <summary className="flex cursor-pointer list-none items-center justify-between gap-3 px-4 py-3 font-mono text-[11px] uppercase tracking-[0.2em] text-muted-foreground transition-colors hover:text-foreground [&::-webkit-details-marker]:hidden">
+          <span>Inline resume preview</span>
+          <AppIcon
+            aria-hidden
+            className="size-4 shrink-0 transition-transform group-open/resume:rotate-180"
+            icon="mdi:chevron-down"
           />
+        </summary>
+        <div className="border-t border-border/25 px-4 pb-4 pt-3">
+          <p className="mb-3 text-xs leading-relaxed text-muted-foreground">
+            Optional embedded view. Replace{" "}
+            <code className="rounded-none bg-muted px-1 py-0.5 font-mono text-[10px]">
+              public/{person.resumeFile}
+            </code>{" "}
+            with your PDF. Some browsers block PDFs in iframes; use Open PDF if
+            the preview is blank.
+          </p>
+          <div className="overflow-hidden rounded-none bg-muted/20 ring-1 ring-foreground/8">
+            <iframe
+              className="h-[min(42vh,420px)] w-full"
+              src={resumeSrc}
+              title="Resume PDF preview"
+            />
+          </div>
         </div>
-      </section>
+      </details>
     </div>
   )
 }

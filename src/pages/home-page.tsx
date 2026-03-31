@@ -1,15 +1,29 @@
-import { ArrowRight, Cpu, TreeStructure } from "@phosphor-icons/react"
+import type { ReactNode } from "react"
 import { Link } from "react-router-dom"
 
+import { AppIcon } from "@/components/ui/app-icon"
 import { ProjectCard } from "@/components/project/project-card"
 import { Button, buttonVariants } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import { getFeaturedByCategory } from "@/data/projects"
+import { site } from "@/lib/site"
 import { cn } from "@/lib/utils"
+
+function HorizontalProjectRow({ children }: { children: ReactNode }) {
+  return (
+    <div
+      className="-mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto overscroll-x-contain px-4 pb-2 pt-1 [scrollbar-width:thin] sm:mx-0 sm:px-0"
+      role="list"
+    >
+      {children}
+    </div>
+  )
+}
 
 export function HomePage() {
   const backendFeatured = getFeaturedByCategory("backend", 3)
   const devopsFeatured = getFeaturedByCategory("devops", 3)
+  const { highlights } = site
 
   return (
     <div className="mx-auto max-w-6xl px-4 pb-16 pt-10 sm:px-6 sm:pt-14">
@@ -20,20 +34,18 @@ export function HomePage() {
         />
         <div className="relative max-w-2xl space-y-6 animate-in fade-in slide-in-from-bottom-3 duration-700">
           <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-accent">
-            Portfolio · Static · GitHub Pages
+            {highlights.heroKicker}
           </p>
           <h1 className="font-display text-4xl leading-[1.05] tracking-tight text-foreground sm:text-5xl md:text-6xl">
-            Systems that survive traffic, audits, and 3am pages.
+            {highlights.heroTitle}
           </h1>
           <p className="max-w-xl text-sm leading-relaxed text-muted-foreground sm:text-base">
-            I design and ship backend platforms and DevOps foundations: APIs you
-            can reason about, pipelines you can trust, and observability that
-            answers questions before Slack does.
+            {highlights.heroSubtitle}
           </p>
           <div className="flex flex-wrap gap-3">
             <Button render={<Link to="/projects" />} size="lg">
               Browse projects
-              <ArrowRight aria-hidden className="size-4" weight="bold" />
+              <AppIcon aria-hidden className="size-4" icon="mdi:arrow-right" />
             </Button>
             <Link
               className={cn(
@@ -55,8 +67,7 @@ export function HomePage() {
               Projects
             </h2>
             <p className="mt-2 max-w-xl text-sm text-muted-foreground">
-              Two lanes of work I ship most often—platform APIs and automation
-              that keeps them honest.
+              {highlights.projectsSectionIntro}
             </p>
           </div>
           <Link
@@ -67,43 +78,59 @@ export function HomePage() {
             to="/projects"
           >
             View all
-            <ArrowRight aria-hidden className="size-3.5" weight="bold" />
+            <AppIcon aria-hidden className="size-3.5" icon="mdi:arrow-right" />
           </Link>
         </div>
 
         <div className="grid gap-12 lg:grid-cols-2">
           <div className="space-y-4">
             <div className="flex items-center gap-2">
-              <Cpu aria-hidden className="size-5 text-accent" weight="duotone" />
+              <AppIcon
+                aria-hidden
+                className="size-5 text-accent"
+                icon="mdi:cpu-64-bit"
+              />
               <h3 className="font-display text-lg tracking-tight">
                 Backend projects
               </h3>
             </div>
             <Separator className="bg-border/80" />
-            <div className="grid gap-6 stagger-cards">
+            <HorizontalProjectRow>
               {backendFeatured.map((project) => (
-                <ProjectCard key={project.slug} project={project} />
+                <div
+                  key={project.slug}
+                  className="min-w-[min(100%,260px)] max-w-[300px] shrink-0 snap-start"
+                  role="listitem"
+                >
+                  <ProjectCard project={project} variant="strip" />
+                </div>
               ))}
-            </div>
+            </HorizontalProjectRow>
           </div>
 
           <div className="space-y-4">
             <div className="flex items-center gap-2">
-              <TreeStructure
+              <AppIcon
                 aria-hidden
                 className="size-5 text-accent"
-                weight="duotone"
+                icon="mdi:file-tree"
               />
               <h3 className="font-display text-lg tracking-tight">
                 DevOps projects
               </h3>
             </div>
             <Separator className="bg-border/80" />
-            <div className="grid gap-6 stagger-cards">
+            <HorizontalProjectRow>
               {devopsFeatured.map((project) => (
-                <ProjectCard key={project.slug} project={project} />
+                <div
+                  key={project.slug}
+                  className="min-w-[min(100%,260px)] max-w-[300px] shrink-0 snap-start"
+                  role="listitem"
+                >
+                  <ProjectCard project={project} variant="strip" />
+                </div>
               ))}
-            </div>
+            </HorizontalProjectRow>
           </div>
         </div>
       </section>
