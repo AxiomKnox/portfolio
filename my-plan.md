@@ -53,8 +53,21 @@ Additions
       - Link to Project Repository
       - Link to Public Site (if available)
     - Ensure that this section is easy for scripts/automation to extract and display.
+    - Add an inputs section in EVERY projects' README, which should state what it requires to perform as intended, including Env Vars, Files, Models, Info, etc. Anything.
 
 <!-- --- -->
+
+> Just an Idea
+- What if I used WASM, to make my college project, which is a python exe which uses a model using local file access, & similar exe or non-web project but which have a UI into something that can be run in the browser & i can put in as a webpage for my github portfolio
+- Problem is, this will just work for project that HAVE a UI AND are NOT web project, this will not work for backend projects which do not have a UI. Will this be worth it for, currently, only one such non-web UI project?? 
+- I will also NEED to move from local file access for model inference to serving it from somewhere managed by me OR host it in a Cloud which provides hosting for custom models with inference.
+- Ask AI
+  - can i have an exe run in a browser using wasm or better tech
+  - i have access to source code, but its a python app 
+  - this project also uses a model to inference from locally, where the model is accessed using local file access
+
+> End of Idea
+
 - For any project in or to be included in GitHub Pages Portfolio (or any repository with a Git history), have Cursor (and its AI) automatically analyze the codebase, upon the completion of those respective projects, to help extract and suggest five concise bullet points (with the project's name) that can be included in my resume as another project. Have the name be the Project Repository's Name too.
 - Consider whether it is best to use two separate repositories for a project, as is common in many professional setups — where one is for the application code and one for deployment-as-code. This separation makes it easier to keep project info organized by backend, devops or other category(ies), especially in README files of their repositories, which can then be automatically fetched and parsed for the GitHub Pages Portfolio deployment.
 - Adopt a clear project ID convention, such as PROJ-DO-001-ALPHA, where "PROJ" indicates it’s a project, "DO"/"BE" indicates the category (e.g. DevOps, Backend), "00X" is a running project number, and "ALPHA"/"PROD" (or similar) indicates the project’s status. This convention should only be used for public projects to be featured on the portfolio, starting from their README creation as mentioned 1 point above. Use this process exclusively for selected, public-facing work, not for every project or code sample.
