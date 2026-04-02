@@ -82,7 +82,7 @@ export function HomePage() {
           </Link>
         </div>
 
-        <div className="grid gap-12 lg:grid-cols-2">
+        {/* <div className="grid gap-12 lg:grid-cols-2"> */}
           <div className="space-y-4">
             <div className="flex items-center gap-2">
               <AppIcon
@@ -99,10 +99,10 @@ export function HomePage() {
               {backendFeatured.map((project) => (
                 <div
                   key={project.slug}
-                  className="min-w-[min(100%,260px)] max-w-[300px] shrink-0 snap-start"
+                  className="min-w-[min(100%,260px)] max-w-[350px] shrink-0 snap-start"
                   role="listitem"
                 >
-                  <ProjectCard project={project} variant="strip" />
+                  <ProjectCard project={project} variant="default" />
                 </div>
               ))}
             </HorizontalProjectRow>
@@ -124,15 +124,15 @@ export function HomePage() {
               {devopsFeatured.map((project) => (
                 <div
                   key={project.slug}
-                  className="min-w-[min(100%,260px)] max-w-[300px] shrink-0 snap-start"
+                  className="min-w-[min(100%,260px)] max-w-[350px] shrink-0 snap-start"
                   role="listitem"
                 >
-                  <ProjectCard project={project} variant="strip" />
+                  <ProjectCard project={project} variant="default" />
                 </div>
               ))}
             </HorizontalProjectRow>
           </div>
-        </div>
+        {/* </div> */}
       </section>
     </div>
   )
