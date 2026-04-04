@@ -2,8 +2,6 @@ name: 01 - Deploy GitHub Pages Portfolio
 on:
   push:
     branches: [ "main" ]
-  paths:
-    - "dist/**"
   workflow_dispatch:
 
 permissions: 
@@ -30,7 +28,7 @@ jobs:
       - name: Build
         run: bun run build
         env: 
-          VITE_BASE_URL: /${{ split(github.repository, '/')[1] }}/ # Setting the repo name as this
+          VITE_BASE_URL: /${{ github.event.repository.name }}/ # Setting the repo name as this
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
