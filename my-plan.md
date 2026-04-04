@@ -15,6 +15,7 @@ Additions
 
 <!-- Separate thing -->
 
+- Keep skills in a Repo as well, maybe in the "profile" repo itself??
 - At the end of a project or even any different project that has a git repo & history, ask cursor & its AI to tell me what I've accomplished here by going to look into code, to put a 5 pointer with project name in my resume 
 - if so, do i need to have 2 different repos for a project, like in many production practises, one for appli code & the other for deployment of appli code?? cuz this will be needed and allow me to keep sepparate project info, category-wise, in readmes in their repos which i can fetch from at gh-pages depploy time at once
 - maybe i can have a project id LIKE, PROJ-DO-001-ALPHA, where its project, DO/BE for category, 00X for the number of tthat project & finnally the status of it ALPHA OR PROD or etc. this should only count & this process, starting from making the readme itself, be carried out for the projects i want public & on this as well, which will definitely not be all of my work or code 
