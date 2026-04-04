@@ -1,7 +1,8 @@
 
 Modifications
-- have the projects section on homepage have the projects list be horizontal instead of vertical for both project categories
-- maybe get a more subtle & cohessive way to embed my resume
+- [x] have the projects section on homepage have the projects list be horizontal instead of vertical for both project categories
+- [x] maybe get a more subtle & cohessive way to embed my resume
+- [ ] ...
 
 Additions
 - use iconify for icons in the project.
