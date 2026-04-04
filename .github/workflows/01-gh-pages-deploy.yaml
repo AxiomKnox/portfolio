@@ -43,7 +43,7 @@ jobs:
       contains(github.event.head_commit.message, 'deploy')
     environment:
       name: github-pages
-      url: 
+      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Deploy to GH Pages Slug `/portfolio`
         id: deployment
