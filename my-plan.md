@@ -2,7 +2,8 @@
 Modifications
 - [x] have the projects section on homepage have the projects list be horizontal instead of vertical for both project categories
 - [x] maybe get a more subtle & cohessive way to embed my resume
-- [ ] ...
+- [ ] Images dont work on github pages deployment, ones
+- change lint, format & typecheck scripts to latest version instead of eslint, prettier & tsc check
 
 Additions
 - use iconify for icons in the project.
