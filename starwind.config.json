@@ -7,10 +7,5 @@
   },
   "componentDir": "src/components",
   "utilsDir": "src/lib/utils",
-  "components": [
-    {
-      "name": "button",
-      "version": "2.3.3"
-    }
-  ]
+  "components": []
 }

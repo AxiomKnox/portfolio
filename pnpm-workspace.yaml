@@ -3,5 +3,5 @@ allowBuilds:
   sharp: true
 minimumReleaseAgeExclude:
   - astro@6.4.5
-overrides:
-  tinyclip: "0.1.12"
+# overrides:
+#   tinyclip: "0.1.12"
