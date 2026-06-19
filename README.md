@@ -1,7 +1,9 @@
 # Setup
 
+Focus on Simplicity, then looks, then features, then optimization
+
 ## New Tech Stack
-This is going to be a reqrite of my poprtfolio project for github pages, which will have the followinf stack & technologies
+This is going to be a rewrite of my portfolio project for github pages, which will have the following stack & technologies, and follow the SSG architecture, no server-side / backend code or SSR
 - Pnpm
 - Astro + Vite
 - TypeScript
@@ -14,11 +16,22 @@ This is going to be a reqrite of my poprtfolio project for github pages, which w
     - Version A: Tailwind + Starwind UI + Astro View Transitions only.
     - Version B: add AstroAnimate.
     - Version C: add Motion inside a React island only if needed.
+- Beasties
+    - for inlining critical css & lazy loading the rest
+- React Flow
+    - for interactive architecture diagrams
+    - the code for this exists in a file called architecture.(jsx|tsx) in every project repo, alongside projects.md, which have only that project's architecture diagram
+    
+> [!Important] Take a look at the Beasties Framework & implementation as well as current stack's thoughts of Brave AI 
 
+[link](file://D:/1_progg/2_Projects/GitHub Pages Portfolio/astro-2/docs/dump/brave logs/beasties library with astro framework comparision.pdf)
 
-### Setup Steps
+---
+---
 
-#### 1. Initialize Astro Project, w/ TypeScript & Tailwind
+## Setup Steps
+
+### 1. Initialize Astro Project, w/ TypeScript & Tailwind
 
 ```bash
 # Creates a project with TypeScript and Tailwind CSS pre-configured
@@ -27,14 +40,14 @@ npm create astro@latest my-project -- --template with-tailwindcss --typescript s
 ```
 ...
 
-#### 2. Setup Starwind UI
+### 2. Setup Starwind UI
 ```bash
 # Run the Starwind init command
 pnpx starwind@latest init   
 ```
 ...
 
-#### 3. Add React
+### 3. Add React
 ```bash
 pnpm astro add react
 ```
@@ -53,7 +66,7 @@ import Counter from '../components/Counter';
 </Layout>   
 ```
 
-#### 4. Astro-icons, astro fonts api, Astro View Transitions
+### 4. Astro-icons, astro fonts api, Astro View Transitions
 
 - astro-icons: it is a 3rd party library that processes the Icon Packs' Packages which contain the datasource of all the icons in the icon packs, like `@iconify-json/tabler` package, which contains the code for svgs & icons of tabler icons pack from iconify. The Icons can be used from just these data source packages, but the astro-icon package simplifies a lot and processes them through:
     - auto svgo optimzation
@@ -71,7 +84,7 @@ AI Generated from using ^^^ this ^^^ as example
     - privacy compliance (eliminates external calls to Google CDN) 
 
 
-#### 5. astro.config.mjs
+### 5. astro.config.mjs
 
 - Use this example for astro config
 ```mjs
@@ -97,6 +110,20 @@ export default defineConfig({
   }
 });
 ```
+
+---
+---
+
+## Features
+
+### Projects Page (WIP)
+
+- Searching
+
+- Sorting
+
+- Filter
+
 
 ---
 ---
