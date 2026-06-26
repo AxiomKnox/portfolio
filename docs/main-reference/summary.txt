@@ -1,0 +1,2 @@
+place where the main design / main app files & refrences go
+like the source code after / before build as well as images of the main branch project of github portfolio repo

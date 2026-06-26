@@ -1,0 +1,6 @@
+
+### Project Status Stages
+- i use alpha, beta & prod stages as global project wide status indicator that the project is in alpha state then beta state then prod state, (Ai suggests i add rc between beta & prod stage, will think about it)
+- and i use dev according to semver and for feature branch versions & all versions, after prod is achieved on main branch, on all branches that are not production or main branches
+- i do not use dev, alpha, beta & prod for every new release, even after prod, or for feature or fix versions, 
+- is that not how every AI has had in mind whenever they were asked about this status hierarchy? i fundamentally use status global project-wide one-way, meaning after achieving prod no status can be alpha or beta & i keep dev out of this, so i can use it for dev builds / in development builds and i don't have to use alpha or beta that'll confuse me or anyone of the state of the project itself, even though it was meant from you to describe the version and not project wide

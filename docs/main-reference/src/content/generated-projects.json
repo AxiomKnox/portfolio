@@ -1,0 +1,133 @@
+[
+  {
+    "id": "PROJ-BE-001-PROD",
+    "slug": "atlas-marketplace",
+    "name": "Atlas Marketplace",
+    "category": "backend",
+    "status": "PROD",
+    "summary": "A global trade platform optimized for speed and real-time inventory synchronization.",
+    "description": [
+      "Atlas Marketplace was conceived to solve the critical latency issues faced by high-volume global trading platforms. The core objective was to create a seamless, instantaneous inventory synchronization system that could handle thousands of concurrent transactions without experiencing locking or race conditions. Our approach involved decoupling the monolithic legacy architecture into specialized microservices, allowing individual components like payments, inventory, and user management to scale independently during traffic spikes.",
+      "We introduced a highly optimized caching layer that significantly reduced the strain on our primary database, ensuring that product catalogs and pricing information were always retrieved at lightning speed. Furthermore, the integration of real-time web socket connections meant that traders could see inventory changes the millisecond they happened, effectively eliminating the risk of double-purchasing. This robust architectural overhaul not only improved the overall user experience but also reduced operational infrastructure costs by streamlining resource utilization, setting a new technical standard for the platform's future growth."
+    ],
+    "techStack": [
+      "Next.js",
+      "Node.js",
+      "PostgreSQL",
+      "Redis",
+      "WebSockets",
+      "Docker"
+    ],
+    "architecture": {
+      "description": "Layered microservices with an API Gateway and event-driven communication via RabbitMQ."
+    },
+    "githubUrl": "https://github.com/example/atlas",
+    "liveUrl": "https://atlas.example.com",
+    "featured": true
+  },
+  {
+    "id": "PROJ-BE-002-ALPHA",
+    "slug": "nexus-protocol",
+    "name": "Nexus Protocol",
+    "category": "backend",
+    "status": "ALPHA",
+    "summary": "Internal coordination tool for distributed architectural teams.",
+    "description": [
+      "Nexus Protocol was developed as a centralized nervous system for distributed teams of architects and engineers collaborating on massive infrastructure projects. Managing complex, multi-gigabyte CAD files across different timezone and organizations inherently risks version conflicts and data loss. The platform provides a highly secure, role-based access API that acts as the single source of truth for all architectural assets, ensuring that only authorized personnel can modify critical structural blueprints.",
+      "Rather than attempting to store the massive files in a traditional database, the system intelligently manages the metadata and version history, acting similarly to Git but optimized for binary spatial data. It tracks every modification, who made it, and automatically syncs these updates to various third-party project management applications using custom webhooks. By bridging the gap between heavy design tools and agile project management, Nexus Protocol has fundamentally streamlined the workflow for interdisciplinary teams, reducing miscommunications and preventing costly construction errors caused by outdated blueprints."
+    ],
+    "techStack": [
+      "Go",
+      "GraphQL",
+      "PostgreSQL",
+      "Nats.io"
+    ],
+    "githubUrl": "https://github.com/example/nexus",
+    "featured": true
+  },
+  {
+    "id": "PROJ-DO-001-BETA",
+    "slug": "lumina-ci-cd",
+    "name": "Lumina CI/CD",
+    "category": "devops",
+    "status": "BETA",
+    "summary": "Automated deployment pipeline for high-frequency financial modeling updates.",
+    "description": [
+      "The Lumina project addressed a major bottleneck in the engineering department's development lifecycle: agonizingly slow deployment times. Financial modeling requires both rapid iteration to respond to market shifts and rigorous security constraints to protect sensitive data. The existing continuous integration and deployment pipeline was sequential and rigid, taking nearly an hour to promote a simple code change to production.",
+      "To resolve this, we completely re-architected the deployment pipeline emphasizing parallel execution and fail-fast principles. We containerized the testing suites to run concurrently across scalable cloud infrastructure, slashing the deployment time to just six minutes. Crucially, we didn't sacrifice safety for speed; automated security and vulnerability scanning were shifted left, embedding them directly into the commit process. Furthermore, we transitioned the entire cloud infrastructure to an Infrastructure-as-Code model, allowing the platform to be deterministically provisioned, audited, and torn down across multiple global regions, ensuring maximum resilience and compliance for our financial modeling tools."
+    ],
+    "techStack": [
+      "AWS",
+      "Terraform",
+      "GitHub Actions",
+      "Docker",
+      "Kubernetes"
+    ],
+    "architecture": {
+      "description": "Cloud-native Blue/Green deployment strategy using EKS and Route53 traffic shifting."
+    },
+    "githubUrl": "https://github.com/example/lumina",
+    "featured": true
+  },
+  {
+    "id": "PROJ-ML-002-PROD",
+    "slug": "sentinel-vision-systems",
+    "name": "Sentinel Vision Systems",
+    "category": "mlops",
+    "status": "PROD",
+    "summary": "Real-time computer vision pipeline for automated defect detection on manufacturing lines.",
+    "description": [
+      "Developed an end-to-end MLOps pipeline for deploying and monitoring computer vision models at the edge. The system ingests high-definition video feeds from factory lines and performs real-time defect classification using optimized YOLOv8 models.",
+      "To handle the complexity of continuous model improvement, we implemented a data flywheel that automatically captures edge-case inputs where the model has low confidence, sending them back to a centralized data lake for human annotation and automated retraining. The entire infrastructure is managed via Kubernetes to guarantee uptime and zero-downtime model swaps."
+    ],
+    "techStack": [
+      "Python",
+      "PyTorch",
+      "OpenCV",
+      "AWS",
+      "Kubernetes",
+      "Docker",
+      "TensorFlow"
+    ],
+    "architecture": {
+      "description": "Edge inference managed by Kubernetes, syncing with a centralized feature store and model registry via AWS SageMaker."
+    },
+    "githubUrl": "https://github.com/example/sentinel",
+    "featured": true
+  },
+  {
+    "id": "PROJ-ML-001-PROD",
+    "slug": "data-science-internship",
+    "name": "Data Science Internship",
+    "category": "mlops",
+    "status": "PROD",
+    "summary": "A Data Science Analysis of Admission Data, Customer Data & Customer Segments Data involving Various Regressions, Clustering Algorithms & EDA, along with Visualization.",
+    "description": [
+      "Notebooks",
+      "1. Notebook 1 - Admission Prediction using Linear Regression & Ridge Regression:",
+      "- Description: This notebook implements linear regression and ridge regression models to predict admission outcomes based on various features. It covers data preprocessing, model training, and evaluation.",
+      "2. Notebook 2 - Clustering Analysis of different algorithms on customer dataset:",
+      "- Description: This notebook explores clustering algorithms such as k-means, agglomerative hierarchy, spectral clustering, and mean shift on a customer dataset. It includes data preprocessing, model implementation, and visualization of clustering results.",
+      "3. Notebook 3 - Customer Segmentation Analysis:",
+      "- Description: This notebook focuses on customer segmentation analysis. It includes exploratory data analysis (EDA), feature engineering, and the application of clustering techniques to identify distinct customer segments.",
+      "Datasets",
+      "- Dataset 1 - Admission Predict Ver1.1:",
+      "- Dataset 2 - Mall Customers:",
+      "- Dataset 3 - Segmentation Data:"
+    ],
+    "techStack": [
+      "NumPy",
+      "Pandas",
+      "Seaborn",
+      "Matplotlib",
+      "Scikit-Learn",
+      "Jupyter",
+      "Python"
+    ],
+    "architecture": {
+      "description": "..."
+    },
+    "githubUrl": "https://github.com/MysteryMan11/Data-Science-Internship",
+    "featured": true
+  }
+]

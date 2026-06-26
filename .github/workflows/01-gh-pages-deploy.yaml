@@ -1,0 +1,59 @@
+name: 01 - Deploy GitHub Pages Portfolio
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+permissions: 
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    if: >
+      github.event_name == 'workflow_dispatch' ||
+      contains(github.event.head_commit.message, 'deploy')
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4  
+        # with:
+        #   version: 10  # Or omit to use version from package.json
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24  # Required for 2026 GitHub Actions
+          cache: 'pnpm'     # ✅ Enables automatic pnpm store caching
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build
+        run: pnpm run build        
+        env: 
+          PUBLIC_SITE_URL: https://${{ github.actor }}.github.io
+          PUBLIC_BASE_PATH: /${{ github.event.repository.name }}
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    if: >
+      github.event_name == 'workflow_dispatch' ||
+      contains(github.event.head_commit.message, 'deploy')
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GH Pages Slug `/portfolio`
+        id: deployment
+        uses: actions/deploy-pages@v4

@@ -21,7 +21,16 @@ This is going to be a rewrite of my portfolio project for github pages, which wi
 - React Flow
     - for interactive architecture diagrams
     - the code for this exists in a file called architecture.(jsx|tsx) in every project repo, alongside projects.md, which have only that project's architecture diagram
-    
+
+- Astro Features & Optimizations
+    - `client:load`, `client:visible` & `client:idle`, etc for hydration / partial hydration with Immediate, when user scrolls into view & when main thread is free timings respectively
+    - <Font /> Fonts API
+    - <Image /> & <Picture /> components for Images
+    - <ViewTransitions /> API for Page Transitions
+    - astro:env for env vars & secrets, but since no server side, only PUBLIC_ env vars
+    - Content Collections API, which provides unified, type-safe way to manage portfolio content in Markdown, MDX, YAML, TOML & JSON
+    - Built-in CSP
+
 > [!Important] Take a look at the Beasties Framework & implementation as well as current stack's thoughts of Brave AI 
 
 [link](file://D:/1_progg/2_Projects/GitHub Pages Portfolio/astro-2/docs/dump/brave logs/beasties library with astro framework comparision.pdf)
@@ -29,7 +38,63 @@ This is going to be a rewrite of my portfolio project for github pages, which wi
 ---
 ---
 
+Follow these phases: each gen or combination of gens should progress from 1 to 6 phase, with a commit between each phase
+
+### 1. Content & Data Phase (The Foundation)
+Before any visual work, you define the raw data.
+*   **Action:** Create **Astro Content Collections** (Markdown/MDX files) for projects, blog posts, and personal info.
+*   **Goal:** Ensure all text, images, and metadata exist in a structured format.
+*   **Result:** A data-rich site that looks like plain HTML.
+
+### 2. Layout & Structure Phase (The Skeleton)
+Building the static grid and responsive containers.
+*   **Action:** Create Astro Layouts (`.astro` files) for the Header, Footer, Grid Systems, and Typography hierarchy.
+*   **Goal:** Establish the "wireframe" look. The site is fully navigable but strictly static (no motion yet).
+*   **Result:** A functional, responsive website that loads instantly but feels "rigid."
+
+### 3. Interaction Logic Phase (The Behavior)
+Defining *how* elements respond to users before adding motion.
+*   **Action:** Write JavaScript/TypeScript for state changes (e.g., mobile menu toggle, theme switcher, tab switching, form validation).
+*   **Goal:** Ensure buttons click, forms submit (via static services), and links work.
+*   **Result:** A functional app where elements snap instantly to new states without animation.
+
+### 4. Asset Optimization Phase (The Performance)
+Preparing heavy media for the web.
+*   **Action:** Convert images to WebP/AVIF, compress videos, and set up Astro's `<Image />` component for lazy loading.
+*   **Goal:** Ensure the site scores 100 on Lighthouse before adding animation overhead.
+*   **Result:** A lightning-fast static site ready for motion.
+
+### 5. Animation Phase (The "Life")
+**This is where you add the "Before & After" and motion.**
+Now that the structure is solid, you layer in the motion libraries (GSAP, Framer Motion, or CSS transitions).
+*   **Entry Animations:** Hero text fades/slides in.
+*   **Scroll Animations:** Elements trigger "Before & After" reveals or parallax as the user scrolls.
+*   **Page Transitions:** Smoothing the jump between static HTML pages using View Transitions API.
+*   **Micro-interactions:** Hover states, magnetic buttons, and cursor effects.
+*   **Goal:** Make the static site feel organic and fluid.
+
+### 6. Deployment Phase (The Release)
+Pushing the final build to a static host.
+*   **Action:** Run `astro build` and deploy to Netlify, Vercel, or Cloudflare Pages.
+*   **Goal:** Serve the pre-rendered HTML/CSS/JS from a global CDN.
+
+### Summary of the Corrected Flow
+
+| Phase | Focus | State of Site |
+| :--- | :--- | :--- |
+| **Content** | Data (MDX) | Non-visual data files |
+| **Structure** | HTML/CSS Grid | Rigid, responsive wireframe |
+| **Logic** | JavaScript State | Functional but "snappy" |
+| **Optimization** | Assets | Fast, ready for motion |
+| **Animation** | **Motion (GSAP/CSS)** | **Fluid, "Before & After" reveals** |
+| **Deploy** | Hosting | Live on CDN |
+
+---
+---
+
 ## Setup Steps
+
+- Use Squash & Merge between branches
 
 ### 1. Initialize Astro Project, w/ TypeScript & Tailwind
 

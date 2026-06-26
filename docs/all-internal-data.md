@@ -43,6 +43,11 @@ Projects.md / Project.json
 *Project.md*
 ...
 
+# Project Preview Image
+[An Image that'll go on the project card as preview image & on the project page hero as the preview image, same image different sizes. Maybe have astro APIs figure this out for me, do use the biggest && clearest as raw image tho]
+*<undecided>.extension*
+...
+
 # Properties
 
 ## Category
@@ -149,3 +154,8 @@ resume.pdf
 ## GitHub, LinkedIn, Socials Links
 portfolio.md
 ...
+
+---
+---
+---
+

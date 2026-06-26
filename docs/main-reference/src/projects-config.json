@@ -1,0 +1,11 @@
+{
+	"localDir": "./src/content/projects", 
+	"remoteRepos": [
+		{
+			"owner": "MysteryMan11",
+			"repo": "Data-Science-Internship",
+			"branch": "main",
+			"path": "project.md"
+		}
+	]
+}

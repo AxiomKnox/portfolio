@@ -1,5 +1,5 @@
 {
-  "name": "",
+  "name": "Portfolio",
   "type": "module",
   "version": "0.0.1",
   "engines": {
@@ -7,14 +7,19 @@
   },
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build",
+    "build": "astro check && astro build",
     "preview": "astro preview",
     "astro": "astro"
   },
   "dependencies": {
+    "@astrojs/react": "^5.0.7",
     "@tailwindcss/forms": "^0.5.11",
     "@tailwindcss/vite": "^4.3.0",
+    "@types/react": "^19.2.17",
+    "@types/react-dom": "^19.2.3",
     "astro": "^6.4.5",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7",
     "tailwind-merge": "^3.6.0",
     "tailwind-variants": "^3.2.2",
     "tailwindcss": "^4.3.0",

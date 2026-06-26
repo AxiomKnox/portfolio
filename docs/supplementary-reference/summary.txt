@@ -1,0 +1,2 @@
+place where the secondary design / secondary builds of portfolio app files & refrences go
+like the source code after / before build as well as images of the various experimentation & generation of AI offshoot from main project 
