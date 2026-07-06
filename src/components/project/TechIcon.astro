@@ -1,0 +1,29 @@
+---
+import { Icon } from "astro-icon/components";
+import { getTechIcon } from "@/lib/utils";
+
+interface Props {
+	tech: string;
+	class?: string;
+}
+
+const { tech, class: className = "w-4 h-4" } = Astro.props;
+const iconName = getTechIcon(tech);
+---
+
+{
+	iconName ? (
+		<Icon name={iconName} class:list={["tech-icon", className]} aria-label={tech} />
+	) : (
+		<span class="text-[9px] uppercase tracking-wider opacity-50">{tech.slice(0, 3)}</span>
+	)
+}
+
+<style>
+	.tech-icon {
+		transition: filter 0.3s ease;
+	}
+	:global(.dark) .tech-icon {
+		filter: grayscale(1) brightness(1.2);
+	}
+</style>

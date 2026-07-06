@@ -92,9 +92,13 @@ Pushing the final build to a static host.
 ---
 ---
 
+### Addition of Documentation Stage
+- Have a Documentation stage after the reaching prod, or even better have a Documentation step after completing every stage, iterate & improve the documentation over time.
+- This is a very important step for organizing & having a mental map for further development & clear understanding of the practices, implementation, architecture & design of the whole project, from inputs to finished product.
+
 ## Setup Steps
 
-- Use Squash & Merge between branches
+- ~~Use Squash & Merge between branches~~ Follow GitHub Flow with My Custom Modifications
 
 ### 1. Initialize Astro Project, w/ TypeScript & Tailwind
 

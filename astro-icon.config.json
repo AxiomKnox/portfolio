@@ -1,0 +1,8 @@
+{
+	"include": {
+		"simple-icons:*": ["simple-icons:*"],
+		"devicon-plain:*": ["devicon-plain:*"],
+		"ph:*": ["ph:*"],
+		"lucide:*": ["lucide:*"]
+	}
+}

@@ -1,11 +1,174 @@
 ---
-import Welcome from '@/pages/about-me.astro';
-import Layout from '@/layouts/Layout.astro';
+import Layout from "@/layouts/Layout.astro";
+import HorizontalScroller from "@/components/home/HorizontalScroller.astro";
+import { getCollection } from "astro:content";
+import Card from "@/components/starwind/card/Card.astro";
+import { Icon } from "astro-icon/components";
+import Button from "@/components/starwind/button";
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+const projects = await getCollection("projects");
+const personal = (await getCollection("personal"))[0];
+
+const backendProjects = projects
+  .filter((p) => p.data.category === "backend")
+  .slice(0, 3);
+const devopsProjects = projects
+  .filter((p) => p.data.category === "devops")
+  .slice(0, 3);
+const mlProjects = projects
+  .filter((p) => p.data.category === "mlops")
+  .slice(0, 3);
+
+const areas = [
+  {
+    iconName: "lucide:server",
+    title: "DevOps",
+    color: "text-purple-400",
+    description: "CI/CD, infrastructure as code and cloud orchestration",
+  },
+  {
+    iconName: "lucide:code",
+    title: "Backend",
+    color: "text-blue-400",
+    description: "High-performance APIs, microservices & distributed systems",
+  },
+  {
+    iconName: "lucide:brain",
+    title: "Machine Learning",
+    color: "text-orange-400",
+    description: "MLOps, model deployment and data pipelines",
+  },
+];
 ---
 
-<Layout>
-	<Welcome />
+<Layout title="Home" description={personal?.data.heroSection}>
+  <div class="pt-32 pb-32 animate-fade-up">
+    <section class="px-6 max-w-7xl mx-auto mt-24 mb-12">
+      <div
+        class="grid grid-cols-1 lg:grid-cols-12 gap-16 items-end mt-12 pb-12"
+      >
+        <div class="lg:col-span-2"></div>
+        <div class="lg:col-span-8 space-y-12">
+          <div>
+            <div class="flex justify-center gap-4 mb-4">
+              <span class="section-label">Available for projects</span>
+              <div
+                class="w-1.5 h-1.5 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.4)]"
+              >
+              </div>
+            </div>
+            <h1 class="hero-name text-center">
+              Building{" "}
+              <span class="max-w-xl px-2 italic font-light opacity-80">
+                scalable systems{" "}
+              </span>
+              that power modern applications
+            </h1>
+          </div>
+          <div class="flex justify-center gap-4">
+            <p class="text-xl font-light leading-relaxed italic opacity-60">
+              "{personal?.data.heroSection}"
+            </p>
+          </div>
+        </div>
+      </div>
+      <!-- <div class="flex justify-center gap-2">
+				<div class="space-y-4">
+					<h3 class="section-label">Services</h3> -->
+
+      <!-- <Card class="max-w-xs p-4 italic">DevOps Infrastructure </Card> <Card class="max-w-xs p-4 italic">Backend Systems </Card> <Card class="p-4 italic">Machine Learning </Card> -->
+
+      <!-- </div>
+			</div> -->
+      <div class="flex justify-center gap-4">
+        <Button size="sm" href="/projects"
+          >View My Work <Icon name="lucide:external-link" />
+        </Button>
+        <Button size="sm" href="/about" variant="outline">About Me</Button>
+      </div>
+
+      <div class="mx-auto mt-20 grid max-w-4xl gap-4 sm:grid-cols-3">
+        {
+          areas.map((area) => (
+            <div
+              class="
+        group 
+		rounded-xl 
+        border border-slate 
+        bg-[#080808] 
+        p-6 
+        backdrop-blur-sm 
+        transition-all 
+        hover:bg-accent/10 
+        hover:border-accent
+		max-w-md
+      "
+            >
+              <div class="mb-4 inline-flex rounded-lg dark:bg-neutral-900 p-2 text-muted-foreground">
+                <Icon
+                  name={area.iconName}
+                  class={`h-5 w-5 ${area.color} dark:text-slate-300`}
+                />
+              </div>
+              <h3 class="font-semibold text-foreground text-base">
+                {area.title}
+              </h3>
+              <p class="mt-1 text-sm text-muted-foreground leading-relaxed">
+                {area.description}
+              </p>
+            </div>
+          ))
+        }
+      </div>
+    </section>
+
+    <!-- <div class="h-px bg-white/10 flex-1 mx-16 my-4"></div> -->
+
+</div>
+<div class="pt-24 bg-[#070707] border-t">
+  <section class="space-y-16 max-w-7xl mx-auto w-full">
+	<span class="">
+	  <h1 class="text-4xl font-serif italic">Recent Projects</h1>
+	  <p class="mb-12 text-sm text-muted-foreground leading-relaxed">
+		A selection of my most recent work across different domains.
+	  </p>
+	</span>
+	<HorizontalScroller
+	  title="Backend Engineering"
+	  projects={backendProjects}
+	/>
+	<HorizontalScroller
+	  title="Infrastructure & DevOps"
+	  projects={devopsProjects}
+	/>
+	<HorizontalScroller title="Machine Learning" projects={mlProjects} />
+  </section>
+</div>
+
+<section class="border-t border-border/50 ">
+	<div class="mx-auto max-w-6xl px-4 py-20 sm:px-6 lg:py-24">
+	<div
+		class="rounded-2xl border border-border/50 bg-gradient-to-br from-card via-card to-muted/50 p-8 text-center sm:p-12 lg:p-16"
+	>
+		<h2
+		class="text-2xl font-bold tracking-tight text-foreground sm:text-3xl"
+		>
+		Interested in working together?
+		</h2>
+		<p class="mx-auto mt-4 max-w-2xl text-muted-foreground">
+		I&apos;m always open to discussing new projects, creative ideas, or
+		opportunities to be part of your visions.
+		</p>
+		<div class="mt-8">
+			<Button 
+			href="/about"
+			size="md" class="gap-2">
+			Get In Touch
+			<Icon name="lucide:arrow-right" class="h-4 w-4" />
+			</Button>
+		
+		</div>
+	</div>
+	</div>
+</section>
 </Layout>

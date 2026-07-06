@@ -1,0 +1,44 @@
+---
+import type { CollectionEntry } from "astro:content";
+
+type PersonalData = CollectionEntry<"personal">["data"];
+
+interface Props {
+	personal?: PersonalData;
+}
+
+const { personal } = Astro.props;
+const year = new Date().getFullYear();
+const initials = personal?.shortInitials ?? "AK";
+---
+
+<footer class="py-24 border-t border-white/5 px-6">
+	<div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
+		<div class="text-[10px] uppercase tracking-widest opacity-20">
+			{year} {initials} — Built with Astro & Starwind UI
+		</div>
+		<div class="flex gap-8 text-[10px] uppercase tracking-widest opacity-40 font-bold">
+			{
+				personal?.github && (
+					<a href={personal.github} class="hover:opacity-100 transition-colors" target="_blank" rel="noopener">
+						GitHub
+					</a>
+				)
+			}
+			{
+				personal?.linkedin && (
+					<a href={personal.linkedin} class="hover:opacity-100 transition-colors" target="_blank" rel="noopener">
+						LinkedIn
+					</a>
+				)
+			}
+			{
+				personal?.email && (
+					<a href={`mailto:${personal.email}`} class="hover:opacity-100 transition-colors">
+						Email
+					</a>
+				)
+			}
+		</div>
+	</div>
+</footer>

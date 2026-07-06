@@ -57,6 +57,10 @@
     - There could also be suggestions for properties which already have their filters, but selecting them will just set the filter to that value, like showing date property with suggestions for 2022, 2023, etc, and selecting a suggestion in search dropdown would just set the date filter to it.
     - the syntax could also be used like prop:"value" and it would work or selecting
 
+- new idea 28-02-26, 02:17, Use just icons at right hand side with tooltips & etc, for sorting, filter options, grouping?? (i dont think i should do this on client-side only code), views, no. of projects on screen, etc
+- implement this like how Database Table or others in notion, have sort, filter, search, view, etc. NOT just the icons, but the functionalilty too. Change the UI & Feel tho, to suite my app & starwindui, vercel theme
+    - maybe have search as the main focus tho, in the left side and dominant or 2/3rd of column size
+    - Use this as a reference [["./Kole Jain - The 3 dashboard UI flaws that give away you've NEVER built one [Ksx9C2-3yMo - 1746x982 - 5m41s].png"]] 
 
 ### Projects Display Section
 

@@ -22,5 +22,14 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
-docs/dump.zip
+# generated content (sync script writes these before build)
+src/content/projects/
+src/content/personal/
+content-sources/projects/PROJ-BE-001.md
+content-sources/projects/PROJ-BE-002.md
+content-sources/projects/PROJ-DO-001.md
+content-sources/projects/PROJ-ML-002.md
 docs/dump_old.zip
+docs/dump.zip
+public/resume.pdf
+pnpm-lock.yaml.bak

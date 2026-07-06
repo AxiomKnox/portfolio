@@ -2,7 +2,7 @@
 
 - [x] Collect all the fragmented data, ONLY to get the ideas from previous projects & NOT the layout or structure or any code from them
 
-- pick some of the boilerplate or showcased examples from the site to use with the portfolio components [https://starwind.dev/docs/components/](https://starwind.dev/docs/components/)
+- [ ] pick some of the boilerplate or showcased examples from the site to use with the portfolio components [https://starwind.dev/docs/components/](https://starwind.dev/docs/components/)
   - Aspect Ratio (for Project Cards)
   - Badge (for category & things above the project details page)
   - Breadcrumbs?
@@ -26,20 +26,26 @@
   - Tabs (for Categories, which will remain above the filters)
   - ThemeToggle (use from this [link](https://pro.starwind.dev/components/theme-switcher/theme-switcher-02/))
   - Tooltip (for other purpose as well, but the first thought was list of tools used on hover of AI Assisted tag)
-- make the README Template better & more clear with missing points
-- do it like the blog image
-- add more skills
-- Use this vercel theme from `tweakcn.com`, along with some modifications from AI or me. This was added because of some **Design System** talks on `bolt.new`. I can adjust it more on tweakcn site if i want to.
+  - 
+
+- [ ] make the README Template better & more clear with missing points
+- [ ] do it like the blog image
+- [ ] add more skills
+  - [ ] Latest Astro Skill, that tells it to use Astro 7 & Vite 8
+  - [ ] Pnpm Skill, that tells it to follows global and local pnpm workspace file & config 
+  - [ ] General Security Skill
+  - [ ] Specific Security & How to Skill for JS ecosystem, with package manager, npm registry, post-install scripts attacks, vulnerabilities & industry standard practices for it.
+- [ ] Use this vercel theme from `tweakcn.com`, along with some modifications from AI or me. This was added because of some **Design System** talks on `bolt.new`. I can adjust it more on tweakcn site if i want to.
 
 ```shell
 pnpm dlx shadcn@latest add https://tweakcn.com/r/themes/vercel.json
 ```
 
-- this is also good, '[https://shadcncraft.com/](https://shadcncraft.com/)'
-- working on the search functionality & components
-- Implementing Perf Optimizations (from sticky notes, add youtube url, transript & methods later)
-- Add images for project card preview images & project hero images in 
-- Just take a note & learn how to use Env Vars in Astro, with Vite, with TypeScript & with other packages for it, like t3-env, beasties, etc
+- [ ] this is also good, '[https://shadcncraft.com/](https://shadcncraft.com/)'
+- [ ] working on the search functionality & components
+- [ ] Implementing Perf Optimizations (from sticky notes, add youtube url, transript & methods later)
+- [ ] Add images for project card preview images & project hero images in 
+- [ ] Just take a note & learn how to use Env Vars in Astro, with Vite, with TypeScript & with other packages for it, like t3-env, beasties, etc
 
 ---
 
@@ -150,6 +156,6 @@ dump
   - can i have an exe run in a browser using wasm or better tech
   - i have access to source code, but its a python app 
   - this project also uses a model to inference from locally, where the model is accessed using local file access
-  > End of Idea
+    > End of Idea
 - Raw: Consider whether it is best to use two separate repositories for a project, as is common in many professional setups — where one is for the application code and one for deployment-as-code. This separation makes it easier to keep project info organized by backend, devops or other category(ies), especially in README files of their repositories, which can then be automatically fetched and parsed for the GitHub Pages Portfolio deployment.
 

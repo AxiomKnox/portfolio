@@ -1,0 +1,164 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/starwind/card";
+import { Separator } from "@/components/starwind/separator";
+import { Button } from "@/components/starwind/button";
+import { getCollection } from "astro:content";
+
+const personal = (await getCollection("personal"))[0];
+---
+
+<Layout title="About">
+	<div class="page-container space-y-24 animate-fade-up">
+		<section class="grid grid-cols-1 md:grid-cols-12 gap-12">
+			<div class="md:col-span-8 space-y-8">
+				<h1 class="text-5xl font-serif italic">
+					Engineering with <br />
+					<span class="not-italic opacity-40">Technical Perfection.</span>
+				</h1>
+				<div class="space-y-6 text-lg font-light opacity-60 leading-relaxed">
+					{personal?.data.aboutParagraphs.map((p) => <p>{p}</p>)}
+				</div>
+			</div>
+			<div class="md:col-span-4 space-y-8">
+				<div class="aspect-square border border-white/10 p-4 bg-white/5 relative overflow-hidden">
+					<div
+						class="w-full h-full border border-white/5 flex items-center justify-center opacity-10 font-serif text-6xl"
+					>
+						{personal?.data.shortInitials}
+					</div>
+				</div>
+				<div class="space-y-4 text-sm">
+					<div>
+						<p class="section-label mb-1">Role</p>
+						<p class="opacity-80">{personal?.data.role}</p>
+					</div>
+					<div>
+						<p class="section-label mb-1">Location</p>
+						<p class="opacity-80">{personal?.data.location}</p>
+					</div>
+					<div>
+						<p class="section-label mb-1">Contact</p>
+						<a href={`mailto:${personal?.data.email}`} class="opacity-80 hover:opacity-100">
+							{personal?.data.email}
+						</a>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<Separator />
+
+		<section class="space-y-12">
+			<h2 class="section-label">Skills & Technologies</h2>
+			<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+				{
+					personal?.data.skills.map((group) => (
+						<div class="space-y-4">
+							<h3 class="text-[10px] uppercase tracking-[0.3em] font-bold opacity-30">
+								{group.category}
+							</h3>
+							<ul class="space-y-2 text-sm opacity-70">
+								{group.items.map((skill) => (
+									<li>{skill}</li>
+								))}
+							</ul>
+						</div>
+					))
+				}
+			</div>
+		</section>
+
+		<Separator />
+
+		<section class="space-y-8">
+			<h2 class="section-label">Experience</h2>
+			<div class="space-y-8">
+				{
+					personal?.data.experience.map((exp) => (
+						<div class="grid grid-cols-1 md:grid-cols-12 gap-4 border-b border-white/5 pb-8">
+							<div class="md:col-span-3">
+								<p class="text-sm opacity-40">{exp.duration}</p>
+							</div>
+							<div class="md:col-span-9 space-y-2">
+								<h3 class="text-xl font-serif">{exp.title}</h3>
+								<p class="text-sm opacity-60">
+									{exp.company} · {exp.location}
+								</p>
+								<p class="text-sm opacity-70 leading-relaxed">{exp.description}</p>
+							</div>
+						</div>
+					))
+				}
+			</div>
+		</section>
+
+		<Separator />
+
+		<section class="space-y-8">
+			<h2 class="section-label">Certifications</h2>
+			<div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+				{
+					personal?.data.certifications.map((cert) => (
+						<Card>
+							<CardHeader>
+								<CardTitle class="text-lg font-serif">{cert.name}</CardTitle>
+							</CardHeader>
+							{cert.issuer && (
+								<CardContent>
+									<p class="text-sm opacity-50">{cert.issuer}</p>
+								</CardContent>
+							)}
+						</Card>
+					))
+				}
+			</div>
+		</section>
+
+		<Separator />
+
+		<section class="space-y-6" id="resume-section">
+			<h2 class="section-label">Resume</h2>
+			<Button id="resume-open-btn" variant="outline">View Resume</Button>
+			<div
+				id="resume-modal"
+				class="hidden fixed inset-0 z-[100] bg-black/80 flex items-center justify-center p-6"
+				role="dialog"
+				aria-modal="true"
+				aria-label="Resume preview"
+			>
+				<div class="bg-background border border-white/10 rounded-lg w-full max-w-3xl max-h-[90vh] overflow-hidden flex flex-col">
+					<div class="flex justify-between items-center p-4 border-b border-white/10">
+						<span class="text-sm uppercase tracking-widest opacity-60">Resume</span>
+						<button id="resume-close-btn" type="button" class="opacity-60 hover:opacity-100 px-2">✕</button>
+					</div>
+					<iframe
+						src={personal?.data.resumeUrl}
+						title="Resume"
+						class="w-full flex-1 min-h-[70vh] bg-white"
+					></iframe>
+				</div>
+			</div>
+		</section>
+
+		<section class="space-y-6 text-center py-12">
+			<h2 class="text-3xl font-serif italic">Let's work together</h2>
+			<p class="opacity-60 max-w-md mx-auto">
+				Interested in collaborating? I'd love to hear about your project.
+			</p>
+			<Button href={`mailto:${personal?.data.email}`}>Get in Touch</Button>
+		</section>
+	</div>
+</Layout>
+
+<script>
+	const openBtn = document.getElementById("resume-open-btn");
+	const closeBtn = document.getElementById("resume-close-btn");
+	const modal = document.getElementById("resume-modal");
+
+	openBtn?.addEventListener("click", () => modal?.classList.remove("hidden"));
+	closeBtn?.addEventListener("click", () => modal?.classList.add("hidden"));
+	modal?.addEventListener("click", (e) => {
+		if (e.target === modal) modal.classList.add("hidden");
+	});
+</script>
