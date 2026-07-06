@@ -3,6 +3,7 @@ import { defineConfig, envField, fontProviders } from "astro/config";
 import tailwindcss from "@tailwindcss/vite";
 import react from "@astrojs/react";
 import icon from "astro-icon";
+import path from "path";
 
 // https://astro.build/config
 export default defineConfig({
@@ -42,7 +43,17 @@ export default defineConfig({
 
 	vite: {
 		plugins: [tailwindcss()],
+		server: {
+		  watch: {
+			// Use glob patterns or absolute paths to ignore directories
+			ignored: ['**/docs/**', // Ignores any 'docs' folder in the project
+			],
+		  },
+		},
 	},
+
+
+
 
 	integrations: [react(), icon()],
 });

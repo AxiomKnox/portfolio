@@ -15,17 +15,20 @@ import {
   getCategoryClass,
   getCategoryLabel,
   getStatusLabel,
+  getStatusColor,
 } from "@/lib/utils";
-import { getCollection, render } from "astro:content";
-import { Image } from "astro:assets";
-import placeholderImage from "@/assets/projects/placeholder.svg";
+import { render } from "astro:content";
 import { Icon } from "astro-icon/components";
-import { getStatusColor } from "@/lib/utils";
 import Button from "@/components/starwind/button";
 import Prose from "@/components/starwind/prose";
+import {
+  getArchitectureData,
+  getRelatedProjects,
+  queryProjects,
+} from "@/lib/portfolio/query";
 
 export async function getStaticPaths() {
-  const projects = await getCollection("projects");
+  const projects = await queryProjects();
   return projects.map((project) => ({
     params: { slug: project.data.slug },
     props: { project },
@@ -34,7 +37,6 @@ export async function getStaticPaths() {
 
 const { project } = Astro.props;
 const { Content } = await render(project);
-const allProjects = await getCollection("projects");
 
 const dateOptions = {
   year: "numeric",
@@ -42,19 +44,14 @@ const dateOptions = {
   day: "numeric",
 } as const;
 
-const related = allProjects.filter((p) =>
-  project.data.relatedProjects.includes(p.data.id),
-);
+const related = await getRelatedProjects(project);
+const architectureData = await getArchitectureData(project.data.slug);
 
-const architectureModules = import.meta.glob<{
-  default: import("@/components/project/ArchitectureDiagram").ArchitectureData;
-}>("@/data/architecture/*.json");
-
-const architectureKey = `@/data/architecture/${project.data.slug}.json`;
-const architectureLoader = architectureModules[architectureKey];
-const architectureData = architectureLoader
-  ? (await architectureLoader()).default
-  : null;
+if (!architectureData) {
+  throw new Error(
+    `Architecture diagram missing for "${project.data.name}" — run sync to pull architecture.tsx`,
+  );
+}
 ---
 
 <Layout title={project.data.name} description={project.data.summary}>
@@ -67,23 +64,11 @@ const architectureData = architectureLoader
     </a>
 
     <section class="space-y-8">
-      <!-- <div class="aspect-[21/9] rounded-xl overflow-hidden border border-white/10">
-				<Image
-					src={placeholderImage}
-					alt={`${project.data.name} preview`}
-					class="w-full h-full object-cover"
-					width={1200}
-					height={514}
-					loading="eager"
-				/>
-			</div> -->
-
       <div class="space-y-4">
         <div class="flex flex-wrap items-center gap-4">
           <span class="text-xs font-mono tracking-tighter opacity-30 uppercase"
             >{project.data.id}</span
           >
-          <!-- <Separator orientation="vertical" class="h-4" /> -->
           <Badge
             variant="outline"
 			size="sm"
@@ -105,15 +90,6 @@ const architectureData = architectureLoader
       <div class="flex flex-wrap gap-4">
         {
           project.data.repoUrl && (
-            // <a
-            //   href={project.data.repoUrl}
-            //   target="_blank"
-            //   rel="noopener"
-            //   class="inline-flex items-center gap-2 px-6 py-3 bg-white text-black text-[10px] font-bold uppercase tracking-widest hover:bg-white/90 transition-colors"
-            // >
-			// 	<Icon name="simple-icons:github" class="w-4 h-4" />
-			// 	Repository
-            // </a>
 			<Button href={project.data.repoUrl} target={"_blank"} rel={"noopener"}>
 				<Icon name="simple-icons:github" class="w-4 h-4" />
 				Repository
@@ -122,15 +98,6 @@ const architectureData = architectureLoader
         }
         {
 			project.data.liveUrl && (
-			// 	<a
-			// 	href={project.data.liveUrl}
-			// 	target="_blank"
-			// 	rel="noopener"
-			// 	class="inline-flex items-center gap-2 px-6 py-3 border border-white/20 text-[10px] font-bold uppercase tracking-widest hover:bg-white/5 transition-colors"
-			// 	>
-			// 	<Icon name="lucide:external-link" class="w-4 h-4" />
-            //   Live Site
-            // </a>
 			<Button 
 			href={project.data.liveUrl}
 			variant="ghost"
@@ -164,9 +131,9 @@ const architectureData = architectureLoader
                 Status
               </span>
               <div class="pt-2 pb-4">
-                <Badge class={getStatusColor(project.data.status as string)}>
+                <Badge class={getStatusColor(project.data.status)}>
                   <Icon name={"lucide:circle-dot"} class="w-4 h-4 mt-0.25" />
-                  {project.data.status}
+                  {getStatusLabel(project.data.status)}
                 </Badge>
               </div>
               <div class="justify-between gap-4">
@@ -222,7 +189,7 @@ const architectureData = architectureLoader
         </Card>
 
         {
-          related.length === 0 && (
+          related.length > 0 && (
             <Card class={"max-w-sm dark:bg-zinc-950 backdrop-blur-md"}>
               <CardHeader>
                 <CardTitle class="text-md tracking-widest">
@@ -252,24 +219,16 @@ const architectureData = architectureLoader
         }
       </aside>
     </section>
-    <section>
+    <section class="space-y-6">
+      <h2 class="section-label">System Architecture</h2>
       {
         project.data.architectureDescription && (
-          <div class="space-y-6">
-            <h2 class="section-label">System Architecture</h2>
-            <p class="text-sm font-light opacity-60 italic">
-              {project.data.architectureDescription}
-            </p>
-            {architectureData ? (
-              <ArchitectureSection client:visible data={architectureData} />
-            ) : (
-              <div class="aspect-video border border-white/10 flex items-center justify-center font-mono text-[10px] uppercase tracking-[0.5em] opacity-20 bg-black/20 rounded-lg">
-                Architecture diagram coming soon
-              </div>
-            )}
-          </div>
+          <p class="text-sm font-light opacity-60 italic">
+            {project.data.architectureDescription}
+          </p>
         )
       }
+      <ArchitectureSection client:visible data={architectureData} />
     </section>
   </div>
 </Layout>

@@ -5,54 +5,14 @@ export function cn(...inputs: ClassValue[]) {
 	return twMerge(clsx(inputs));
 }
 
-export type ProjectCategory = "backend" | "devops" | "mlops";
-
-const CATEGORY_LABELS: Record<ProjectCategory, string> = {
-	backend: "Backend",
-	devops: "DevOps",
-	mlops: "Machine Learning",
-};
-
-const CATEGORY_CLASSES: Record<ProjectCategory, string> = {
-	backend: "cat-backend",
-	devops: "cat-devops",
-	mlops: "cat-mlops",
-};
-
-const CATEGORY_COLORS: Record<string, string> = {
-  devops: "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20",
-  backend: "bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/20",
-  "machine-learning": "bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20",
-};
-
-const STATUS_COLORS: Record<string, string> = {
-  prod: "bg-green-500/10 text-green-600 dark:text-green-400",
-  alpha: "bg-orange-500/10 text-orange-600 dark:text-orange-400",
-  beta: "bg-yellow-500/10 text-yellow-600 dark:text-yellow-400",
-  dev: "bg-purple-500/10 text-purple-600 dark:text-purple-400",
-  archived: "bg-gray-500/10 text-gray-600 dark:text-gray-400",
-};
-
-export function getCategoryLabel(category: ProjectCategory): string {
-	return CATEGORY_LABELS[category] ?? category;
-}
-
-export function getCategoryClass(category: ProjectCategory): string {
-	return CATEGORY_CLASSES[category] ?? "italic";
-}
-
-export function getStatusLabel(status: string): string {
-	return status.toUpperCase();
-}
-
-
-export function getCategoryColor(category: string): string {
-  return CATEGORY_COLORS[category] || "bg-muted text-muted-foreground";
-}
-
-export function getStatusColor(status: string): string {
-  return STATUS_COLORS[status] || "bg-muted text-muted-foreground";
-}
+export type { ProjectCategory } from "@portfolio/schema";
+export {
+	getCategoryClass,
+	getCategoryColor,
+	getCategoryLabel,
+	getStatusColor,
+	getStatusLabel,
+} from "@/lib/portfolio/display";
 
 export function getTechIcon(tech: string): string | null {
 	const t = tech.toLowerCase();

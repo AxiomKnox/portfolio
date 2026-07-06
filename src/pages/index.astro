@@ -1,23 +1,12 @@
 ---
 import Layout from "@/layouts/Layout.astro";
-import HorizontalScroller from "@/components/home/HorizontalScroller.astro";
-import { getCollection } from "astro:content";
-import Card from "@/components/starwind/card/Card.astro";
+import ProjectCard from "@/components/project/ProjectCard.astro";
 import { Icon } from "astro-icon/components";
 import Button from "@/components/starwind/button";
+import { getHomepageProjects, getPersonal } from "@/lib/portfolio/query";
 
-const projects = await getCollection("projects");
-const personal = (await getCollection("personal"))[0];
-
-const backendProjects = projects
-  .filter((p) => p.data.category === "backend")
-  .slice(0, 3);
-const devopsProjects = projects
-  .filter((p) => p.data.category === "devops")
-  .slice(0, 3);
-const mlProjects = projects
-  .filter((p) => p.data.category === "mlops")
-  .slice(0, 3);
+const homepageProjects = await getHomepageProjects();
+const personal = await getPersonal();
 
 const areas = [
   {
@@ -28,13 +17,13 @@ const areas = [
   },
   {
     iconName: "lucide:code",
-    title: "Backend",
+    title: "WebApp",
     color: "text-blue-400",
     description: "High-performance APIs, microservices & distributed systems",
   },
   {
     iconName: "lucide:brain",
-    title: "Machine Learning",
+    title: "ML / MLOps",
     color: "text-orange-400",
     description: "MLOps, model deployment and data pipelines",
   },
@@ -58,11 +47,7 @@ const areas = [
               </div>
             </div>
             <h1 class="hero-name text-center">
-              Building{" "}
-              <span class="max-w-xl px-2 italic font-light opacity-80">
-                scalable systems{" "}
-              </span>
-              that power modern applications
+              {personal?.data.heroAdditionalText || personal?.data.heroSection}
             </h1>
           </div>
           <div class="flex justify-center gap-4">
@@ -72,14 +57,6 @@ const areas = [
           </div>
         </div>
       </div>
-      <!-- <div class="flex justify-center gap-2">
-				<div class="space-y-4">
-					<h3 class="section-label">Services</h3> -->
-
-      <!-- <Card class="max-w-xs p-4 italic">DevOps Infrastructure </Card> <Card class="max-w-xs p-4 italic">Backend Systems </Card> <Card class="p-4 italic">Machine Learning </Card> -->
-
-      <!-- </div>
-			</div> -->
       <div class="flex justify-center gap-4">
         <Button size="sm" href="/projects"
           >View My Work <Icon name="lucide:external-link" />
@@ -121,27 +98,20 @@ const areas = [
         }
       </div>
     </section>
-
-    <!-- <div class="h-px bg-white/10 flex-1 mx-16 my-4"></div> -->
-
 </div>
 <div class="pt-24 bg-[#070707] border-t">
-  <section class="space-y-16 max-w-7xl mx-auto w-full">
-	<span class="">
+  <section class="space-y-12 max-w-7xl mx-auto w-full px-6">
+	<div>
 	  <h1 class="text-4xl font-serif italic">Recent Projects</h1>
 	  <p class="mb-12 text-sm text-muted-foreground leading-relaxed">
-		A selection of my most recent work across different domains.
+		The three most recently released projects across all categories.
 	  </p>
-	</span>
-	<HorizontalScroller
-	  title="Backend Engineering"
-	  projects={backendProjects}
-	/>
-	<HorizontalScroller
-	  title="Infrastructure & DevOps"
-	  projects={devopsProjects}
-	/>
-	<HorizontalScroller title="Machine Learning" projects={mlProjects} />
+	</div>
+	<div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+	  {homepageProjects.map((project) => (
+	    <ProjectCard project={project} />
+	  ))}
+	</div>
   </section>
 </div>
 

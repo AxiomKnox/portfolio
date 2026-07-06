@@ -1,5 +1,7 @@
 # Input Data
 
+See also: [architecture-flow.md](./architecture-flow.md) — how sync and Astro collections implement this spec (including known divergences).
+
 There are now **two source bundles**:
 
 - There is no need to parse these now, just pass them to Astro's Content Collections.
@@ -42,9 +44,9 @@ There are now **two source bundles**:
 
 - `./src/content/projects/project-slug/*`
 
-	- `project.md` — added with actual values for project properties, which are project status, version & release date from git derived data
+	- `project.md` — regenerated with YAML frontmatter; includes project status, version & release date from git-derived data
     
-	- `architecture.tsx` 
+	- `architecture.json` — produced at sync from source `architecture.tsx` (AST parse, no execution)
 	
 	- `preview.png` 
 
@@ -52,7 +54,7 @@ There are now **two source bundles**:
 
 - `./src/content/personal/*`
 
-	- `portfolio.md` — personal content
+	- `site.md` — personal content as structured frontmatter (parsed from source `portfolio.md`)
 		
 	- `resume.pdf` — resume document
 

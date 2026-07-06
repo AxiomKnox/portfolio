@@ -6,8 +6,11 @@ Abj Ksh
 ## Hero Summary
 I'm a software engineer specializing in DevOps, backend systems, and machine learning infrastructure. I build tools that help teams ship faster and more reliably.
 
+## Hero Additional Text
+Building scalable systems that power modern applications
+
 ## Role
-Backend Developer & DevOps Engineer
+Web Developer & DevOps Engineer
 
 ## Location
 Pune, IN
@@ -21,9 +24,6 @@ https://github.com/yourusername
 ## LinkedIn
 https://linkedin.com/in/yourusername
 
-## Resume
-/resume.pdf
-
 ## About Me
 I am a fresher focused on the intersection of reliable infrastructure and robust backend architecture. I'm enthusiastic about building scalable and reliable systems.
 
@@ -33,7 +33,7 @@ My philosophy is rooted in technical honesty - there's no substitute for clean c
 0+
 
 ## Education
-Bachelor's in Computer Science
+Bachelor's in Computer Engineering
 
 ## Skills
 

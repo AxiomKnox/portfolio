@@ -1,91 +1,20 @@
 ---
 import Layout from "@/layouts/Layout.astro";
 import ProjectGrid from "@/components/project/ProjectGrid.astro";
-import { getCollection } from "astro:content";
+import { queryProjects } from "@/lib/portfolio/query";
 
-const projects = await getCollection("projects");
-
-const categories = [
-	{ label: "All Work", value: "all" },
-	{ label: "DevOps", value: "devops" },
-	{ label: "Backend", value: "backend" },
-	{ label: "Machine Learning", value: "mlops" },
-];
+const projects = await queryProjects();
 ---
 
 <Layout title="Projects">
 	<div class="page-container space-y-16 animate-fade-up">
 		<div class="space-y-4">
 			<h1 class="text-6xl font-serif italic">My Projects.</h1>
-			<!-- <p class="section-label">Total Projects: <span id="project-count">{projects.length}</span></p> -->
-			<p class="text-[14px] tracking-[0.1em] opacity-40 max-w-2xl">A collection of my work in DevOps, backend development, and machine learning. Each project represents a unique challenge and learning experience.</p> 
+			<p class="text-[14px] tracking-[0.1em] opacity-40 max-w-2xl">A collection of my work in DevOps, web applications, and machine learning. Each project represents a unique challenge and learning experience.</p> 
 		</div>
 	</div>
 	
-    <!-- <div class="h-px bg-white/10 flex-1 mx-16 my-4" /> -->
-	
-	
 	<div class="page-container animate-fade-up">
-		<div class="flex flex-wrap items-center gap-6 border-b border-white/10 pb-6" role="tablist">
-			{
-				categories.map((cat) => (
-					<button
-						type="button"
-						role="tab"
-						data-category-filter={cat.value}
-						class="category-tab text-[10px] uppercase tracking-[0.2em] transition-all relative pb-2 opacity-40 hover:opacity-70"
-						aria-selected={cat.value === "all" ? "true" : "false"}
-					>
-						{cat.label}
-					</button>
-				))
-			}
-		</div>
-
 		<ProjectGrid projects={projects} />
 	</div>
 </Layout>
-
-<script>
-	const tabs = document.querySelectorAll<HTMLButtonElement>("[data-category-filter]");
-	const cards = document.querySelectorAll<HTMLElement>("[data-category]");
-	const countEl = document.getElementById("project-count");
-
-	function filterCategory(value: string) {
-		let visible = 0;
-		cards.forEach((card) => {
-			const match = value === "all" || card.dataset.category === value;
-			card.style.display = match ? "" : "none";
-			if (match) visible++;
-		});
-		if (countEl) countEl.textContent = String(visible);
-
-		tabs.forEach((tab) => {
-			const active = tab.dataset.categoryFilter === value;
-			tab.classList.toggle("opacity-100", active);
-			tab.classList.toggle("font-bold", active);
-			tab.classList.toggle("opacity-40", !active);
-			tab.setAttribute("aria-selected", String(active));
-		});
-	}
-
-	tabs.forEach((tab) => {
-		tab.addEventListener("click", () => {
-			filterCategory(tab.dataset.categoryFilter ?? "all");
-		});
-	});
-
-	filterCategory("all");
-</script>
-
-<style>
-	.category-tab[aria-selected="true"]::after {
-		content: "";
-		position: absolute;
-		bottom: 0;
-		left: 0;
-		right: 0;
-		height: 2px;
-		background: currentColor;
-	}
-</style>

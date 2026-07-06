@@ -7,8 +7,9 @@
   },
   "scripts": {
     "sync": "tsx scripts/sync-content.ts",
+    "test": "vitest run",
     "prebuild": "pnpm run sync",
-    "dev": "pnpm run sync && astro dev",
+    "dev": "astro dev",
     "build": "astro check && astro build && tsx scripts/beasties-postbuild.ts",
     "preview": "astro preview",
     "astro": "astro"
@@ -42,6 +43,7 @@
     "@types/node": "^26.0.1",
     "beasties": "^0.4.2",
     "tsx": "^4.22.4",
-    "typescript": "^6.0.3"
+    "typescript": "^6.0.3",
+    "vitest": "^3.2.4"
   }
 }

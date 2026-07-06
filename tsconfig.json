@@ -6,6 +6,7 @@
     "types": ["node"],
     "paths": {
       "@/*": ["./src/*"],
+      "@portfolio/*": ["./lib/portfolio/*"],
       "@components/*": ["./src/components/*"],
       "@layouts/*": ["./src/layouts/*"],
       "@pages/*": ["./src/pages/*"]
