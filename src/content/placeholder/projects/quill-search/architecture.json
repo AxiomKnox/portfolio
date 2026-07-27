@@ -1,0 +1,79 @@
+{
+  "nodes": [
+    {
+      "id": "s1",
+      "label": "Ingest",
+      "x": 40,
+      "y": 120
+    },
+    {
+      "id": "s2",
+      "label": "Chunk",
+      "x": 240,
+      "y": 200
+    },
+    {
+      "id": "s3",
+      "label": "Embed",
+      "x": 440,
+      "y": 120
+    },
+    {
+      "id": "s4",
+      "label": "Store",
+      "x": 640,
+      "y": 200
+    },
+    {
+      "id": "s5",
+      "label": "Query",
+      "x": 840,
+      "y": 120
+    }
+  ],
+  "edges": [
+    {
+      "from": "s1",
+      "to": "s2"
+    },
+    {
+      "from": "s2",
+      "to": "s3"
+    },
+    {
+      "from": "s3",
+      "to": "s4"
+    },
+    {
+      "from": "s4",
+      "to": "s5"
+    }
+  ],
+  "steps": [
+    {
+      "id": "s1",
+      "title": "Ingest",
+      "detail": "Files are dragged into the browser; text is extracted with pdf.js and remark."
+    },
+    {
+      "id": "s2",
+      "title": "Chunk",
+      "detail": "A splitter produces overlapping 512-token chunks with source offsets."
+    },
+    {
+      "id": "s3",
+      "title": "Embed",
+      "detail": "A quantized MiniLM model runs on WebGPU to produce 384-dim vectors."
+    },
+    {
+      "id": "s4",
+      "title": "Store",
+      "detail": "Vectors and metadata are persisted to DuckDB running against OPFS."
+    },
+    {
+      "id": "s5",
+      "title": "Query",
+      "detail": "Queries are embedded the same way and ranked with cosine + BM25 fusion."
+    }
+  ]
+}

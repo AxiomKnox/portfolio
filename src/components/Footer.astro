@@ -1,0 +1,48 @@
+---
+import { getProfile } from "@/content/adapter";
+import { BrandIcon } from "@/lib/icon-renderers";
+import { Button } from "@/components/starwind/button";
+
+const profile = await getProfile();
+const year = new Date().getFullYear();
+---
+
+<footer
+  id="site-footer"
+  transition:persist="site-footer"
+  class="surface-frosted mt-24 border-t border-border/60"
+>
+  <div
+    class="mx-auto flex max-w-6xl flex-col gap-6 px-6 py-10 md:flex-row md:items-center md:justify-between"
+  >
+    <div>
+      <p class="font-mono text-xs uppercase tracking-wider text-muted-foreground">
+        {profile.fullName}
+      </p>
+      <p class="mt-2 max-w-md text-sm text-muted-foreground">
+        Built by hand. Content compiles from a single data file — no CMS, no tracking. AI-assisted
+        where useful, reviewed line by line.
+      </p>
+      <p class="mt-3 font-mono text-[11px] text-muted-foreground/70">
+        © {year} — MIT for the code, opinions my own.
+      </p>
+    </div>
+    <div class="flex items-center gap-3">
+      {
+        profile.links.map((l) => (
+          <Button
+            href={l.href}
+            target="_blank"
+            rel="noreferrer"
+            aria-label={l.label}
+            variant="outline"
+            size="icon-sm"
+            class="text-muted-foreground hover:text-foreground"
+          >
+            <BrandIcon name={l.icon} size={14} />
+          </Button>
+        ))
+      }
+    </div>
+  </div>
+</footer>

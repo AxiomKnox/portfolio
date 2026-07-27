@@ -1,0 +1,79 @@
+{
+  "nodes": [
+    {
+      "id": "s1",
+      "label": "Repo sync",
+      "x": 40,
+      "y": 120
+    },
+    {
+      "id": "s2",
+      "label": "Normalize",
+      "x": 240,
+      "y": 200
+    },
+    {
+      "id": "s3",
+      "label": "Type-check",
+      "x": 440,
+      "y": 120
+    },
+    {
+      "id": "s4",
+      "label": "Render",
+      "x": 640,
+      "y": 200
+    },
+    {
+      "id": "s5",
+      "label": "Deploy",
+      "x": 840,
+      "y": 120
+    }
+  ],
+  "edges": [
+    {
+      "from": "s1",
+      "to": "s2"
+    },
+    {
+      "from": "s2",
+      "to": "s3"
+    },
+    {
+      "from": "s3",
+      "to": "s4"
+    },
+    {
+      "from": "s4",
+      "to": "s5"
+    }
+  ],
+  "steps": [
+    {
+      "id": "s1",
+      "title": "Repo sync",
+      "detail": "A scheduled job clones every whitelisted repo and pulls its projects.md file."
+    },
+    {
+      "id": "s2",
+      "title": "Normalize",
+      "detail": "A parser flattens the markdown frontmatter into a single typed data.json."
+    },
+    {
+      "id": "s3",
+      "title": "Type-check",
+      "detail": "TypeScript verifies the data file matches the site's schema before render."
+    },
+    {
+      "id": "s4",
+      "title": "Render",
+      "detail": "Vite pre-renders all routes to static HTML with per-page metadata."
+    },
+    {
+      "id": "s5",
+      "title": "Deploy",
+      "detail": "The output is uploaded to Atlas Deploy for edge distribution."
+    }
+  ]
+}

@@ -1,0 +1,273 @@
+---
+import { Image } from "astro:assets";
+import Layout from "@/layouts/Layout.astro";
+import { GradientPreview } from "@/components/GradientPreview";
+import { BrandIcon, UiIcon } from "@/lib/icon-renderers";
+import {
+  experienceHeadline,
+  experienceTimelineEntries,
+  getProfile,
+  shouldShowCertifications,
+  showLearningSignal,
+} from "@/content/adapter";
+import AboutPreviewDialog from "@/components/AboutPreviewDialog.astro";
+import { getProfilePhotoMetadata } from "@/lib/content-images";
+import { personJsonLd } from "@/lib/jsonld";
+
+const profile = await getProfile();
+const headline = experienceHeadline(profile.experience);
+const experienceEntries = experienceTimelineEntries(profile.experience);
+const showCertifications = shouldShowCertifications(profile.certifications);
+const pageTitle = `About — ${profile.fullName} — DevOps, Web & MLOps engineer`;
+const jsonLd = personJsonLd(profile, Astro.site);
+const profilePhoto = getProfilePhotoMetadata(profile.profilePhoto);
+---
+
+<Layout title={pageTitle} description={profile.bio} jsonLd={jsonLd}>
+  <!-- Intro -->
+  <section class="border-b border-border">
+    <div class="mx-auto grid max-w-6xl gap-10 px-6 py-16 lg:grid-cols-[1fr_1.4fr] lg:items-center">
+      <div class="relative mx-auto w-full max-w-xs lg:mx-0">
+        {
+          profilePhoto ? (
+            <Image
+              src={profilePhoto}
+              alt={profile.fullName}
+              width={480}
+              height={480}
+              class="aspect-square w-full rounded-2xl object-cover"
+            />
+          ) : (
+            <GradientPreview id={profile.avatar} className="aspect-square w-full rounded-2xl" />
+          )
+        }
+        <div
+          class="absolute bottom-3 left-3 rounded-md border border-border bg-card/80 px-2 py-1 font-mono text-[10px] uppercase tracking-wider text-muted-foreground backdrop-blur"
+        >
+          {profile.initials}
+        </div>
+      </div>
+      <div>
+        <div class="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">/about</div>
+        <h1 class="mt-3 text-3xl font-medium tracking-tight sm:text-4xl">{profile.fullName}</h1>
+        {
+          headline && <p class="mt-1 text-sm text-muted-foreground">{headline}</p>
+        }
+
+        <ul class="mt-6 flex flex-wrap gap-4 text-sm text-muted-foreground">
+          <li class="flex items-center gap-1.5">
+            <UiIcon name="map-pin" className="h-3.5 w-3.5" size={14} /> {profile.location}
+          </li>
+          <li class="flex items-center gap-1.5">
+            <UiIcon name="clock" className="h-3.5 w-3.5" size={14} /> {profile.yearsExperience}+ years
+          </li>
+          <li class="flex items-center gap-1.5">
+            <UiIcon name="graduation-cap" className="h-3.5 w-3.5" size={14} /> {profile.education}
+          </li>
+        </ul>
+
+        <div class="mt-6 max-w-2xl space-y-4 text-base text-foreground/90">
+          {(profile.bioLong ?? [profile.bio]).map((p) => <p>{p}</p>)}
+        </div>
+
+        <div class="mt-6 flex flex-wrap items-center gap-2">
+          {
+            profile.links.map((l) => (
+              <a
+                href={l.href}
+                target="_blank"
+                rel="noreferrer"
+                class="inline-flex items-center gap-2 rounded-md border border-border px-3 py-1.5 text-xs text-muted-foreground transition-colors hover:text-foreground"
+              >
+                <BrandIcon name={l.icon} size={13} />
+                {l.label}
+                <UiIcon name="external-link" className="h-3 w-3" size={12} />
+              </a>
+            ))
+          }
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Skills -->
+  <section class="mx-auto max-w-6xl px-6 py-20">
+    <div class="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">/skills</div>
+    <h2 class="mt-2 text-2xl font-medium tracking-tight">Skills, languages & tech</h2>
+
+    <div class="mt-8 grid gap-4 md:grid-cols-3">
+      {
+        profile.skills.map((group) => {
+          const learning = showLearningSignal(group);
+          return (
+            <div class="relative overflow-hidden rounded-lg border border-border bg-card p-5">
+              <div
+                class:list={[
+                  learning && "pointer-events-none select-none opacity-40 blur-[2.5px]",
+                ]}
+              >
+                <h3 class="font-mono text-[10px] uppercase tracking-wider text-primary">
+                  {group.category}
+                </h3>
+                <ul class="mt-4 flex flex-col gap-2">
+                  {group.items.map((item) => (
+                    <li class="flex items-center gap-2.5 text-sm text-foreground/90">
+                      <BrandIcon name={item} size={14} />
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              {learning && (
+                <div class="pointer-events-none absolute inset-0 flex items-center justify-center">
+                  <span class="rounded-md border border-border/70 bg-background/55 px-3 py-1.5 font-mono text-xs uppercase tracking-[0.18em] text-foreground/80">
+                    Learning
+                  </span>
+                </div>
+              )}
+            </div>
+          );
+        })
+      }
+    </div>
+  </section>
+
+  <!-- Experience -->
+  <section class="border-t border-border">
+    <div class="mx-auto max-w-6xl px-6 py-20">
+      <div class="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
+        /experience
+      </div>
+      <h2 class="mt-2 text-2xl font-medium tracking-tight">Where I've worked</h2>
+
+      <ol class="relative mt-10 border-l border-border pl-8 sm:pl-10">
+        {
+          experienceEntries.map((e, i) => (
+            <li
+              class:list={[
+                "relative grid gap-3 pb-10 sm:grid-cols-[140px_1fr]",
+                i === experienceEntries.length - 1 ? "pb-0" : "",
+              ]}
+            >
+              <span
+                class="absolute -left-[33px] top-1.5 flex h-3.5 w-3.5 items-center justify-center rounded-full border border-border bg-background sm:-left-[41px]"
+                aria-hidden
+              >
+                <span class="h-1.5 w-1.5 rounded-full bg-primary" />
+              </span>
+              <div class="font-mono text-[11px] uppercase tracking-wider text-muted-foreground">
+                {e.start} — {e.end === "Present" ? "now" : e.end}
+              </div>
+              <div>
+                <h3 class="text-base font-medium text-foreground">
+                  {e.role}
+                  {e.company ? (
+                    <>
+                      {" "}
+                      · <span class="text-muted-foreground">{e.company}</span>
+                    </>
+                  ) : null}
+                </h3>
+                {e.location && <p class="text-xs text-muted-foreground">{e.location}</p>}
+                <p class="mt-2 max-w-2xl text-sm text-muted-foreground">{e.summary}</p>
+              </div>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  {
+    showCertifications && (
+      <section class="border-t border-border">
+        <div class="mx-auto max-w-6xl px-6 py-20">
+          <div class="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
+            /certifications
+          </div>
+          <h2 class="mt-2 text-2xl font-medium tracking-tight">Certifications</h2>
+          <ul class="mt-8 grid border-t border-border sm:grid-cols-2">
+            {profile.certifications.map((c, i) => {
+              const isLastRow =
+                i >=
+                profile.certifications.length -
+                  (profile.certifications.length % 2 === 0 ? 2 : 1);
+              return (
+                <li
+                  class:list={[
+                    "border-b border-border",
+                    i % 2 === 0 ? "sm:border-r" : "",
+                    isLastRow ? "sm:last:border-b" : "",
+                  ]}
+                >
+                  <div class="flex items-center justify-between gap-4 px-1 py-5 sm:px-5">
+                    <div class="flex items-center gap-3">
+                      <div class="flex h-10 w-10 items-center justify-center rounded-md border border-border bg-card">
+                        <UiIcon name="file-text" className="h-4 w-4 text-muted-foreground" size={16} />
+                      </div>
+                      <div>
+                        <div class="text-sm text-foreground">{c.name}</div>
+                        <div class="font-mono text-[11px] uppercase tracking-wider text-muted-foreground">
+                          {c.issuer}
+                        </div>
+                      </div>
+                    </div>
+                    <AboutPreviewDialog
+                      title={c.name}
+                      triggerLabel="Preview"
+                      triggerClassName="rounded-md border border-border px-3 py-1.5 text-xs text-muted-foreground transition-colors hover:text-foreground"
+                      contentClassName="max-w-2xl"
+                      iconSize="sm"
+                    />
+                  </div>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      </section>
+    )
+  }
+
+  <!-- Resume -->
+  <section class="border-t border-border">
+    <div class="mx-auto max-w-6xl px-6 py-20 text-center">
+      <div class="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">/resume</div>
+      <h2 class="mt-2 text-2xl font-medium tracking-tight">Resume</h2>
+      <p class="mx-auto mt-3 max-w-2xl text-sm text-muted-foreground">
+        Prefer a single-page PDF? Preview or download it below.
+      </p>
+      <div class="mt-6 flex justify-center">
+        <AboutPreviewDialog
+          title={`${profile.fullName} — Resume`}
+          triggerLabel="Preview resume"
+          triggerClassName="inline-flex items-center gap-2 rounded-md border border-border bg-card px-4 py-2 text-sm text-foreground transition-colors hover:border-foreground/40"
+          contentClassName="max-w-3xl"
+          iconSize="md"
+          showTriggerIcon={true}
+        />
+      </div>
+    </div>
+  </section>
+
+  <!-- Work together -->
+  <section class="border-t border-border">
+    <div class="mx-auto max-w-6xl px-6 py-24 text-center">
+      <div class="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">/contact</div>
+      <h2 class="mt-3 text-3xl font-medium tracking-tight sm:text-4xl">
+        Have something you'd like to ship?
+      </h2>
+      <p class="mx-auto mt-4 max-w-lg text-sm text-muted-foreground">
+        I take on a small number of platform, MLOps, and full-stack engagements each quarter. Say hi
+        with a paragraph about what you're building.
+      </p>
+      <a
+        href={`mailto:${profile.email}`}
+        class="mt-8 inline-flex items-center gap-2 rounded-md bg-foreground px-5 py-2.5 text-sm font-medium text-background transition-opacity hover:opacity-90"
+      >
+        Get in touch
+        <span class="font-mono text-xs opacity-70">{profile.email}</span>
+      </a>
+    </div>
+  </section>
+</Layout>

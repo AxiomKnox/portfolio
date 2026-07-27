@@ -1,0 +1,26 @@
+---
+/**
+ * Ambient cycle control — click handler + icon paint live in site-prefs-client (VT-safe).
+ * Icons: off / glow|shapes (cloud) / stars (sparkles).
+ */
+import { UiIcon } from "@/lib/icon-renderers";
+---
+
+<button
+  type="button"
+  id="ambient-toggle"
+  aria-label="Ambient: off. Click to cycle."
+  title="Ambient: off"
+  class="ml-1 flex h-8 w-8 items-center justify-center rounded-md border border-border text-muted-foreground transition-colors hover:text-foreground"
+>
+  <!-- Prefer HTML `hidden` — Tailwind `hidden` can lose to display utilities. -->
+  <span id="ambient-icon-off">
+    <UiIcon name="circle-dashed" size={14} />
+  </span>
+  <span id="ambient-icon-active" hidden>
+    <UiIcon name="cloud" size={14} />
+  </span>
+  <span id="ambient-icon-stars" hidden>
+    <UiIcon name="sparkles" size={14} />
+  </span>
+</button>

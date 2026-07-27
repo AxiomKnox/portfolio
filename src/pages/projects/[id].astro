@@ -1,0 +1,272 @@
+---
+	import { Image } from "astro:assets";
+	import Layout from "@/layouts/Layout.astro";
+	import { GradientPreview } from "@/components/GradientPreview";
+	import { BrandIcon, UiIcon } from "@/lib/icon-renderers";
+	import ProjectArchitectureIsland from "@/components/islands/ProjectArchitectureIsland";
+	import {
+	  getProfile,
+	  getProjectById,
+	  getProjects,
+	  type Category,
+	  type Project,
+	} from "@/content/adapter";
+	import { getProjectPreviewMetadata } from "@/lib/content-images";
+	import { renderMarkdown } from "@/lib/markdown";
+	import { withBase } from "@/lib/base";
+	import { projectJsonLd } from "@/lib/jsonld";
+	import { statusLabel } from "@/lib/status-display";
+	
+	export async function getStaticPaths() {
+	  const projects = await getProjects();
+	  return projects.map((p) => ({
+	    params: { id: p.id },
+	  }));
+	}
+	
+	const { id } = Astro.params;
+	const project = await getProjectById(id!);
+	if (!project) {
+	  throw new Error(`Unknown project id: ${id}`);
+	}
+	
+	const architectureAvailable = project.architecture != null;
+	const previewImage = getProjectPreviewMetadata(project.id, project.preview);
+	
+	const CATEGORY_LABEL: Record<Category, string> = {
+	  devops: "DevOps",
+	  web: "Web",
+	  ml: "ML",
+	};
+	
+	function formatDate(iso: string): string {
+	  const d = new Date(iso);
+	  if (isNaN(d.getTime())) return iso;
+	  return d.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
+	}
+	
+	const descriptionHtml = renderMarkdown(project.description);
+	const associated = (
+	  await Promise.all(project.associated.map((aid) => getProjectById(aid)))
+	).filter((p): p is Project => p != null);
+	const profile = await getProfile();
+	const jsonLd = projectJsonLd(project, profile.fullName, Astro.site);
+	const statusProse = statusLabel(project.status, "prose");
+	---
+	
+	<Layout
+	  title={`${project.title} — ${profile.fullName}`}
+	  description={project.summary}
+	  ogType="article"
+	  jsonLd={jsonLd}
+	>
+	  <section class="border-b border-border">
+	    <div class="mx-auto max-w-6xl px-6 py-12">
+	      <a
+	        href={withBase("/projects")}
+	        data-project-back
+	        class="font-mono text-[11px] uppercase tracking-wider text-muted-foreground hover:text-foreground"
+	      >
+	        ← Back
+	      </a>
+	      <div class="mt-6 grid gap-8 lg:grid-cols-[1fr_1.2fr] lg:items-center">
+	        {
+	          previewImage ? (
+	            <Image
+	              src={previewImage}
+	              alt={project.title}
+	              width={960}
+	              height={540}
+	              class="h-56 w-full rounded-lg object-cover lg:h-64"
+	            />
+	          ) : (
+	            <GradientPreview
+	              id={project.preview}
+	              className="h-56 w-full rounded-lg lg:h-64"
+	              label={project.id}
+	            />
+	          )
+	        }
+	        <div>
+          <div
+            class="flex items-center gap-2 font-mono text-[10px] uppercase tracking-wider text-muted-foreground"
+          >
+            <span>{CATEGORY_LABEL[project.category]}</span>
+            <span class="text-border">·</span>
+            <span class="status-dot" data-status={project.status}></span>
+            <span>{statusProse}</span>
+          </div>
+          <h1 class="mt-3 text-3xl font-medium tracking-tight sm:text-4xl">
+            {project.title}
+          </h1>
+          <p class="mt-3 max-w-xl text-sm text-muted-foreground sm:text-base">{project.summary}</p>
+          <div class="mt-6 flex flex-wrap items-center gap-2">
+            {
+              project.links.github && (
+                <a
+                  href={project.links.github}
+                  target="_blank"
+                  rel="noreferrer"
+                  class="inline-flex items-center gap-1.5 rounded-md border border-border px-3 py-1.5 text-xs text-muted-foreground transition-colors hover:text-foreground"
+                >
+                  <UiIcon name="github" className="h-3.5 w-3.5" size={14} /> Source
+                  <UiIcon name="arrow-up-right" className="h-3 w-3" size={12} />
+                </a>
+              )
+            }
+            {
+              project.links.live && (
+                <a
+                  href={project.links.live}
+                  target="_blank"
+                  rel="noreferrer"
+                  class="inline-flex items-center gap-1.5 rounded-md bg-foreground px-3 py-1.5 text-xs text-background transition-opacity hover:opacity-90"
+                >
+                  <UiIcon name="globe" className="h-3.5 w-3.5" size={14} /> Live
+                  <UiIcon name="arrow-up-right" className="h-3 w-3" size={12} />
+                </a>
+              )
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="mx-auto max-w-6xl px-6 py-16">
+    <div class="grid gap-12 lg:grid-cols-3">
+      <div class="lg:col-span-2">
+        <div class="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
+          /overview
+        </div>
+        <h2 class="mt-2 text-2xl font-medium tracking-tight">About this project</h2>
+        <article
+          class="prose prose-sm mt-6 max-w-none dark:prose-invert prose-headings:font-medium prose-headings:tracking-tight prose-a:text-primary prose-code:font-mono prose-code:text-xs"
+          set:html={descriptionHtml}
+        />
+      </div>
+
+      <aside class="space-y-8">
+        <div class="rounded-lg border border-border p-5">
+          <h3 class="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
+            Properties
+          </h3>
+          <dl class="mt-4 divide-y divide-border/60">
+            <div class="flex items-center justify-between gap-3 py-2.5 first:pt-0 last:pb-0">
+              <dt
+                class="flex items-center gap-2 font-mono text-[10px] uppercase tracking-wider text-muted-foreground"
+              >
+                <UiIcon name="box" className="h-3 w-3" size={12} /> Type
+              </dt>
+              <dd class="text-right text-sm text-foreground">{project.type}</dd>
+            </div>
+            <div class="flex items-center justify-between gap-3 py-2.5 first:pt-0 last:pb-0">
+              <dt
+                class="flex items-center gap-2 font-mono text-[10px] uppercase tracking-wider text-muted-foreground"
+              >
+                <UiIcon name="activity" className="h-3 w-3" size={12} /> Status
+              </dt>
+              <dd class="text-right text-sm text-foreground">
+                <span class="inline-flex items-center gap-1.5">
+                  <span class="status-dot" data-status={project.status}></span>
+                  {statusProse}
+                </span>
+              </dd>
+            </div>
+            <div class="flex items-center justify-between gap-3 py-2.5 first:pt-0 last:pb-0">
+              <dt
+                class="flex items-center gap-2 font-mono text-[10px] uppercase tracking-wider text-muted-foreground"
+              >
+                <UiIcon name="tag" className="h-3 w-3" size={12} /> Version
+              </dt>
+              <dd class="text-right text-sm text-foreground">
+                <span
+                  class="rounded-md border border-border bg-muted/40 px-1.5 py-0.5 font-mono text-[11px] text-foreground"
+                >
+                  {project.version}
+                </span>
+              </dd>
+            </div>
+            <div class="flex items-center justify-between gap-3 py-2.5 first:pt-0 last:pb-0">
+              <dt
+                class="flex items-center gap-2 font-mono text-[10px] uppercase tracking-wider text-muted-foreground"
+              >
+                <UiIcon name="calendar" className="h-3 w-3" size={12} /> Released
+              </dt>
+              <dd class="text-right text-sm text-foreground">
+                <span class="font-mono text-xs text-foreground">{formatDate(project.releaseDate)}</span>
+              </dd>
+            </div>
+          </dl>
+
+          <div class="mt-5 border-t border-border pt-4">
+            <div class="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
+              Tech stack
+            </div>
+            <div class="mt-2 flex flex-wrap gap-1.5">
+              {
+                project.techStack.map((t) => (
+                  <span class="inline-flex items-center gap-1 rounded-md border border-border bg-background px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground">
+                    <BrandIcon name={t} size={10} />
+                    {t}
+                  </span>
+                ))
+              }
+            </div>
+          </div>
+        </div>
+
+        {
+          associated.length > 0 && (
+            <div class="rounded-lg border border-border p-5">
+              <h3 class="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
+                Associated
+              </h3>
+              <ul class="mt-3 space-y-2">
+                {associated.map((p) => (
+                  <li>
+                    <a
+                      href={withBase(`/projects/${p.id}`)}
+                      class="group flex items-center justify-between rounded-md px-2 py-1.5 text-sm text-foreground transition-colors hover:bg-muted"
+                    >
+                      <span class="flex items-center gap-2">
+                        <span class="h-1.5 w-1.5 rounded-full bg-muted-foreground/50" />
+                        {p.title}
+                      </span>
+                      <span class="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
+                        {CATEGORY_LABEL[p.category]}
+                      </span>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )
+        }
+      </aside>
+    </div>
+  </section>
+
+  <section class="border-t border-border">
+    <div class="mx-auto max-w-6xl px-6 py-16">
+      <div class="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
+        /architecture
+      </div>
+      <h2 class="mt-2 text-2xl font-medium tracking-tight">How it works</h2>
+      {
+        architectureAvailable ? (
+          <p class="mt-2 max-w-2xl text-sm text-muted-foreground">
+            Click any node in the diagram to expand the matching step, or click a step to highlight
+            the node.
+          </p>
+        ) : (
+          <p class="mt-2 max-w-2xl text-sm text-muted-foreground">
+            Architecture diagram will appear here when available.
+          </p>
+        )
+      }
+
+      <ProjectArchitectureIsland client:load architecture={project.architecture} />
+    </div>
+  </section>
+</Layout>

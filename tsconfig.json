@@ -1,13 +1,17 @@
 {
-  "files": [],
-  "references": [
-    { "path": "./tsconfig.app.json" },
-    { "path": "./tsconfig.node.json" }
-  ],
+  "extends": "astro/tsconfigs/strict",
+  "include": ["src/**/*", "test/**/*", "astro.config.mjs", ".astro/types.d.ts"],
+  "exclude": ["docs", "dist"],
   "compilerOptions": {
-    "baseUrl": ".",
+    "jsx": "react-jsx",
+    "jsxImportSource": "react",
     "paths": {
       "@/*": ["./src/*"]
-    }
+    },
+    "types": ["bun", "node", "unplugin-icons/types/react"],
+    "strict": true,
+    "skipLibCheck": true,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false
   }
 }

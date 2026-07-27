@@ -1,0 +1,138 @@
+---
+import { Font } from "astro:assets";
+import { ClientRouter } from "astro:transitions";
+import Navbar from "@/components/Navbar.astro";
+import Footer from "@/components/Footer.astro";
+import { AmbientBackground } from "@/components/AmbientBackground";
+import { getProfile } from "@/content/adapter";
+import "@/styles.css";
+import { withBase } from "@/lib/base";
+import { absoluteUrl, canonicalUrl } from "@/lib/site";
+
+interface Props {
+  title?: string;
+  description?: string;
+  ogType?: string;
+  /** Path under site base, e.g. `/og-default.png`. */
+  image?: string;
+  noindex?: boolean;
+  /** JSON-LD objects (or array) serialized into application/ld+json. */
+  jsonLd?: Record<string, unknown> | Record<string, unknown>[];
+}
+
+const profile = await getProfile();
+const {
+  title = `${profile.fullName} — DevOps, Web & MLOps engineer`,
+  description = `Portfolio of ${profile.fullName}: ${profile.bio}`,
+  ogType = "website",
+  image = "/og-default.png",
+  noindex = false,
+  jsonLd,
+} = Astro.props;
+
+const canonical = canonicalUrl(Astro.url.pathname, Astro.site);
+const ogImage = absoluteUrl(image, Astro.site);
+const jsonLdBlocks = jsonLd == null ? [] : Array.isArray(jsonLd) ? jsonLd : [jsonLd];
+---
+
+<!doctype html>
+<html lang="en" data-page-transition="fade">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <Font cssVariable="--font-geist" preload />
+    <Font cssVariable="--font-geist-mono" preload />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    {noindex ? <meta name="robots" content="noindex, nofollow" /> : null}
+    <link rel="canonical" href={canonical} />
+
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content={ogType} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:locale" content="en_US" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+
+    <link rel="icon" href={withBase("/favicon.svg")} type="image/svg+xml" />
+    <link rel="icon" href={withBase("/favicon.ico")} sizes="any" />
+    <ClientRouter fallback="animate" />
+    <slot name="head" />
+    {
+      jsonLdBlocks.map((block) => (
+        <script is:inline type="application/ld+json" set:html={JSON.stringify(block)} />
+      ))
+    }
+    {/* FOUC boot: theme + motion + page-transition before first paint / after VT swap. */}
+    <script is:inline>
+      (function () {
+        function applyPrefs(root) {
+          try {
+            var t = localStorage.getItem("theme");
+            if (t === "light") root.classList.remove("dark");
+            else root.classList.add("dark");
+          } catch (e) {
+            root.classList.add("dark");
+          }
+          /* Keep in sync with resolveMotionPreference in src/lib/motion-preference.ts.
+             Persist only explicit user choice; OS reduce ⇒ reduced unless stored "full". */
+          var stored = null;
+          try {
+            stored = localStorage.getItem("motion");
+          } catch (e) {}
+          var osReduce = false;
+          try {
+            osReduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+          } catch (e) {}
+          var effective =
+            stored === "reduced"
+              ? "reduced"
+              : stored === "full"
+                ? "full"
+                : osReduce
+                  ? "reduced"
+                  : "full";
+          root.setAttribute("data-motion", effective);
+          root.setAttribute("data-page-transition", "fade");
+          if (effective === "reduced") root.setAttribute("data-page-transition-skip", "");
+          else root.removeAttribute("data-page-transition-skip");
+        }
+        applyPrefs(document.documentElement);
+        if (window.__portfolioFoucPrefs) return;
+        window.__portfolioFoucPrefs = true;
+        document.addEventListener("astro:before-swap", function (event) {
+          applyPrefs(event.newDocument.documentElement);
+        });
+        document.addEventListener("astro:after-swap", function () {
+          applyPrefs(document.documentElement);
+        });
+      })();
+    </script>
+    <script>
+      import { bootSitePrefs } from "@/lib/site-prefs-client";
+      bootSitePrefs();
+    </script>
+  </head>
+  <body>
+    <a
+      href="#main-content"
+      class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-background focus:px-3 focus:py-2 focus:text-sm focus:text-foreground focus:shadow-md focus:outline-none focus:ring-2 focus:ring-ring"
+    >
+      Skip to content
+    </a>
+    <AmbientBackground client:idle transition:persist="site-ambient" />
+    <div class="relative z-0 flex min-h-screen flex-col">
+      <Navbar />
+      <!-- transition:animate none: custom VT CSS owns main-content (parallel crossfade, not sequential). -->
+      <main id="main-content" class="flex-1" transition:name="main-content" transition:animate="none">
+        <slot />
+      </main>
+      <Footer />
+    </div>
+  </body>
+</html>

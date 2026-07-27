@@ -1,0 +1,66 @@
+---
+/**
+ * Static PDF-preview dialog for the about page (Starwind + vanilla JS).
+ * Replaces the previous React dialog island.
+ */
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/starwind/dialog";
+import { UiIcon } from "@/lib/icon-renderers";
+
+interface Props {
+  title: string;
+  triggerLabel: string;
+  triggerClassName: string;
+  contentClassName?: string;
+  iconSize?: "sm" | "md" | "lg";
+  showTriggerIcon?: boolean;
+}
+
+const {
+  title,
+  triggerLabel,
+  triggerClassName,
+  contentClassName = "max-w-2xl",
+  iconSize = "sm",
+  showTriggerIcon = false,
+} = Astro.props;
+
+const iconPx = iconSize === "sm" ? 32 : 40;
+---
+
+<Dialog>
+  <DialogTrigger class={triggerClassName}>
+    {
+      showTriggerIcon ? (
+        <UiIcon name="file-text" className="h-4 w-4" size={16} />
+      ) : null
+    }
+    {triggerLabel}
+  </DialogTrigger>
+  <DialogContent class={contentClassName}>
+    <DialogHeader>
+      <DialogTitle class="text-sm font-medium text-foreground">{title}</DialogTitle>
+    </DialogHeader>
+    <div
+      class="flex aspect-[3/4] items-center justify-center rounded-md border border-dashed border-border bg-muted/40"
+    >
+      <div class="text-center">
+        <UiIcon
+          name="file-text"
+          className="mx-auto text-muted-foreground"
+          size={iconPx}
+        />
+        <p
+          class="mt-2 font-mono text-[10px] uppercase tracking-wider text-muted-foreground"
+        >
+          PDF preview placeholder
+        </p>
+      </div>
+    </div>
+  </DialogContent>
+</Dialog>

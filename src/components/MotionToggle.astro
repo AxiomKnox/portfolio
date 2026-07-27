@@ -1,0 +1,17 @@
+---
+/** Motion toggle — click handler + paint live in site-prefs-client (VT-safe). */
+import { UiIcon } from "@/lib/icon-renderers";
+---
+
+<button
+  type="button"
+  id="motion-toggle"
+  aria-label="Reduce motion"
+  aria-pressed="false"
+  title="Motion on"
+  class="ml-1 flex h-8 w-8 items-center justify-center rounded-md border border-border text-muted-foreground transition-colors hover:text-foreground"
+>
+  <span id="motion-icon">
+    <UiIcon name="waves" size={14} />
+  </span>
+</button>

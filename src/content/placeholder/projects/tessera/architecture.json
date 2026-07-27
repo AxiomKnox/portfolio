@@ -1,0 +1,79 @@
+{
+  "nodes": [
+    {
+      "id": "s1",
+      "label": "Scrobble stream",
+      "x": 40,
+      "y": 120
+    },
+    {
+      "id": "s2",
+      "label": "Feature store",
+      "x": 240,
+      "y": 200
+    },
+    {
+      "id": "s3",
+      "label": "Two-tower model",
+      "x": 440,
+      "y": 120
+    },
+    {
+      "id": "s4",
+      "label": "ANN index",
+      "x": 640,
+      "y": 200
+    },
+    {
+      "id": "s5",
+      "label": "API",
+      "x": 840,
+      "y": 120
+    }
+  ],
+  "edges": [
+    {
+      "from": "s1",
+      "to": "s2"
+    },
+    {
+      "from": "s2",
+      "to": "s3"
+    },
+    {
+      "from": "s3",
+      "to": "s4"
+    },
+    {
+      "from": "s4",
+      "to": "s5"
+    }
+  ],
+  "steps": [
+    {
+      "id": "s1",
+      "title": "Scrobble stream",
+      "detail": "Public scrobbles are pulled nightly and deduplicated."
+    },
+    {
+      "id": "s2",
+      "title": "Feature store",
+      "detail": "Track audio features are extracted with librosa and cached."
+    },
+    {
+      "id": "s3",
+      "title": "Two-tower model",
+      "detail": "A two-tower model is trained with in-batch negatives."
+    },
+    {
+      "id": "s4",
+      "title": "ANN index",
+      "detail": "Item embeddings are indexed in a HNSW graph."
+    },
+    {
+      "id": "s5",
+      "title": "API",
+      "detail": "A FastAPI endpoint returns k-nearest tracks for a seed."
+    }
+  ]
+}
