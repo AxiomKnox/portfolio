@@ -56,13 +56,13 @@ const profilePhoto = getProfilePhotoMetadata(profile.profilePhoto);
 
         <ul class="mt-6 flex flex-wrap gap-4 text-sm text-muted-foreground">
           <li class="flex items-center gap-1.5">
-            <UiIcon name="map-pin" className="h-3.5 w-3.5" size={14} /> {profile.location}
+            <UiIcon name="map-pin" size={14} /> {profile.location}
           </li>
           <li class="flex items-center gap-1.5">
-            <UiIcon name="clock" className="h-3.5 w-3.5" size={14} /> {profile.yearsExperience}+ years
+            <UiIcon name="clock" size={14} /> {profile.yearsExperience}+ years
           </li>
           <li class="flex items-center gap-1.5">
-            <UiIcon name="graduation-cap" className="h-3.5 w-3.5" size={14} /> {profile.education}
+            <UiIcon name="graduation-cap" size={14} /> {profile.education}
           </li>
         </ul>
 
@@ -79,9 +79,9 @@ const profilePhoto = getProfilePhotoMetadata(profile.profilePhoto);
                 rel="noreferrer"
                 class="inline-flex items-center gap-2 rounded-md border border-border px-3 py-1.5 text-xs text-muted-foreground transition-colors hover:text-foreground"
               >
-                <BrandIcon name={l.icon} size={13} />
+                <BrandIcon name={l.icon} size={14} />
                 {l.label}
-                <UiIcon name="external-link" className="h-3 w-3" size={12} />
+                <UiIcon name="external-link" size={12} />
               </a>
             ))
           }
@@ -100,7 +100,12 @@ const profilePhoto = getProfilePhotoMetadata(profile.profilePhoto);
         profile.skills.map((group) => {
           const learning = showLearningSignal(group);
           return (
-            <div class="relative overflow-hidden rounded-lg border border-border bg-card p-5">
+            <div
+              class:list={[
+                "relative rounded-lg border border-border bg-card p-5",
+                learning && "overflow-hidden",
+              ]}
+            >
               <div
                 class:list={[
                   learning && "pointer-events-none select-none opacity-40 blur-[2.5px]",
@@ -111,8 +116,8 @@ const profilePhoto = getProfilePhotoMetadata(profile.profilePhoto);
                 </h3>
                 <ul class="mt-4 flex flex-col gap-2">
                   {group.items.map((item) => (
-                    <li class="flex items-center gap-2.5 text-sm text-foreground/90">
-                      <BrandIcon name={item} size={14} />
+                    <li class="flex min-h-5 items-center gap-2.5 text-sm text-foreground/90">
+                      <BrandIcon name={item} size={16} />
                       {item}
                     </li>
                   ))}
@@ -255,11 +260,11 @@ const profilePhoto = getProfilePhotoMetadata(profile.profilePhoto);
     <div class="mx-auto max-w-6xl px-6 py-24 text-center">
       <div class="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">/contact</div>
       <h2 class="mt-3 text-3xl font-medium tracking-tight sm:text-4xl">
-        Have something you'd like to ship?
+        Looking for a team to grow with.
       </h2>
       <p class="mx-auto mt-4 max-w-lg text-sm text-muted-foreground">
-        I take on a small number of platform, MLOps, and full-stack engagements each quarter. Say hi
-        with a paragraph about what you're building.
+        Open to full-time roles in DevOps, platform, and full-stack engineering. If you're hiring —
+        or know someone who is — say hi with a line about the team and the problem space.
       </p>
       <a
         href={`mailto:${profile.email}`}

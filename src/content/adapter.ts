@@ -6,10 +6,11 @@
 
 import type { CollectionEntry } from "astro:content";
 import { getCollection, getEntry } from "astro:content";
+import { selectHomepageProjects } from "@/content/homepage-projects";
 import type { Profile, Project } from "@/content/types";
-import { sortDate } from "@/content/types";
 import { assertBrandCatalogCoverage } from "@/lib/icon-catalog";
 
+export { selectHomepageProjects } from "@/content/homepage-projects";
 export {
   LEARNING_SIGNALS_ENABLED,
   showLearningSignal,
@@ -84,8 +85,5 @@ export async function getProjectById(id: string): Promise<Project | undefined> {
 
 export async function getFeaturedProjects(limit = 3): Promise<Project[]> {
   const projects = await getProjects();
-  return [...projects]
-    .filter((p) => p.featured)
-    .sort((a, b) => sortDate(b).localeCompare(sortDate(a)))
-    .slice(0, limit);
+  return selectHomepageProjects(projects, limit);
 }

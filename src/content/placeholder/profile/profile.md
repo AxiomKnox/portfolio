@@ -10,7 +10,7 @@ bioLong:
 location: Bengaluru, IN
 yearsExperience: 6
 education: B.Tech, Computer Science — IIT Roorkee
-email: arjun@example.dev
+email: abks@example.dev
 avatar: grad-avatar
 what:
 - deliverables:
@@ -39,7 +39,7 @@ links:
 - href: https://linkedin.com/in/example
   icon: linkedin
   label: LinkedIn
-- href: mailto:arjun@example.dev
+- href: mailto:abks@example.dev
   icon: gmail
   label: Email
 - href: https://x.com/example

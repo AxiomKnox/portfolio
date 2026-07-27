@@ -17,9 +17,9 @@ import type { SyncConfig } from "./src/sync/types.ts";
 const config: SyncConfig = {
   profile: {
     // TODO: real GitHub owner/repo for the profile content remote
-    owner: "TODO",
-    repo: "TODO",
-    path: "profile",
+    owner: "MysteryMan11",
+    repo: "mysteryman11",
+    path: "portfolio",
     // ref: "main",
   },
   projects: [

@@ -19,7 +19,20 @@ export function UiIcon({
   if (!Icon) {
     throw new Error(`Unknown UI icon: ${name}`);
   }
-  return <Icon className={className} width={size} height={size} aria-hidden="true" />;
+  return (
+    <span
+      className={`icon-slot inline-flex shrink-0 items-center justify-center overflow-visible ${className}`}
+      style={{ width: size, height: size }}
+    >
+      <Icon
+        className="ui-icon max-h-full max-w-full overflow-visible"
+        width={size}
+        height={size}
+        aria-hidden="true"
+        overflow="visible"
+      />
+    </span>
+  );
 }
 
 // --- Brand icons ---
@@ -37,7 +50,7 @@ export function BrandIcon({
   if (!entry) {
     return (
       <span
-        className={`inline-flex items-center justify-center rounded-sm bg-muted font-mono text-[10px] text-muted-foreground ${className}`}
+        className={`icon-slot inline-flex shrink-0 items-center justify-center overflow-visible rounded-sm bg-muted font-mono text-[10px] text-muted-foreground ${className}`}
         style={{ width: size, height: size }}
       >
         {name.slice(0, 1).toUpperCase()}
@@ -51,15 +64,22 @@ export function BrandIcon({
     : undefined;
 
   return (
-    <Icon
-      className={`brand-icon inline-block shrink-0 ${className}`}
-      width={size}
-      height={size}
-      role="img"
-      aria-label={name}
-      data-light-mode-override={lightModeOverrideColor ? "" : undefined}
-      data-dark-mode-grayscale={darkModeGrayscale ? "" : undefined}
-      style={overrideStyle}
-    />
+    <span
+      className={`icon-slot inline-flex shrink-0 items-center justify-center overflow-visible ${className}`}
+      style={{ width: size, height: size }}
+    >
+      <Icon
+        className="brand-icon max-h-full max-w-full overflow-visible"
+        width={size}
+        height={size}
+        role="img"
+        aria-label={name}
+        overflow="visible"
+        preserveAspectRatio="xMidYMid meet"
+        data-light-mode-override={lightModeOverrideColor ? "" : undefined}
+        data-dark-mode-grayscale={darkModeGrayscale ? "" : undefined}
+        style={overrideStyle}
+      />
+    </span>
   );
 }
