@@ -10,11 +10,11 @@ import { selectHomepageProjects } from "@/content/homepage-projects";
 import type { Profile, Project } from "@/content/types";
 import { assertBrandCatalogCoverage } from "@/lib/icon-catalog";
 
+export { selectHomepageProjects } from "@/content/homepage-projects";
 export {
   LEARNING_SIGNALS_ENABLED,
   showLearningSignal,
 } from "@/content/learning-signals";
-export { selectHomepageProjects } from "@/content/homepage-projects";
 export {
   experienceHeadline,
   experienceTimelineEntries,

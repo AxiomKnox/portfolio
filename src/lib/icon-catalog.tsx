@@ -46,10 +46,6 @@ import IconGoogleCloud from "~icons/logos/google-cloud";
 import IconGmail from "~icons/logos/google-gmail";
 import IconLinkedin from "~icons/logos/linkedin-icon";
 import IconX from "~icons/logos/x";
-import IconLoki from "~icons/selfhst/loki"; 
-import IconTailscale from "~icons/simple-icons/tailscale"; 
-import IconOpenlayers from "~icons/simple-icons/openlayers";
-
 // --- Lucide icons ---
 import IconActivity from "~icons/lucide/activity";
 import IconArrowDownUp from "~icons/lucide/arrow-down-up";
@@ -77,10 +73,13 @@ import IconSparkles from "~icons/lucide/sparkles";
 import IconTag from "~icons/lucide/tag";
 import IconWaves from "~icons/lucide/waves";
 import IconXLucide from "~icons/lucide/x";
+import IconLoki from "~icons/selfhst/loki";
 import IconDocker from "~icons/simple-icons/docker";
 import IconMlflow from "~icons/simple-icons/mlflow";
 import IconNginx from "~icons/simple-icons/nginx";
+import IconOpenlayers from "~icons/simple-icons/openlayers";
 import IconRedis from "~icons/simple-icons/redis";
+import IconTailscale from "~icons/simple-icons/tailscale";
 import IconVite from "~icons/simple-icons/vite";
 
 export type IconComponent = ComponentType<SVGProps<SVGSVGElement>>;

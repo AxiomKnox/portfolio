@@ -22,9 +22,7 @@ export function selectHomepageProjects(projects: readonly Project[], limit = 3):
   }
 
   const featuredIds = new Set(featured.map((p) => p.id));
-  const fillers = projects
-    .filter((p) => !featuredIds.has(p.id))
-    .sort(byRecencyDesc);
+  const fillers = projects.filter((p) => !featuredIds.has(p.id)).sort(byRecencyDesc);
 
   return [...featured, ...fillers].slice(0, limit);
 }

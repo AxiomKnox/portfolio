@@ -1,6 +1,6 @@
 import { describe, expect, test } from "bun:test";
-import type { Project } from "@/content/types";
 import { selectHomepageProjects } from "@/content/homepage-projects";
+import type { Project } from "@/content/types";
 
 function project(partial: Partial<Project> & Pick<Project, "id" | "title">): Project {
   return {
@@ -49,9 +49,7 @@ describe("selectHomepageProjects", () => {
   });
 
   test("returns fewer than limit when the catalog is small", () => {
-    const few = [
-      project({ id: "only", title: "Only", releaseDate: "2025-01-01", featured: true }),
-    ];
+    const few = [project({ id: "only", title: "Only", releaseDate: "2025-01-01", featured: true })];
     expect(selectHomepageProjects(few).map((p) => p.id)).toEqual(["only"]);
   });
 
