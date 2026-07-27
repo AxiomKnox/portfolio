@@ -24,6 +24,7 @@ jobs:
       ASTRO_SITE: https://${{ github.actor }}.github.io
       ASTRO_BASE: /${{ github.event.repository.name }}
       ASTRO_TELEMETRY_DISABLED: "1"
+      LEARNING_SIGNALS_ENABLED: true
     steps:
       - name: Checkout
         uses: actions/checkout@v4
