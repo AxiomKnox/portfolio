@@ -1,0 +1,54 @@
+---
+import type { HTMLAttributes } from "astro/types";
+import { UiIcon } from "@/lib/icon-renderers";
+
+import { dialogBackdrop, dialogCloseButton, dialogContent } from "./variants";
+
+type Props = HTMLAttributes<"dialog"> & {
+  /**
+   * Open and close animation duration in milliseconds
+   */
+  animationDuration?: number;
+};
+
+const { class: className, animationDuration = 200, ...rest } = Astro.props;
+---
+
+<!-- dialog overlay -->
+<slot name="backdrop">
+  <div
+    class={dialogBackdrop()}
+    data-state="closed"
+    data-slot="dialog-backdrop"
+    style={{ animationDuration: `${animationDuration}ms` }}
+  >
+  </div>
+</slot>
+
+<dialog
+  class={dialogContent({ class: className })}
+  data-state="closed"
+  style={{ animationDuration: `${animationDuration}ms` }}
+  {...rest}
+  data-slot="dialog-content"
+>
+  <slot />
+  <button type="button" class={dialogCloseButton()} data-dialog-close aria-label="Close dialog">
+    <slot name="icon">
+      <UiIcon name="x" className="size-4 transition-opacity" size={16} />
+    </slot>
+    <span class="sr-only">Close</span>
+  </button>
+  <div class="pointer-events-none fixed inset-0" data-floating-root data-slot="floating-root"></div>
+</dialog>
+
+<style>
+  .starwind-dialog-content {
+    --nested-offset: 1rem;
+    --nested-scale: 0.05;
+  }
+  /* Space children like SOURCE DialogContent gap-4 without forcing display */
+  .starwind-dialog-content > :not([data-dialog-close]):not([data-floating-root]) + :not([data-dialog-close]):not([data-floating-root]) {
+    margin-top: 1rem;
+  }
+</style>

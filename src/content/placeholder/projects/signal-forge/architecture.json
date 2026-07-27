@@ -1,0 +1,79 @@
+{
+  "nodes": [
+    {
+      "id": "s1",
+      "label": "OTLP ingest",
+      "x": 40,
+      "y": 120
+    },
+    {
+      "id": "s2",
+      "label": "Normalize",
+      "x": 240,
+      "y": 200
+    },
+    {
+      "id": "s3",
+      "label": "Correlate",
+      "x": 440,
+      "y": 120
+    },
+    {
+      "id": "s4",
+      "label": "Compress",
+      "x": 640,
+      "y": 200
+    },
+    {
+      "id": "s5",
+      "label": "Emit",
+      "x": 840,
+      "y": 120
+    }
+  ],
+  "edges": [
+    {
+      "from": "s1",
+      "to": "s2"
+    },
+    {
+      "from": "s2",
+      "to": "s3"
+    },
+    {
+      "from": "s3",
+      "to": "s4"
+    },
+    {
+      "from": "s4",
+      "to": "s5"
+    }
+  ],
+  "steps": [
+    {
+      "id": "s1",
+      "title": "OTLP ingest",
+      "detail": "Services send OpenTelemetry over gRPC on a Unix socket."
+    },
+    {
+      "id": "s2",
+      "title": "Normalize",
+      "detail": "Fields are renamed to a compact internal schema."
+    },
+    {
+      "id": "s3",
+      "title": "Correlate",
+      "detail": "Trace IDs are joined with adjacent log windows to build a timeline."
+    },
+    {
+      "id": "s4",
+      "title": "Compress",
+      "detail": "The joined stream is zstd-compressed in 1s frames."
+    },
+    {
+      "id": "s5",
+      "title": "Emit",
+      "detail": "Frames are shipped to any Loki-compatible backend."
+    }
+  ]
+}

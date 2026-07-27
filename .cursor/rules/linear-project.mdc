@@ -1,0 +1,15 @@
+---
+description: Scope Linear issue lookups to this repo's project
+alwaysApply: true
+---
+
+# Linear project scope
+
+This codebase maps to one Linear project. When querying Linear (MCP or otherwise), **filter/list by this project first** — do not search the whole workspace or pick up unrelated issues.
+
+| Field | Value |
+| --- | --- |
+| Project name | Personal Project Portfolio |
+| Project id | `personal-project-portfolio-027014ac53c4` |
+
+Canonical fact also recorded in [`.agents/codebase/README.md`](../../.agents/codebase/README.md) Quick facts.

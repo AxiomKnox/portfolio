@@ -1,0 +1,52 @@
+name: CI
+
+# PR gate: materialize committed fixtures (`sync:dev`), then lint / check / test / build.
+# Remote GitHub sync stays on deploy.yml (`bun run sync` only).
+on:
+  pull_request:
+  push:
+    branches: [main, lovable-astro-migration]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    env:
+      ASTRO_SITE: https://${{ github.actor }}.github.io
+      ASTRO_BASE: /${{ github.event.repository.name }}
+      ASTRO_TELEMETRY_DISABLED: "1"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      # Live roots are gitignored; materialize fixtures from placeholder/ (no PAT).
+      - name: Materialize fixture content
+        run: bun run sync:dev
+
+      - name: Lint
+        run: bun run lint
+
+      - name: Typecheck (astro check)
+        run: bun run check
+
+      - name: Test
+        run: bun run test
+
+      - name: Build
+        run: bun run build

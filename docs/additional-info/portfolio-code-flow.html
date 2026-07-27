@@ -1,0 +1,1346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Portfolio code &amp; execution flow</title>
+  <meta name="description" content="Standalone map of the Astro SSG portfolio: layers, files, seams, and execution flows." />
+  <script type="module">
+    import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
+
+    const dark = matchMedia("(prefers-color-scheme: dark)").matches;
+    mermaid.initialize({
+      startOnLoad: false,
+      theme: dark ? "dark" : "neutral",
+      securityLevel: "loose",
+      flowchart: { curve: "basis", padding: 12, htmlLabels: true },
+      themeVariables: dark
+        ? {
+            primaryColor: "#1a3030",
+            primaryTextColor: "#e8ecef",
+            primaryBorderColor: "#3d8f85",
+            lineColor: "#6a8a86",
+            secondaryColor: "#1c2428",
+            tertiaryColor: "#141a1e",
+            mainBkg: "#1a3030",
+            nodeBorder: "#3d8f85",
+            clusterBkg: "#141a1e",
+            titleColor: "#e8ecef",
+            edgeLabelBackground: "#141a1e",
+          }
+        : {
+            primaryColor: "#d9efe9",
+            primaryTextColor: "#1a2228",
+            primaryBorderColor: "#2f7a70",
+            lineColor: "#5a726c",
+            secondaryColor: "#f0f3f2",
+            tertiaryColor: "#e6ebe9",
+            mainBkg: "#d9efe9",
+            nodeBorder: "#2f7a70",
+            clusterBkg: "#f4f6f5",
+            titleColor: "#1a2228",
+            edgeLabelBackground: "#ffffff",
+          },
+    });
+    await mermaid.run({ querySelector: ".mermaid" });
+  </script>
+  <style>
+    :root {
+      color-scheme: light dark;
+      --bg: #f4f6f5;
+      --bg-elev: #ffffff;
+      --bg-soft: #e8eeeb;
+      --text: #1a2228;
+      --text-muted: #4d5c63;
+      --text-faint: #6d7d84;
+      --border: #c5d0cb;
+      --border-strong: #9aada4;
+      --accent: #2f7a70;
+      --accent-soft: #d9efe9;
+      --accent-text: #1a4f48;
+      --warn: #8a5a20;
+      --warn-bg: #f7edd9;
+      --info: #2a5f78;
+      --info-bg: #dcecf3;
+      --shadow: 0 1px 2px rgb(20 30 28 / 6%), 0 8px 24px rgb(20 30 28 / 6%);
+      --nav-w: 15.5rem;
+      --radius: 10px;
+      --font: "Segoe UI", "Helvetica Neue", ui-sans-serif, system-ui, sans-serif;
+      --mono: "Cascadia Code", "SF Mono", "Consolas", ui-monospace, monospace;
+      --focus: 0 0 0 3px color-mix(in srgb, var(--accent) 35%, transparent);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #0f1417;
+        --bg-elev: #161d21;
+        --bg-soft: #1c2428;
+        --text: #e8ecef;
+        --text-muted: #a8b4ba;
+        --text-faint: #7d8c93;
+        --border: #2a353a;
+        --border-strong: #3d4d54;
+        --accent: #4db3a5;
+        --accent-soft: #1a3030;
+        --accent-text: #b6e6de;
+        --warn: #e0b06a;
+        --warn-bg: #2a2318;
+        --info: #7eb8d4;
+        --info-bg: #17242c;
+        --shadow: 0 1px 2px rgb(0 0 0 / 35%), 0 12px 28px rgb(0 0 0 / 28%);
+      }
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; scroll-padding-top: 4.5rem; }
+    body {
+      margin: 0;
+      font-family: var(--font);
+      background:
+        radial-gradient(1200px 600px at 10% -10%, color-mix(in srgb, var(--accent) 14%, transparent), transparent 55%),
+        radial-gradient(900px 500px at 100% 0%, color-mix(in srgb, var(--info) 10%, transparent), transparent 50%),
+        var(--bg);
+      color: var(--text);
+      line-height: 1.55;
+      min-height: 100vh;
+    }
+
+    a { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: 2px; }
+    a:hover { color: var(--accent-text); }
+    code, .mono {
+      font-family: var(--mono);
+      font-size: 0.86em;
+      background: var(--bg-soft);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 0.05em 0.35em;
+    }
+
+    .skip {
+      position: absolute;
+      left: -9999px;
+      top: 0;
+      background: var(--bg-elev);
+      padding: 0.5rem 1rem;
+      z-index: 100;
+    }
+    .skip:focus { left: 0.5rem; top: 0.5rem; outline: none; box-shadow: var(--focus); }
+
+    .layout {
+      display: grid;
+      grid-template-columns: var(--nav-w) minmax(0, 1fr);
+      gap: 0;
+      max-width: 1280px;
+      margin: 0 auto;
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow: auto;
+      padding: 1.1rem 0.9rem 2rem;
+      border-right: 1px solid var(--border);
+      background: color-mix(in srgb, var(--bg-elev) 88%, transparent);
+      backdrop-filter: blur(10px);
+    }
+
+    .brand {
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-faint);
+      margin: 0 0 0.35rem;
+    }
+    .sidebar h1 {
+      font-size: 1.05rem;
+      margin: 0 0 0.85rem;
+      line-height: 1.25;
+      font-weight: 700;
+    }
+
+    .search-wrap { margin-bottom: 0.85rem; }
+    .search-wrap label {
+      display: block;
+      font-size: 0.72rem;
+      color: var(--text-faint);
+      margin-bottom: 0.3rem;
+    }
+    #search {
+      width: 100%;
+      padding: 0.55rem 0.7rem;
+      border-radius: 8px;
+      border: 1px solid var(--border-strong);
+      background: var(--bg);
+      color: var(--text);
+      font: inherit;
+    }
+    #search:focus { outline: none; box-shadow: var(--focus); border-color: var(--accent); }
+
+    .nav-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+      margin-bottom: 0.9rem;
+    }
+    .btn {
+      appearance: none;
+      border: 1px solid var(--border);
+      background: var(--bg-soft);
+      color: var(--text-muted);
+      border-radius: 999px;
+      padding: 0.28rem 0.65rem;
+      font: inherit;
+      font-size: 0.75rem;
+      cursor: pointer;
+    }
+    .btn:hover { border-color: var(--accent); color: var(--accent-text); }
+    .btn:focus-visible { outline: none; box-shadow: var(--focus); }
+
+    .toc {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: grid;
+      gap: 0.2rem;
+    }
+    .toc a {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+      text-decoration: none;
+      color: var(--text-muted);
+      padding: 0.4rem 0.55rem;
+      border-radius: 7px;
+      font-size: 0.88rem;
+    }
+    .toc a:hover,
+    .toc a.active {
+      background: var(--accent-soft);
+      color: var(--accent-text);
+    }
+    .toc .count {
+      font-size: 0.72rem;
+      color: var(--text-faint);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .meta-note {
+      margin-top: 1.1rem;
+      font-size: 0.75rem;
+      color: var(--text-faint);
+      line-height: 1.4;
+    }
+
+    main {
+      padding: 1.4rem 1.5rem 3.5rem;
+      min-width: 0;
+    }
+
+    .hero {
+      background: var(--bg-elev);
+      border: 1px solid var(--border);
+      border-radius: calc(var(--radius) + 2px);
+      box-shadow: var(--shadow);
+      padding: 1.25rem 1.35rem 1.35rem;
+      margin-bottom: 1.25rem;
+    }
+    .hero h2 {
+      margin: 0 0 0.45rem;
+      font-size: 1.55rem;
+      letter-spacing: -0.02em;
+    }
+    .hero p {
+      margin: 0;
+      color: var(--text-muted);
+      max-width: 62ch;
+    }
+    .pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-top: 0.85rem;
+    }
+    .pill {
+      font-size: 0.75rem;
+      padding: 0.22rem 0.6rem;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--bg-soft);
+      color: var(--text-muted);
+    }
+    .pill.accent {
+      background: var(--accent-soft);
+      border-color: color-mix(in srgb, var(--accent) 45%, var(--border));
+      color: var(--accent-text);
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 0.65rem;
+      margin-top: 1rem;
+    }
+    .stat {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 0.7rem 0.8rem;
+    }
+    .stat strong {
+      display: block;
+      font-size: 1.35rem;
+      font-variant-numeric: tabular-nums;
+      letter-spacing: -0.02em;
+    }
+    .stat span {
+      font-size: 0.75rem;
+      color: var(--text-faint);
+    }
+
+    .toolbar {
+      position: sticky;
+      top: 0;
+      z-index: 5;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.65rem 0;
+      margin-bottom: 0.75rem;
+      background: color-mix(in srgb, var(--bg) 88%, transparent);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid transparent;
+    }
+    .toolbar.stuck { border-bottom-color: var(--border); }
+    .filter-status {
+      font-size: 0.8rem;
+      color: var(--text-faint);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .section {
+      background: var(--bg-elev);
+      border: 1px solid var(--border);
+      border-radius: calc(var(--radius) + 2px);
+      box-shadow: var(--shadow);
+      margin-bottom: 1rem;
+      overflow: clip;
+    }
+    .section > summary,
+    .section-head {
+      list-style: none;
+      cursor: pointer;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 0.95rem 1.1rem;
+      border-bottom: 1px solid var(--border);
+      background: color-mix(in srgb, var(--bg-soft) 55%, var(--bg-elev));
+    }
+    .section > summary::-webkit-details-marker { display: none; }
+    .section > summary::after {
+      content: "▾";
+      color: var(--text-faint);
+      transition: transform 0.15s ease;
+      margin-top: 0.15rem;
+    }
+    .section:not([open]) > summary::after { transform: rotate(-90deg); }
+    .section:not([open]) > summary { border-bottom: none; }
+    .section-head h3,
+    .section > summary h3 {
+      margin: 0;
+      font-size: 1.05rem;
+    }
+    .section-head p,
+    .section > summary p {
+      margin: 0.25rem 0 0;
+      color: var(--text-muted);
+      font-size: 0.88rem;
+    }
+    .section-body { padding: 1rem 1.1rem 1.15rem; }
+    .section.hidden-by-filter { display: none; }
+
+    .callout {
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      padding: 0.75rem 0.9rem;
+      margin: 0 0 0.85rem;
+      background: var(--bg);
+      font-size: 0.9rem;
+    }
+    .callout strong { display: block; margin-bottom: 0.2rem; font-size: 0.82rem; }
+    .callout.warn { background: var(--warn-bg); border-color: color-mix(in srgb, var(--warn) 40%, var(--border)); }
+    .callout.warn strong { color: var(--warn); }
+    .callout.info { background: var(--info-bg); border-color: color-mix(in srgb, var(--info) 40%, var(--border)); }
+    .callout.info strong { color: var(--info); }
+
+    .mermaid-wrap {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 0.75rem;
+      overflow: auto;
+      margin-bottom: 0.85rem;
+    }
+    .mermaid { display: flex; justify-content: center; }
+    .mermaid svg { max-width: 100%; height: auto; }
+
+    .route-table,
+    .ref-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.88rem;
+      margin-bottom: 0.85rem;
+    }
+    .route-table th,
+    .route-table td,
+    .ref-table th,
+    .ref-table td {
+      text-align: left;
+      padding: 0.5rem 0.6rem;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+    .route-table th,
+    .ref-table th {
+      color: var(--text-faint);
+      font-weight: 600;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .route-table tr:nth-child(even) td,
+    .ref-table tr:nth-child(even) td { background: color-mix(in srgb, var(--bg-soft) 45%, transparent); }
+
+    .ascii {
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      white-space: pre;
+      overflow: auto;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 0.85rem;
+      line-height: 1.45;
+    }
+
+    .files {
+      display: grid;
+      gap: 0.65rem;
+    }
+    .file {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--bg);
+      padding: 0.75rem 0.85rem;
+    }
+    .file.hidden-by-filter { display: none; }
+    .file-path {
+      font-family: var(--mono);
+      font-size: 0.82rem;
+      color: var(--accent-text);
+      font-weight: 600;
+      word-break: break-all;
+    }
+    .file-purpose {
+      margin: 0.4rem 0 0;
+      font-size: 0.9rem;
+    }
+    .file-links {
+      margin: 0.45rem 0 0;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+    .file-links span {
+      display: inline-block;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--text-faint);
+      margin-right: 0.35rem;
+    }
+    .layer-tag {
+      display: inline-block;
+      margin-top: 0.45rem;
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-faint);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 0.1rem 0.45rem;
+    }
+
+    .empty {
+      display: none;
+      text-align: center;
+      padding: 2rem 1rem;
+      color: var(--text-faint);
+      border: 1px dashed var(--border);
+      border-radius: var(--radius);
+    }
+    .empty.visible { display: block; }
+
+    .kbd {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      border: 1px solid var(--border);
+      border-bottom-width: 2px;
+      border-radius: 4px;
+      padding: 0.05rem 0.35rem;
+      background: var(--bg-elev);
+      color: var(--text-muted);
+    }
+
+    @media (max-width: 900px) {
+      .layout { grid-template-columns: 1fr; }
+      .sidebar {
+        position: relative;
+        height: auto;
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+      }
+      .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      main { padding: 1rem 1rem 2.5rem; }
+    }
+
+    @media print {
+      .sidebar, .toolbar, .skip { display: none !important; }
+      .layout { display: block; }
+      .section { break-inside: avoid; box-shadow: none; }
+      body { background: white; color: black; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip" href="#content">Skip to content</a>
+  <div class="layout">
+    <aside class="sidebar" aria-label="Table of contents">
+      <p class="brand">Personal Project Portfolio</p>
+      <h1>Code &amp; execution flow</h1>
+
+      <div class="search-wrap">
+        <label for="search">Filter files <span class="kbd">/</span></label>
+        <input id="search" type="search" placeholder="path, purpose, links…" autocomplete="off" />
+      </div>
+
+      <div class="nav-actions">
+        <button type="button" class="btn" id="expand-all">Expand all</button>
+        <button type="button" class="btn" id="collapse-all">Collapse all</button>
+        <button type="button" class="btn" id="clear-search">Clear filter</button>
+      </div>
+
+      <nav>
+        <ul class="toc" id="toc">
+          <li><a href="#overview">Overview</a></li>
+          <li><a href="#flow">Execution flow</a></li>
+          <li><a href="#config" data-layer="config">Config <span class="count" data-count-for="config"></span></a></li>
+          <li><a href="#layout" data-layer="layout">Layout / chrome <span class="count" data-count-for="layout"></span></a></li>
+          <li><a href="#pages" data-layer="pages">Pages / routes <span class="count" data-count-for="pages"></span></a></li>
+          <li><a href="#content" data-layer="content">Content / data <span class="count" data-count-for="content"></span></a></li>
+          <li><a href="#islands" data-layer="islands">Islands <span class="count" data-count-for="islands"></span></a></li>
+          <li><a href="#ui" data-layer="ui">UI components <span class="count" data-count-for="ui"></span></a></li>
+          <li><a href="#lib" data-layer="lib">Lib / hooks <span class="count" data-count-for="lib"></span></a></li>
+          <li><a href="#references">References</a></li>
+        </ul>
+      </nav>
+
+      <p class="meta-note">
+        Self-contained docs map. Open this file in any browser
+        (<span class="mono">file://</span> or static server).
+        Source: canvases + graphify + <span class="mono">src/</span> inventory.
+        Does not modify application code.
+      </p>
+    </aside>
+
+    <main id="content">
+      <header class="hero" id="overview">
+        <h2>Portfolio code &amp; execution flow</h2>
+        <p>
+          Layered map of the Astro SSG portfolio: every application file under
+          <code>src/</code> plus <code>astro.config.mjs</code>, from config → shell →
+          pages → content → islands → UI → lib, with call edges and seam callouts.
+        </p>
+        <div class="pills">
+          <span class="pill accent">Astro SSG · no runtime API</span>
+          <span class="pill">Content-as-code (ADR-0001)</span>
+          <span class="pill">Starwind shell + shadcn islands</span>
+        </div>
+        <div class="stats">
+          <div class="stat"><strong id="stat-files">64</strong><span>Files covered</span></div>
+          <div class="stat"><strong>7</strong><span>Routes</span></div>
+          <div class="stat"><strong>3</strong><span>Deep islands</span></div>
+          <div class="stat"><strong>5</strong><span>Key seams</span></div>
+        </div>
+        <p style="margin-top:0.9rem;font-size:0.88rem;color:var(--text-muted)">
+          Prefer changing content in <code>src/data/*</code> and presentation rules in
+          <code>src/content/*</code>. Pages should stay thin composers behind the adapter.
+        </p>
+      </header>
+
+      <div class="toolbar" id="main-toolbar">
+        <div class="filter-status" id="filter-status">Showing all files</div>
+        <div class="nav-actions" style="margin:0">
+          <button type="button" class="btn" data-jump="#flow">Jump to flow</button>
+          <button type="button" class="btn" data-jump="#content-layer">Jump to adapter</button>
+        </div>
+      </div>
+
+      <div class="empty" id="empty-state">No files match that filter. Try a shorter path fragment.</div>
+
+      <!-- EXECUTION FLOW -->
+      <details class="section" id="flow" open>
+        <summary>
+          <div>
+            <h3>Execution flow</h3>
+            <p>Build/dev compiles content into static HTML; islands hydrate only where <code>client:*</code> is set.</p>
+          </div>
+        </summary>
+        <div class="section-body">
+          <div class="mermaid-wrap">
+            <pre class="mermaid">
+flowchart TB
+  CFG["astro.config.mjs"] --> PAGES["src/pages/*"]
+  DATA["src/data/*"] --> ADAPTER["content/adapter"]
+  ADAPTER --> PAGES
+  LIB["lib helpers<br/>site / base / jsonld"] --> PAGES
+  LIB --> LAYOUT["Layout.astro"]
+  PAGES --> LAYOUT
+  LAYOUT --> SHELL["Navbar / Footer / Ambient"]
+  PAGES --> ISLANDS["React islands"]
+  LAYOUT --> HTML["Static HTML"]
+  ISLANDS --> HTML
+            </pre>
+          </div>
+
+          <h4 style="margin:0 0 0.5rem;font-size:0.95rem">Request / build sequences</h4>
+          <table class="route-table">
+            <thead><tr><th>Path</th><th>Sequence</th></tr></thead>
+            <tbody>
+              <tr>
+                <td><code>SSG build</code></td>
+                <td>astro.config → scan pages → adapter loads data + brand assert → getStaticPaths for [id] → render Layout+page → emit HTML/assets (+ robots/llms/sitemap)</td>
+              </tr>
+              <tr>
+                <td><code>/projects</code></td>
+                <td>projects/index.astro → getProjects() → Layout chrome → ProjectsPageIsland hydrates → Toolbar state ↔ URL → filter → ProjectCard/Row</td>
+              </tr>
+              <tr>
+                <td><code>/projects/[id]</code></td>
+                <td>getStaticPaths from getProjects → getProjectById → renderMarkdown → Layout + detail → ProjectArchitectureIsland → lazy ArchitectureDiagram + StepsAccordion</td>
+              </tr>
+              <tr>
+                <td><code>Home / About</code></td>
+                <td>getProfile + display helpers → Layout + personJsonLd → static sections; HeroGrid / dialogs / learning gates as needed</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="mermaid-wrap">
+            <pre class="mermaid">
+flowchart LR
+  PLIST["projects/index"] --> ISLAND["ProjectsPageIsland"]
+  ISLAND --> TOOLBAR["ProjectsToolbar"]
+  ISLAND --> CARDS["ProjectCard / Row"]
+  CARDS --> DETAIL["projects/[id]"]
+            </pre>
+          </div>
+
+          <div class="mermaid-wrap">
+            <pre class="mermaid">
+flowchart LR
+  DET["[id].astro"] --> ARCH["ArchIsland<br/>selectedId"]
+  ARCH --> DIAG["ArchitectureDiagram<br/>lazy ReactFlow"]
+  ARCH --> ACC["StepsAccordion"]
+            </pre>
+          </div>
+
+          <div class="callout warn">
+            <strong>Seam: content adapter</strong>
+            Pages and shell (Navbar/Footer) import from <code>src/content/adapter.ts</code>, not <code>src/data/*</code>.
+            Adapter re-exports profile-display + learning-signals. Islands still import some
+            <code>@/data/projects</code> types/helpers today — deepen behind adapter when touching discovery.
+          </div>
+          <div class="callout warn">
+            <strong>Seam: discovery island</strong>
+            <code>ProjectsPageIsland</code> owns URL sync + filter apply.
+            <code>ProjectsToolbar</code> owns Search DSL UI and emits <code>setState</code> patches only —
+            do not parse URL inside the toolbar.
+          </div>
+          <div class="callout warn">
+            <strong>Seam: architecture selection</strong>
+            Keep diagram + accordion in one island sharing <code>selectedId</code>.
+            <code>ArchStep.id</code> must equal <code>ArchNode.id</code> (<code>arch()</code> enforces for linear graphs).
+          </div>
+          <div class="callout info">
+            <strong>Seam: learning signals</strong>
+            <code>LEARNING_SIGNALS_ENABLED</code> is build-time only (astro env schema → learning-signals.ts).
+            Content marks <code>learning: true</code>; <code>showLearningSignal</code> gates UI. Not a client toggle.
+          </div>
+          <div class="callout">
+            <strong>Seam: UI hybrid (ADR-0002)</strong>
+            Starwind/Astro for static shell and About dialogs; shadcn React for toolbar, architecture accordion,
+            ambient/motion/HeroGrid. Custom ThemeToggle; marked for prose (not Starwind Prose).
+          </div>
+        </div>
+      </details>
+
+      <!-- CONFIG -->
+      <details class="section" id="config" open data-layer-section="config">
+        <summary>
+          <div>
+            <h3>Config &amp; global styles</h3>
+            <p>Bootstrapping every page inherits. Telemetry disabled; site/base drive GitHub Pages URLs.</p>
+          </div>
+        </summary>
+        <div class="section-body">
+          <div class="files" data-file-list="config">
+            <article class="file" data-layer="config" data-path="astro.config.mjs" data-text="astro.config.mjs Astro SSG entry site base static React sitemap Tailwind unplugin-icons Geist LEARNING_SIGNALS_ENABLED">
+              <div class="file-path">astro.config.mjs</div>
+              <p class="file-purpose">Astro SSG entry: site/base from env, output static, React + sitemap integrations, Tailwind + unplugin-icons Vite plugins, Geist fonts, LEARNING_SIGNALS_ENABLED envField.</p>
+              <p class="file-links"><span>Links</span> Consumed by Astro CLI build/dev. Env schema → learning-signals.ts. Fonts → Layout.astro Font tags.</p>
+              <span class="layer-tag">config</span>
+            </article>
+            <article class="file" data-layer="config" data-path="src/env.d.ts" data-text="src/env.d.ts Ambient TypeScript Astro unplugin-icons">
+              <div class="file-path">src/env.d.ts</div>
+              <p class="file-purpose">Ambient TypeScript refs for Astro client + unplugin-icons React types.</p>
+              <p class="file-links"><span>Links</span> No runtime calls; enables typed ~icons imports and Astro globals.</p>
+              <span class="layer-tag">config</span>
+            </article>
+            <article class="file" data-layer="config" data-path="src/styles.css" data-text="src/styles.css Design tokens Tailwind ambient glow blob frosted motion tech-icon">
+              <div class="file-path">src/styles.css</div>
+              <p class="file-purpose">Design tokens, Tailwind entry, ambient glow/blob, frosted surfaces, motion + tech-icon rules.</p>
+              <p class="file-links"><span>Links</span> Imported once by Layout.astro; all components consume CSS variables / utility classes.</p>
+              <span class="layer-tag">config</span>
+            </article>
+          </div>
+        </div>
+      </details>
+
+      <!-- LAYOUT -->
+      <details class="section" id="layout" open data-layer-section="layout">
+        <summary>
+          <div>
+            <h3>Layout &amp; site chrome</h3>
+            <p>Shared shell around every HTML page. Ambient/motion are client-side; theme FOUC script runs before paint.</p>
+          </div>
+        </summary>
+        <div class="section-body">
+          <div class="files" data-file-list="layout">
+            <article class="file" data-layer="layout" data-path="src/layouts/Layout.astro" data-text="Layout.astro HTML shell meta OG Twitter canonical JSON-LD theme FOUC AmbientBackground Navbar Footer">
+              <div class="file-path">src/layouts/Layout.astro</div>
+              <p class="file-purpose">HTML shell: meta/OG/Twitter, canonical via site.ts, JSON-LD slot, theme/motion FOUC script, AmbientBackground, Navbar, main slot, Footer.</p>
+              <p class="file-links"><span>Links</span> ← pages; → Navbar, Footer, AmbientBackground (client:idle), styles.css, withBase, absoluteUrl/canonicalUrl.</p>
+              <span class="layer-tag">layout</span>
+            </article>
+            <article class="file" data-layer="layout" data-path="src/components/Navbar.astro" data-text="Navbar.astro sticky frosted header ThemeToggle MotionToggle AmbientToggle">
+              <div class="file-path">src/components/Navbar.astro</div>
+              <p class="file-purpose">Sticky frosted header: profile initials/name, Home/Projects/About Starwind buttons, ThemeToggle + Motion/Ambient islands.</p>
+              <p class="file-links"><span>Links</span> ← Layout; → getProfile (adapter), withBase, ThemeToggle, MotionToggle (client:load), AmbientToggle (client:load), starwind/button.</p>
+              <span class="layer-tag">layout</span>
+            </article>
+            <article class="file" data-layer="layout" data-path="src/components/Footer.astro" data-text="Footer.astro bio blurb profile icon buttons">
+              <div class="file-path">src/components/Footer.astro</div>
+              <p class="file-purpose">Site footer with bio blurb and external profile icon buttons.</p>
+              <p class="file-links"><span>Links</span> ← Layout; → getProfile (adapter), BrandIcon, starwind/button.</p>
+              <span class="layer-tag">layout</span>
+            </article>
+            <article class="file" data-layer="layout" data-path="src/components/ThemeToggle.astro" data-text="ThemeToggle.astro dark light localStorage">
+              <div class="file-path">src/components/ThemeToggle.astro</div>
+              <p class="file-purpose">Vanilla inline script toggle for dark/light; writes localStorage theme; default dark.</p>
+              <p class="file-links"><span>Links</span> ← Navbar; mutates documentElement.classList (no React).</p>
+              <span class="layer-tag">layout</span>
+            </article>
+            <article class="file" data-layer="layout" data-path="src/components/AmbientBackground.tsx" data-text="AmbientBackground.tsx stars glow blobs shapes starsAnimationPolicy">
+              <div class="file-path">src/components/AmbientBackground.tsx</div>
+              <p class="file-purpose">Fixed -z-10 canvas/CSS ambient: stars (dark), glow blobs (dark), shapes (light). Uses starsAnimationPolicy; pauses on reduced-motion / hidden tab.</p>
+              <p class="file-links"><span>Links</span> ← Layout (client:idle); → ambient-stars-policy; synced with AmbientToggle via ambient-style-change + localStorage keys.</p>
+              <span class="layer-tag">layout</span>
+            </article>
+            <article class="file" data-layer="layout" data-path="src/components/AmbientToggle.tsx" data-text="AmbientToggle.tsx cycles ambient mode">
+              <div class="file-path">src/components/AmbientToggle.tsx</div>
+              <p class="file-purpose">Cycles ambient mode per theme (dark: off→glow→stars; light: off↔shapes); persists and dispatches ambient-style-change.</p>
+              <p class="file-links"><span>Links</span> ← Navbar (client:load); → readAmbientMode from AmbientBackground.</p>
+              <span class="layer-tag">layout</span>
+            </article>
+            <article class="file" data-layer="layout" data-path="src/components/MotionToggle.tsx" data-text="MotionToggle.tsx reduced motion preference">
+              <div class="file-path">src/components/MotionToggle.tsx</div>
+              <p class="file-purpose">Navbar control for reduced motion preference.</p>
+              <p class="file-links"><span>Links</span> ← Navbar (client:load); → useMotionPreference hook.</p>
+              <span class="layer-tag">layout</span>
+            </article>
+          </div>
+        </div>
+      </details>
+
+      <!-- PAGES -->
+      <details class="section" id="pages" open data-layer-section="pages">
+        <summary>
+          <div>
+            <h3>Pages &amp; routes</h3>
+            <p>Astro file-based routing. Pages compose adapter + layout; keep business logic out of <code>.astro</code> files.</p>
+          </div>
+        </summary>
+        <div class="section-body">
+          <table class="route-table">
+            <thead><tr><th>URL</th><th>File</th></tr></thead>
+            <tbody>
+              <tr><td><code>/</code></td><td><code>src/pages/index.astro</code></td></tr>
+              <tr><td><code>/about</code></td><td><code>src/pages/about.astro</code></td></tr>
+              <tr><td><code>/projects</code></td><td><code>src/pages/projects/index.astro</code></td></tr>
+              <tr><td><code>/projects/[id]</code></td><td><code>src/pages/projects/[id].astro</code></td></tr>
+              <tr><td><code>/robots.txt</code></td><td><code>src/pages/robots.txt.ts</code></td></tr>
+              <tr><td><code>/llms.txt</code></td><td><code>src/pages/llms.txt.ts</code></td></tr>
+              <tr><td><code>404</code></td><td><code>src/pages/404.astro</code></td></tr>
+            </tbody>
+          </table>
+          <div class="files" data-file-list="pages">
+            <article class="file" data-layer="pages" data-path="src/pages/index.astro" data-text="index.astro Home SOURCE hero HeroGrid featured ProjectCards experience learning Person JSON-LD">
+              <div class="file-path">src/pages/index.astro</div>
+              <p class="file-purpose">Home: SOURCE hero + HeroGrid, featured ProjectCards, experience snapshot, learning-gated chips, Person JSON-LD.</p>
+              <p class="file-links"><span>Links</span> → Layout; adapter (getProfile/getFeaturedProjects/experienceTimelineEntries/showLearningSignal/shouldShowCertifications); ProjectCard; HeroGrid (client); personJsonLd; BrandIcon; UiIcon; withBase.</p>
+              <span class="layer-tag">pages</span>
+            </article>
+            <article class="file" data-layer="pages" data-path="src/pages/about.astro" data-text="about.astro bio skills experience certifications AboutPreviewDialog">
+              <div class="file-path">src/pages/about.astro</div>
+              <p class="file-purpose">About: bio, skills, experience timeline (career vs early-career), certifications + AboutPreviewDialog, Person JSON-LD.</p>
+              <p class="file-links"><span>Links</span> → Layout; adapter display helpers; AboutPreviewDialog; GradientPreview; BrandIcon; UiIcon; personJsonLd.</p>
+              <span class="layer-tag">pages</span>
+            </article>
+            <article class="file" data-layer="pages" data-path="src/pages/projects/index.astro" data-text="projects/index.astro getProjects ProjectsPageIsland">
+              <div class="file-path">src/pages/projects/index.astro</div>
+              <p class="file-purpose">Thin projects index: heading + hands projects[] to island.</p>
+              <p class="file-links"><span>Links</span> → Layout; getProjects (adapter); ProjectsPageIsland (client:load).</p>
+              <span class="layer-tag">pages</span>
+            </article>
+            <article class="file" data-layer="pages" data-path="src/pages/projects/[id].astro" data-text="projects/[id].astro detail markdown architecture SoftwareSourceCode JSON-LD">
+              <div class="file-path">src/pages/projects/[id].astro</div>
+              <p class="file-purpose">Project detail SSG paths from getProjects(); markdown description; links; associated projects; architecture island; SoftwareSourceCode JSON-LD.</p>
+              <p class="file-links"><span>Links</span> → Layout; getProjectById/getProjects/getProfile; renderMarkdown; ProjectArchitectureIsland; GradientPreview; BrandIcon; UiIcon; projectJsonLd; withBase.</p>
+              <span class="layer-tag">pages</span>
+            </article>
+            <article class="file" data-layer="pages" data-path="src/pages/404.astro" data-text="404.astro not-found noindex">
+              <div class="file-path">src/pages/404.astro</div>
+              <p class="file-purpose">Not-found page with noindex + Starwind primary Button home link.</p>
+              <p class="file-links"><span>Links</span> → Layout; starwind/button; withBase.</p>
+              <span class="layer-tag">pages</span>
+            </article>
+            <article class="file" data-layer="pages" data-path="src/pages/robots.txt.ts" data-text="robots.txt.ts Allow Sitemap absoluteUrl">
+              <div class="file-path">src/pages/robots.txt.ts</div>
+              <p class="file-purpose">Build-time text route: Allow / + Sitemap absolute URL.</p>
+              <p class="file-links"><span>Links</span> → absoluteUrl (site.ts).</p>
+              <span class="layer-tag">pages</span>
+            </article>
+            <article class="file" data-layer="pages" data-path="src/pages/llms.txt.ts" data-text="llms.txt.ts assistant-facing site summary">
+              <div class="file-path">src/pages/llms.txt.ts</div>
+              <p class="file-purpose">Assistant-facing site summary from profile + projects with absolute page URLs.</p>
+              <p class="file-links"><span>Links</span> → getProfile/getProjects (adapter); absoluteUrl.</p>
+              <span class="layer-tag">pages</span>
+            </article>
+          </div>
+        </div>
+      </details>
+
+      <!-- CONTENT -->
+      <details class="section" id="content" open data-layer-section="content">
+        <summary>
+          <div>
+            <h3 id="content-layer">Content &amp; data</h3>
+            <p>Content-as-code: typed TS modules, no CMS/DB. Adapter is the only intended import surface for pages.</p>
+          </div>
+        </summary>
+        <div class="section-body">
+          <div class="ascii">data/profile.ts ─┐
+data/projects.ts ─┼─► content/adapter.ts ─► pages / Navbar / Footer / llms
+profile-display ──┤         ▲
+learning-signals ─┘         │
+                    icon-catalog assert at module load</div>
+          <div class="files" data-file-list="content">
+            <article class="file" data-layer="content" data-path="src/data/projects.ts" data-text="projects.ts Category Status Project architecture graph arch() projectById sortDate">
+              <div class="file-path">src/data/projects.ts</div>
+              <p class="file-purpose">Deep content module: Category/Status types, Project + architecture graph types, arch() helper, projects[], projectById, sortDate, STATUS_ORDER.</p>
+              <p class="file-links"><span>Links</span> Imported by adapter (and currently some islands/components for types/helpers). Pages must not import directly.</p>
+              <span class="layer-tag">content</span>
+            </article>
+            <article class="file" data-layer="content" data-path="src/data/profile.ts" data-text="profile.ts bio skills experience earlyCareer certifications links">
+              <div class="file-path">src/data/profile.ts</div>
+              <p class="file-purpose">Deep person content: bio, skills, experience, earlyCareer, certifications, links, experienceMode, certificationsVisibility.</p>
+              <p class="file-links"><span>Links</span> Imported by adapter only (pages via getProfile).</p>
+              <span class="layer-tag">content</span>
+            </article>
+            <article class="file" data-layer="content" data-path="src/content/adapter.ts" data-text="adapter.ts getProfile getProjects getProjectById getFeaturedProjects assertBrandCatalogCoverage">
+              <div class="file-path">src/content/adapter.ts</div>
+              <p class="file-purpose">Primary content seam: getProfile/getProjects/getProjectById/getFeaturedProjects; re-exports display + learning helpers; assertBrandCatalogCoverage at module load.</p>
+              <p class="file-links"><span>Links</span> ← all pages + Navbar/Footer/llms; → data/*, profile-display, learning-signals, icon-catalog.</p>
+              <span class="layer-tag">content</span>
+            </article>
+            <article class="file" data-layer="content" data-path="src/content/profile-display.ts" data-text="profile-display.ts experienceHeadline timeline shouldShowCertifications showLearningSignal">
+              <div class="file-path">src/content/profile-display.ts</div>
+              <p class="file-purpose">Presentation rules: experienceHeadline/timeline for early-career, shouldShowCertifications, showLearningSignal(item, enabled), parseLearningSignalsEnabled.</p>
+              <p class="file-links"><span>Links</span> ← adapter re-exports; ← learning-signals for parse/gate; tested by profile-display.test.ts.</p>
+              <span class="layer-tag">content</span>
+            </article>
+            <article class="file" data-layer="content" data-path="src/content/learning-signals.ts" data-text="learning-signals.ts LEARNING_SIGNALS_ENABLED build-time gate">
+              <div class="file-path">src/content/learning-signals.ts</div>
+              <p class="file-purpose">Build-time gate: reads LEARNING_SIGNALS_ENABLED from astro:env/server; exports parsed flag + showLearningSignal(item).</p>
+              <p class="file-links"><span>Links</span> ← adapter; → profile-display helpers; configured in astro.config.mjs env.schema.</p>
+              <span class="layer-tag">content</span>
+            </article>
+            <article class="file" data-layer="content" data-path="src/content/profile-display.test.ts" data-text="profile-display.test.ts unit tests early-career cert learning-signal">
+              <div class="file-path">src/content/profile-display.test.ts</div>
+              <p class="file-purpose">Unit tests for early-career headlines, cert visibility, learning-signal parse/gate.</p>
+              <p class="file-links"><span>Links</span> → profile-display.ts only.</p>
+              <span class="layer-tag">content</span>
+            </article>
+          </div>
+        </div>
+      </details>
+
+      <!-- ISLANDS -->
+      <details class="section" id="islands" open data-layer-section="islands">
+        <summary>
+          <div>
+            <h3>React islands</h3>
+            <p>Hydration boundaries. Everything else stays Astro/static HTML.</p>
+          </div>
+        </summary>
+        <div class="section-body">
+          <div class="files" data-file-list="islands">
+            <article class="file" data-layer="islands" data-path="src/components/islands/ProjectsPageIsland.tsx" data-text="ProjectsPageIsland.tsx URL ToolbarState parseQuery filter sort grid list">
+              <div class="file-path">src/components/islands/ProjectsPageIsland.tsx</div>
+              <p class="file-purpose">Deep discovery island: URL↔ToolbarState sync, parseQuery filter/sort pipeline, grid/list via ProjectCard/ProjectRow, localStorage projects:view.</p>
+              <p class="file-links"><span>Links</span> ← projects/index.astro (client:load); → ProjectsToolbar, ProjectCard, @/data/projects types/helpers (direct today).</p>
+              <span class="layer-tag">islands</span>
+            </article>
+            <article class="file" data-layer="islands" data-path="src/components/islands/ProjectArchitectureIsland.tsx" data-text="ProjectArchitectureIsland.tsx selectedId ArchitectureDiagram StepsAccordion">
+              <div class="file-path">src/components/islands/ProjectArchitectureIsland.tsx</div>
+              <p class="file-purpose">Owns selectedId for diagram↔accordion; lazy-loads ArchitectureDiagram; fallback when architecture omitted.</p>
+              <p class="file-links"><span>Links</span> ← projects/[id].astro; → StepsAccordion; lazy → ArchitectureDiagram; type from @/data/projects.</p>
+              <span class="layer-tag">islands</span>
+            </article>
+            <article class="file" data-layer="islands" data-path="src/components/HeroGrid.tsx" data-text="HeroGrid.tsx home hero canvas ripples reduced motion">
+              <div class="file-path">src/components/HeroGrid.tsx</div>
+              <p class="file-purpose">Home hero canvas: static line grid + cursor ripples; RAF only while ripples live; respects data-motion=reduced.</p>
+              <p class="file-links"><span>Links</span> ← index.astro (client island); no content imports.</p>
+              <span class="layer-tag">islands</span>
+            </article>
+          </div>
+          <p style="margin:0.85rem 0 0;font-size:0.82rem;color:var(--text-faint)">
+            Discovery chain: <code>projects/index</code> → ProjectsPageIsland → ProjectsToolbar + ProjectCard/Row → BrandIcon / GradientPreview / withBase.<br />
+            Architecture chain: <code>[id].astro</code> → ProjectArchitectureIsland → (lazy) ArchitectureDiagram + StepsAccordion; shared <code>selectedId</code>.
+          </p>
+        </div>
+      </details>
+
+      <!-- UI -->
+      <details class="section" id="ui" open data-layer-section="ui">
+        <summary>
+          <div>
+            <h3>UI components</h3>
+            <p>App components, Starwind (Astro), and shadcn/Base UI (React).</p>
+          </div>
+        </summary>
+        <div class="section-body">
+          <h4 style="margin:0 0 0.55rem;font-size:0.92rem">App components</h4>
+          <div class="files" data-file-list="ui-app" style="margin-bottom:1rem">
+            <article class="file" data-layer="ui" data-path="src/components/ProjectsToolbar.tsx" data-text="ProjectsToolbar.tsx filter search DSL chips date sort view">
+              <div class="file-path">src/components/ProjectsToolbar.tsx</div>
+              <p class="file-purpose">Deep filter UI: search token DSL (parseQuery), category/status/tech chips, date range, sort/view; emits setState patches only (island owns URL).</p>
+              <p class="file-links"><span>Links</span> ← ProjectsPageIsland; → ui/dropdown-menu, ui/popover, ui/calendar, ui/button; Project types from data.</p>
+              <span class="layer-tag">ui</span>
+            </article>
+            <article class="file" data-layer="ui" data-path="src/components/ProjectCard.tsx" data-text="ProjectCard.tsx ProjectRow grid list GradientPreview BrandIcon">
+              <div class="file-path">src/components/ProjectCard.tsx</div>
+              <p class="file-purpose">Grid ProjectCard + list ProjectRow linking to /projects/[id] with GradientPreview + BrandIcon chips.</p>
+              <p class="file-links"><span>Links</span> ← ProjectsPageIsland, index.astro; → GradientPreview, BrandIcon, withBase; Project type from data.</p>
+              <span class="layer-tag">ui</span>
+            </article>
+            <article class="file" data-layer="ui" data-path="src/components/ArchitectureDiagram.tsx" data-text="ArchitectureDiagram.tsx ReactFlow ArchNode StepNode">
+              <div class="file-path">src/components/ArchitectureDiagram.tsx</div>
+              <p class="file-purpose">ReactFlow mapper: ArchNode/Edge → nodes/edges, StepNode, selection highlight.</p>
+              <p class="file-links"><span>Links</span> ← ProjectArchitectureIsland (lazy); → reactflow; ProjectArchitecture type from data.</p>
+              <span class="layer-tag">ui</span>
+            </article>
+            <article class="file" data-layer="ui" data-path="src/components/StepsAccordion.tsx" data-text="StepsAccordion.tsx ArchSteps selectedId accordion">
+              <div class="file-path">src/components/StepsAccordion.tsx</div>
+              <p class="file-purpose">Controlled accordion of ArchSteps bound to selectedId/onSelect.</p>
+              <p class="file-links"><span>Links</span> ← ProjectArchitectureIsland; → ui/accordion; ArchStep from data.</p>
+              <span class="layer-tag">ui</span>
+            </article>
+            <article class="file" data-layer="ui" data-path="src/components/GradientPreview.tsx" data-text="GradientPreview.tsx deterministic gradient swatches">
+              <div class="file-path">src/components/GradientPreview.tsx</div>
+              <p class="file-purpose">Deterministic gradient swatches keyed by project.preview / avatar ids (placeholder imagery).</p>
+              <p class="file-links"><span>Links</span> ← ProjectCard, about, [id]; no further imports.</p>
+              <span class="layer-tag">ui</span>
+            </article>
+            <article class="file" data-layer="ui" data-path="src/components/AboutPreviewDialog.astro" data-text="AboutPreviewDialog.astro Starwind dialog cert resume PDF">
+              <div class="file-path">src/components/AboutPreviewDialog.astro</div>
+              <p class="file-purpose">Static Starwind dialog for cert/resume PDF preview placeholders (no React island).</p>
+              <p class="file-links"><span>Links</span> ← about.astro; → starwind/dialog/*, UiIcon.</p>
+              <span class="layer-tag">ui</span>
+            </article>
+          </div>
+
+          <h4 style="margin:0 0 0.55rem;font-size:0.92rem">Starwind (Astro)</h4>
+          <div class="files" data-file-list="ui-starwind" style="margin-bottom:1rem">
+            <article class="file" data-layer="ui" data-path="src/components/starwind/button/Button.astro" data-text="starwind Button.astro CVA variants Navbar Footer 404">
+              <div class="file-path">src/components/starwind/button/Button.astro</div>
+              <p class="file-purpose">Astro Button markup with CVA-driven variants for static shell CTAs.</p>
+              <p class="file-links"><span>Links</span> ← Navbar, Footer, 404 via starwind/button index; → variants.ts.</p>
+              <span class="layer-tag">ui · starwind</span>
+            </article>
+            <article class="file" data-layer="ui" data-path="src/components/starwind/button/index.ts" data-text="starwind button index.ts re-export">
+              <div class="file-path">src/components/starwind/button/index.ts</div>
+              <p class="file-purpose">Public export barrel for Starwind Button.</p>
+              <p class="file-links"><span>Links</span> ← Navbar, Footer, 404; → Button.astro.</p>
+              <span class="layer-tag">ui · starwind</span>
+            </article>
+            <article class="file" data-layer="ui" data-path="src/components/starwind/button/variants.ts" data-text="starwind button variants.ts CVA">
+              <div class="file-path">src/components/starwind/button/variants.ts</div>
+              <p class="file-purpose">CVA variant definitions for Starwind Button sizes/tones.</p>
+              <p class="file-links"><span>Links</span> ← Button.astro.</p>
+              <span class="layer-tag">ui · starwind</span>
+            </article>
+            <article class="file" data-layer="ui" data-path="src/components/starwind/dialog/Dialog.astro" data-text="starwind Dialog.astro root">
+              <div class="file-path">src/components/starwind/dialog/Dialog.astro</div>
+              <p class="file-purpose">Dialog root primitive (vanilla/Starwind).</p>
+              <p class="file-links"><span>Links</span> ← AboutPreviewDialog via dialog index.</p>
+              <span class="layer-tag">ui · starwind</span>
+            </article>
+            <article class="file" data-layer="ui" data-path="src/components/starwind/dialog/DialogTrigger.astro" data-text="starwind DialogTrigger.astro">
+              <div class="file-path">src/components/starwind/dialog/DialogTrigger.astro</div>
+              <p class="file-purpose">Opens the dialog from a control.</p>
+              <p class="file-links"><span>Links</span> ← AboutPreviewDialog.</p>
+              <span class="layer-tag">ui · starwind</span>
+            </article>
+            <article class="file" data-layer="ui" data-path="src/components/starwind/dialog/DialogContent.astro" data-text="starwind DialogContent.astro close icon customized no tabler">
+              <div class="file-path">src/components/starwind/dialog/DialogContent.astro</div>
+              <p class="file-purpose">Dialog panel content; customized close icon without @tabler dependency.</p>
+              <p class="file-links"><span>Links</span> ← AboutPreviewDialog; covered by dependency-prune.test.ts contract.</p>
+              <span class="layer-tag">ui · starwind</span>
+            </article>
+            <article class="file" data-layer="ui" data-path="src/components/starwind/dialog/DialogHeader.astro" data-text="starwind DialogHeader.astro">
+              <div class="file-path">src/components/starwind/dialog/DialogHeader.astro</div>
+              <p class="file-purpose">Dialog header region.</p>
+              <p class="file-links"><span>Links</span> ← AboutPreviewDialog.</p>
+              <span class="layer-tag">ui · starwind</span>
+            </article>
+            <article class="file" data-layer="ui" data-path="src/components/starwind/dialog/DialogTitle.astro" data-text="starwind DialogTitle.astro">
+              <div class="file-path">src/components/starwind/dialog/DialogTitle.astro</div>
+              <p class="file-purpose">Accessible dialog title.</p>
+              <p class="file-links"><span>Links</span> ← AboutPreviewDialog.</p>
+              <span class="layer-tag">ui · starwind</span>
+            </article>
+            <article class="file" data-layer="ui" data-path="src/components/starwind/dialog/DialogDescription.astro" data-text="starwind DialogDescription.astro">
+              <div class="file-path">src/components/starwind/dialog/DialogDescription.astro</div>
+              <p class="file-purpose">Accessible dialog description text.</p>
+              <p class="file-links"><span>Links</span> ← AboutPreviewDialog.</p>
+              <span class="layer-tag">ui · starwind</span>
+            </article>
+            <article class="file" data-layer="ui" data-path="src/components/starwind/dialog/DialogFooter.astro" data-text="starwind DialogFooter.astro">
+              <div class="file-path">src/components/starwind/dialog/DialogFooter.astro</div>
+              <p class="file-purpose">Dialog footer actions region.</p>
+              <p class="file-links"><span>Links</span> ← AboutPreviewDialog.</p>
+              <span class="layer-tag">ui · starwind</span>
+            </article>
+            <article class="file" data-layer="ui" data-path="src/components/starwind/dialog/DialogClose.astro" data-text="starwind DialogClose.astro">
+              <div class="file-path">src/components/starwind/dialog/DialogClose.astro</div>
+              <p class="file-purpose">Explicit close control for the dialog.</p>
+              <p class="file-links"><span>Links</span> ← AboutPreviewDialog / DialogContent.</p>
+              <span class="layer-tag">ui · starwind</span>
+            </article>
+            <article class="file" data-layer="ui" data-path="src/components/starwind/dialog/index.ts" data-text="starwind dialog index.ts barrel">
+              <div class="file-path">src/components/starwind/dialog/index.ts</div>
+              <p class="file-purpose">Public export barrel for Starwind dialog primitives.</p>
+              <p class="file-links"><span>Links</span> ← AboutPreviewDialog.</p>
+              <span class="layer-tag">ui · starwind</span>
+            </article>
+            <article class="file" data-layer="ui" data-path="src/components/starwind/dialog/variants.ts" data-text="starwind dialog variants.ts">
+              <div class="file-path">src/components/starwind/dialog/variants.ts</div>
+              <p class="file-purpose">Shared CVA/variant helpers for dialog parts.</p>
+              <p class="file-links"><span>Links</span> ← dialog primitives.</p>
+              <span class="layer-tag">ui · starwind</span>
+            </article>
+          </div>
+
+          <h4 style="margin:0 0 0.55rem;font-size:0.92rem">shadcn / Base UI (React)</h4>
+          <div class="files" data-file-list="ui-shadcn">
+            <article class="file" data-layer="ui" data-path="src/components/ui/accordion.tsx" data-text="ui/accordion.tsx shadcn StepsAccordion">
+              <div class="file-path">src/components/ui/accordion.tsx</div>
+              <p class="file-purpose">shadcn/Base UI accordion primitives for StepsAccordion.</p>
+              <p class="file-links"><span>Links</span> ← StepsAccordion.</p>
+              <span class="layer-tag">ui · shadcn</span>
+            </article>
+            <article class="file" data-layer="ui" data-path="src/components/ui/button.tsx" data-text="ui/button.tsx React button toolbar">
+              <div class="file-path">src/components/ui/button.tsx</div>
+              <p class="file-purpose">React button primitive for toolbar controls.</p>
+              <p class="file-links"><span>Links</span> ← ProjectsToolbar (+ related island UI).</p>
+              <span class="layer-tag">ui · shadcn</span>
+            </article>
+            <article class="file" data-layer="ui" data-path="src/components/ui/calendar.tsx" data-text="ui/calendar.tsx date picker toolbar">
+              <div class="file-path">src/components/ui/calendar.tsx</div>
+              <p class="file-purpose">Date picker surface for toolbar release-date filters.</p>
+              <p class="file-links"><span>Links</span> ← ProjectsToolbar.</p>
+              <span class="layer-tag">ui · shadcn</span>
+            </article>
+            <article class="file" data-layer="ui" data-path="src/components/ui/dropdown-menu.tsx" data-text="ui/dropdown-menu.tsx sort status view">
+              <div class="file-path">src/components/ui/dropdown-menu.tsx</div>
+              <p class="file-purpose">Menus for sort/status/view actions in toolbar.</p>
+              <p class="file-links"><span>Links</span> ← ProjectsToolbar.</p>
+              <span class="layer-tag">ui · shadcn</span>
+            </article>
+            <article class="file" data-layer="ui" data-path="src/components/ui/popover.tsx" data-text="ui/popover.tsx tech date filter panels">
+              <div class="file-path">src/components/ui/popover.tsx</div>
+              <p class="file-purpose">Popover shells for tech/date filter panels.</p>
+              <p class="file-links"><span>Links</span> ← ProjectsToolbar.</p>
+              <span class="layer-tag">ui · shadcn</span>
+            </article>
+          </div>
+        </div>
+      </details>
+
+      <!-- LIB -->
+      <details class="section" id="lib" open data-layer-section="lib">
+        <summary>
+          <div>
+            <h3>Lib &amp; hooks</h3>
+            <p>Cross-cutting helpers: URLs/SEO, icons, markdown, ambient policy, classnames. No content ownership here.</p>
+          </div>
+        </summary>
+        <div class="section-body">
+          <div class="files" data-file-list="lib">
+            <article class="file" data-layer="lib" data-path="src/lib/base.ts" data-text="base.ts withBase BASE_URL GitHub Pages">
+              <div class="file-path">src/lib/base.ts</div>
+              <p class="file-purpose">withBase(path) prefixes import.meta.env.BASE_URL for GH Pages subpaths.</p>
+              <p class="file-links"><span>Links</span> ← Layout, pages, ProjectCard, site.ts, Navbar links.</p>
+              <span class="layer-tag">lib</span>
+            </article>
+            <article class="file" data-layer="lib" data-path="src/lib/site.ts" data-text="site.ts absoluteUrl canonicalUrl">
+              <div class="file-path">src/lib/site.ts</div>
+              <p class="file-purpose">absoluteUrl / canonicalUrl combining site origin + withBase.</p>
+              <p class="file-links"><span>Links</span> ← Layout, robots, llms, jsonld; tested by site.test.ts.</p>
+              <span class="layer-tag">lib</span>
+            </article>
+            <article class="file" data-layer="lib" data-path="src/lib/site.test.ts" data-text="site.test.ts URL helper unit tests">
+              <div class="file-path">src/lib/site.test.ts</div>
+              <p class="file-purpose">URL helper unit tests.</p>
+              <p class="file-links"><span>Links</span> → site.ts.</p>
+              <span class="layer-tag">lib</span>
+            </article>
+            <article class="file" data-layer="lib" data-path="src/lib/jsonld.ts" data-text="jsonld.ts personJsonLd projectJsonLd schema.org">
+              <div class="file-path">src/lib/jsonld.ts</div>
+              <p class="file-purpose">personJsonLd + projectJsonLd schema.org builders.</p>
+              <p class="file-links"><span>Links</span> ← index/about/[id]; → absoluteUrl.</p>
+              <span class="layer-tag">lib</span>
+            </article>
+            <article class="file" data-layer="lib" data-path="src/lib/markdown.ts" data-text="markdown.ts marked GFM project.description">
+              <div class="file-path">src/lib/markdown.ts</div>
+              <p class="file-purpose">Build-time marked GFM → HTML for project.description.</p>
+              <p class="file-links"><span>Links</span> ← projects/[id].astro only.</p>
+              <span class="layer-tag">lib</span>
+            </article>
+            <article class="file" data-layer="lib" data-path="src/lib/icon-catalog.tsx" data-text="icon-catalog.tsx UI_ICONS BRAND_ICONS assertBrandCatalogCoverage">
+              <div class="file-path">src/lib/icon-catalog.tsx</div>
+              <p class="file-purpose">Maps only: UI_ICONS (Lucide chrome) + BRAND_ICONS (Iconify brand/tech) + coverage helpers.</p>
+              <p class="file-links"><span>Links</span> ← adapter (assert at load); ← icon-renderers.</p>
+              <span class="layer-tag">lib</span>
+            </article>
+            <article class="file" data-layer="lib" data-path="src/lib/icon-renderers.tsx" data-text="icon-renderers.tsx UiIcon BrandIcon brand-icon">
+              <div class="file-path">src/lib/icon-renderers.tsx</div>
+              <p class="file-purpose">UiIcon (Lucide chrome) + BrandIcon (letter fallback, .brand-icon color hooks).</p>
+              <p class="file-links"><span>Links</span> ← pages, Footer, ProjectCard, toolbar, dialogs; → icon-catalog.</p>
+              <span class="layer-tag">lib</span>
+            </article>
+            <article class="file" data-layer="lib" data-path="src/lib/ambient-stars-policy.ts" data-text="ambient-stars-policy.ts animate static idle">
+              <div class="file-path">src/lib/ambient-stars-policy.ts</div>
+              <p class="file-purpose">Pure policy: animate | static | idle from dark/mode/reducedMotion/tabHidden.</p>
+              <p class="file-links"><span>Links</span> ← AmbientBackground; tested by ambient-stars-policy.test.ts.</p>
+              <span class="layer-tag">lib</span>
+            </article>
+            <article class="file" data-layer="lib" data-path="src/lib/ambient-stars-policy.test.ts" data-text="ambient-stars-policy.test.ts policy matrix">
+              <div class="file-path">src/lib/ambient-stars-policy.test.ts</div>
+              <p class="file-purpose">Policy matrix unit tests.</p>
+              <p class="file-links"><span>Links</span> → ambient-stars-policy.ts.</p>
+              <span class="layer-tag">lib</span>
+            </article>
+            <article class="file" data-layer="lib" data-path="src/lib/utils.ts" data-text="utils.ts cn clsx tailwind-merge">
+              <div class="file-path">src/lib/utils.ts</div>
+              <p class="file-purpose">cn() = clsx + tailwind-merge for class composition.</p>
+              <p class="file-links"><span>Links</span> ← shadcn ui components.</p>
+              <span class="layer-tag">lib</span>
+            </article>
+            <article class="file" data-layer="lib" data-path="src/lib/dependency-prune.test.ts" data-text="dependency-prune.test.ts T4 kill-list package.json DialogContent">
+              <div class="file-path">src/lib/dependency-prune.test.ts</div>
+              <p class="file-purpose">Contract tests that pruned packages stay gone (T4 kill-list).</p>
+              <p class="file-links"><span>Links</span> Reads package.json + DialogContent source; no app runtime import.</p>
+              <span class="layer-tag">lib</span>
+            </article>
+            <article class="file" data-layer="lib" data-path="src/hooks/use-motion-preference.ts" data-text="use-motion-preference.ts reduced-motion data-motion">
+              <div class="file-path">src/hooks/use-motion-preference.ts</div>
+              <p class="file-purpose">Reduced-motion state: OS media query + localStorage override; sets data-motion on html.</p>
+              <p class="file-links"><span>Links</span> ← MotionToggle; observed by AmbientBackground / HeroGrid via attribute.</p>
+              <span class="layer-tag">lib</span>
+            </article>
+          </div>
+          <div class="callout info" style="margin-top:0.85rem">
+            <strong>Icons (4→2, single Lucide path)</strong>
+            <code>icon-catalog.tsx</code> holds <code>UI_ICONS</code> + <code>BRAND_ICONS</code>;
+            <code>icon-renderers.tsx</code> exports <code>UiIcon</code> + <code>BrandIcon</code> (<code>.brand-icon</code>).
+            No <code>lucide-react</code>; shadcn <code>ui/*</code> uses <code>~icons/lucide/*</code>.
+          </div>
+        </div>
+      </details>
+
+      <!-- REFERENCES -->
+      <details class="section" id="references" open>
+        <summary>
+          <div>
+            <h3>References</h3>
+            <p>Agent briefing docs and human design notes that back this map.</p>
+          </div>
+        </summary>
+        <div class="section-body">
+          <table class="ref-table">
+            <thead><tr><th>Doc</th><th>Use for</th></tr></thead>
+            <tbody>
+              <tr><td><code>.agents/codebase/README.md</code></td><td>Task routing, Linear project scope, agent constraints</td></tr>
+              <tr><td><code>.agents/codebase/architecture.md</code></td><td>System map, file index, routes, UI hybrid notes</td></tr>
+              <tr><td><code>.agents/codebase/module-seams.md</code></td><td>Depth/seam table, deletion tests, do-not-break rules</td></tr>
+              <tr><td><code>.agents/codebase/route-trace.md</code></td><td>End-to-end /projects/[id] walkthrough</td></tr>
+              <tr><td><code>.agents/codebase/adr/0001-content-as-code.md</code></td><td>Why content is TS modules, not CMS</td></tr>
+              <tr><td><code>.agents/codebase/adr/0002-astro-starwind-shadcn-hybrid.md</code></td><td>When to use Starwind vs shadcn islands</td></tr>
+              <tr><td><code>docs/filtering-search.md</code></td><td>Search token grammar for ProjectsToolbar</td></tr>
+              <tr><td><code>docs/data-model.md</code></td><td>Human field definitions for Project/Profile</td></tr>
+            </tbody>
+          </table>
+          <div class="callout">
+            <strong>Coverage note</strong>
+            Counted 63 files under <code>src/</code> plus <code>astro.config.mjs</code> (64 total).
+            Starwind dialog/button parts are listed individually. Excludes
+            <code>node_modules</code>, generated <code>.astro/</code>, and agent/docs trees outside application code.
+          </div>
+        </div>
+      </details>
+    </main>
+  </div>
+
+  <script>
+    (() => {
+      const search = document.getElementById("search");
+      const status = document.getElementById("filter-status");
+      const empty = document.getElementById("empty-state");
+      const files = [...document.querySelectorAll(".file")];
+      const sections = [...document.querySelectorAll("[data-layer-section]")];
+      const tocLinks = [...document.querySelectorAll("#toc a")];
+      const toolbar = document.getElementById("main-toolbar");
+
+      const countByLayer = () => {
+        const counts = {};
+        for (const f of files) {
+          const layer = f.dataset.layer;
+          counts[layer] = (counts[layer] || 0) + 1;
+        }
+        for (const el of document.querySelectorAll("[data-count-for]")) {
+          const n = counts[el.dataset.countFor] || 0;
+          el.textContent = String(n);
+        }
+        document.getElementById("stat-files").textContent = String(files.length);
+      };
+
+      const applyFilter = () => {
+        const q = search.value.trim().toLowerCase();
+        let shown = 0;
+        for (const f of files) {
+          const hay = (f.dataset.text || f.dataset.path || "").toLowerCase();
+          const match = !q || hay.includes(q);
+          f.classList.toggle("hidden-by-filter", !match);
+          if (match) shown += 1;
+        }
+        for (const s of sections) {
+          const layer = s.dataset.layerSection;
+          const any = files.some(
+            (f) => f.dataset.layer === layer && !f.classList.contains("hidden-by-filter"),
+          );
+          s.classList.toggle("hidden-by-filter", q !== "" && !any);
+          if (q && any && !s.open) s.open = true;
+        }
+        status.textContent = q
+          ? `Showing ${shown} of ${files.length} files matching “${search.value.trim()}”`
+          : `Showing all ${files.length} files`;
+        empty.classList.toggle("visible", shown === 0);
+      };
+
+      search.addEventListener("input", applyFilter);
+      document.getElementById("clear-search").addEventListener("click", () => {
+        search.value = "";
+        applyFilter();
+        search.focus();
+      });
+      document.getElementById("expand-all").addEventListener("click", () => {
+        document.querySelectorAll("details.section").forEach((d) => { d.open = true; });
+      });
+      document.getElementById("collapse-all").addEventListener("click", () => {
+        document.querySelectorAll("details.section").forEach((d) => { d.open = false; });
+      });
+
+      document.querySelectorAll("[data-jump]").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const id = btn.getAttribute("data-jump");
+          const el = document.querySelector(id);
+          if (!el) return;
+          if (el.matches("details")) el.open = true;
+          el.scrollIntoView({ behavior: "smooth", block: "start" });
+        });
+      });
+
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "/" && document.activeElement !== search && !e.metaKey && !e.ctrlKey && !e.altKey) {
+          const tag = document.activeElement?.tagName || "";
+          if (tag === "INPUT" || tag === "TEXTAREA") return;
+          e.preventDefault();
+          search.focus();
+          search.select();
+        }
+        if (e.key === "Escape" && document.activeElement === search) {
+          search.blur();
+        }
+      });
+
+      const sectionIds = ["overview", "flow", "config", "layout", "pages", "content", "islands", "ui", "lib", "references"];
+      const io = new IntersectionObserver(
+        (entries) => {
+          const visible = entries
+            .filter((e) => e.isIntersecting)
+            .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+          if (!visible) return;
+          const id = visible.target.id;
+          for (const a of tocLinks) {
+            a.classList.toggle("active", a.getAttribute("href") === `#${id}`);
+          }
+        },
+        { rootMargin: "-20% 0px -65% 0px", threshold: [0.1, 0.25, 0.5] },
+      );
+      sectionIds.forEach((id) => {
+        const el = document.getElementById(id);
+        if (el) io.observe(el);
+      });
+
+      const onScroll = () => {
+        toolbar.classList.toggle("stuck", window.scrollY > 120);
+      };
+      window.addEventListener("scroll", onScroll, { passive: true });
+      onScroll();
+
+      countByLayer();
+      applyFilter();
+    })();
+  </script>
+</body>
+</html>

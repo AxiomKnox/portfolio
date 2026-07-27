@@ -22,3 +22,28 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Astro
+.astro/
+.env
+.sync-staging/
+.cursor/plans/*.md
+.lovable/*
+
+.codegraph/
+.gitnexus/
+graphify-out/
+.lovable/project.json
+
+# Generated live content roots (materialized by `bun run sync` / `sync:dev*`).
+# Committed fixtures live under `src/content/placeholder/` instead.
+src/content/projects/
+src/content/profile/
+docs/additional-info/project-straglers-and-timline.md
+docs/lighthouse-reports/*
+
+
+
+
+
+

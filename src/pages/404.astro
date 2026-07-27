@@ -1,0 +1,24 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import { Button } from "@/components/starwind/button";
+import { withBase } from "@/lib/base";
+---
+
+<Layout 
+  title="Page not found"
+  description="The page you're looking for doesn't exist." 
+  noindex
+  >
+  <div class="flex min-h-[60vh] items-center justify-center px-4">
+    <div class="max-w-md text-center">
+      <h1 class="text-7xl font-bold text-foreground">404</h1>
+      <h2 class="mt-4 text-xl font-semibold text-foreground">Page not found</h2>
+      <p class="mt-2 text-sm text-muted-foreground">
+        The page you're looking for doesn't exist or has been moved.
+      </p>
+      <div class="mt-6">
+        <Button href={withBase("/")} variant="primary">Go home</Button>
+      </div>
+    </div>
+  </div>
+</Layout>

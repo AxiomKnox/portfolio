@@ -1,0 +1,79 @@
+{
+  "nodes": [
+    {
+      "id": "s1",
+      "label": "Notebook",
+      "x": 40,
+      "y": 120
+    },
+    {
+      "id": "s2",
+      "label": "Pipeline spec",
+      "x": 240,
+      "y": 200
+    },
+    {
+      "id": "s3",
+      "label": "Training job",
+      "x": 440,
+      "y": 120
+    },
+    {
+      "id": "s4",
+      "label": "Model registry",
+      "x": 640,
+      "y": 200
+    },
+    {
+      "id": "s5",
+      "label": "Serving",
+      "x": 840,
+      "y": 120
+    }
+  ],
+  "edges": [
+    {
+      "from": "s1",
+      "to": "s2"
+    },
+    {
+      "from": "s2",
+      "to": "s3"
+    },
+    {
+      "from": "s3",
+      "to": "s4"
+    },
+    {
+      "from": "s4",
+      "to": "s5"
+    }
+  ],
+  "steps": [
+    {
+      "id": "s1",
+      "title": "Notebook",
+      "detail": "A researcher tags cells in a Jupyter notebook with @harbor.step markers."
+    },
+    {
+      "id": "s2",
+      "title": "Pipeline spec",
+      "detail": "Harbor lifts the tagged cells into an Argo Workflow spec and commits it."
+    },
+    {
+      "id": "s3",
+      "title": "Training job",
+      "detail": "The workflow runs on a GPU pool with cached datasets mounted from S3."
+    },
+    {
+      "id": "s4",
+      "title": "Model registry",
+      "detail": "Trained weights, metrics, and a signature are pushed to MLflow."
+    },
+    {
+      "id": "s5",
+      "title": "Serving",
+      "detail": "A FastAPI wrapper is deployed automatically with rolling health checks."
+    }
+  ]
+}

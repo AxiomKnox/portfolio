@@ -1,6 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="800" height="480" viewBox="0 0 800 480">
-  <rect width="800" height="480" fill="#141a18"/>
-  <path d="M40 280 Q200 80 360 280 T680 200" fill="none" stroke="#c17f2d" stroke-width="3" opacity="0.9"/>
-  <path d="M40 320 L120 240 L200 300 L320 160 L440 260 L560 140 L720 220" fill="none" stroke="#2dd4bf" stroke-width="2" opacity="0.7"/>
-  <text x="48" y="420" fill="#d6e5e1" font-family="monospace" font-size="16">ingest.stream</text>
-</svg>

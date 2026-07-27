@@ -1,0 +1,300 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import { ProjectCard } from "@/components/ProjectCard";
+import { HeroGrid } from "@/components/HeroGrid";
+import {
+  experienceTimelineEntries,
+  getProfile,
+  getProjects,
+  shouldShowCertifications,
+  showLearningSignal,
+  sortDate,
+} from "@/content/adapter";
+import { withBase } from "@/lib/base";
+import { optimizeProjectPreviewMap } from "@/lib/content-images";
+import { personJsonLd } from "@/lib/jsonld";
+import { UiIcon } from "@/lib/icon-renderers";
+import type { UiIconName } from "@/lib/icon-catalog";
+
+const profile = await getProfile();
+const pageTitle = `${profile.fullName} — DevOps, Web & MLOps engineer`;
+const pageDescription = profile.bio;
+const jsonLd = personJsonLd(profile, Astro.site);
+const allProjects = await getProjects();
+const featured = [...allProjects]
+  .filter((p) => p.featured)
+  .sort((a, b) => sortDate(b).localeCompare(sortDate(a)))
+  .slice(0, 3);
+const featuredPreviewImages = await optimizeProjectPreviewMap(featured, {
+  width: 640,
+  height: 360,
+});
+const timeline = experienceTimelineEntries(profile.experience).reverse();
+
+const shippedProjects = allProjects.filter((p) => p.status !== "archived").length;
+const uniqueTechCount = new Set(allProjects.flatMap((p) => p.techStack)).size;
+const showCertifications = shouldShowCertifications(profile.certifications);
+const certCount = showCertifications ? profile.certifications.length : 0;
+
+const stats: [string, string][] = [
+  [`${profile.yearsExperience}+`, "years experience"],
+  [`${shippedProjects}`, "projects shipped"],
+  ...(showCertifications ? [[`${certCount}`, "certifications"] as [string, string]] : []),
+  [`${uniqueTechCount}`, "tools & tech"],
+];
+
+const WHAT_ACCENTS: Record<
+  string,
+  { iconBg: string; iconText: string; hoverBorder: string }
+> = {
+  server: {
+    iconBg: "bg-sky-500/10",
+    iconText: "text-sky-400",
+    hoverBorder: "hover:border-sky-500/40",
+  },
+  globe: {
+    iconBg: "bg-emerald-500/10",
+    iconText: "text-emerald-400",
+    hoverBorder: "hover:border-emerald-500/40",
+  },
+  sparkles: {
+    iconBg: "bg-violet-500/10",
+    iconText: "text-violet-400",
+    hoverBorder: "hover:border-violet-500/40",
+  },
+};
+
+function whatIcon(name: string): UiIconName {
+  if (name === "server" || name === "globe" || name === "sparkles") return name;
+  return "server";
+}
+---
+
+<Layout title={pageTitle} description={pageDescription} jsonLd={jsonLd}>
+  <!-- Hero -->
+  <section class="surface-frosted relative overflow-hidden border-b border-border">
+    <div
+      aria-hidden
+      class="pointer-events-none absolute left-1/2 top-0 h-[640px] w-[900px] -translate-x-1/2 -translate-y-1/2 rounded-full opacity-70 blur-[130px]"
+      style="background: radial-gradient(circle, color-mix(in oklab, var(--color-primary) 35%, transparent) 0%, color-mix(in oklab, var(--color-primary) 12%, transparent) 45%, transparent 72%);"
+    >
+    </div>
+    <HeroGrid client:visible />
+    <div
+      class="pointer-events-none absolute inset-0"
+      style="background: radial-gradient(ellipse at top, color-mix(in oklab, var(--color-primary) 14%, transparent), transparent 60%);"
+    >
+    </div>
+
+    <div class="relative mx-auto max-w-6xl px-6 py-24 sm:py-28 lg:py-32">
+      <div class="grid grid-cols-1 items-center gap-12 lg:grid-cols-12 lg:gap-14">
+        <div class="flex flex-col gap-8 lg:col-span-7">
+          <div
+            class="inline-flex w-fit items-center gap-2 rounded-full border border-emerald-500/25 bg-emerald-500/5 px-3 py-1 font-mono text-[11px] uppercase tracking-wider text-emerald-400"
+          >
+            <span class="relative flex h-1.5 w-1.5">
+              <span
+                class="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-70"
+              ></span>
+              <span class="relative inline-flex h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
+            </span>
+            available for consulting — Q3 2026
+          </div>
+
+          <div class="space-y-5">
+            <h1 class="text-4xl font-medium tracking-tight text-foreground sm:text-5xl lg:text-6xl">
+              <span class="block">{profile.fullName}.</span>
+              <span class="block text-muted-foreground/80">{profile.tagline}</span>
+            </h1>
+            <p class="max-w-xl text-base leading-relaxed text-muted-foreground sm:text-lg">
+              {profile.bio}
+            </p>
+          </div>
+
+          <div class="flex flex-wrap items-center gap-3">
+            <a
+              href={withBase("/projects")}
+              class="inline-flex items-center gap-1.5 rounded-md bg-foreground px-5 py-2.5 text-sm font-medium text-background transition-opacity hover:opacity-90"
+            >
+              See the work <UiIcon name="arrow-right" className="h-3.5 w-3.5" size={14} />
+            </a>
+            <a
+              href={withBase("/about")}
+              class="inline-flex items-center gap-1.5 rounded-md border border-border px-5 py-2.5 text-sm text-muted-foreground transition-colors hover:text-foreground"
+            >
+              About me
+            </a>
+          </div>
+
+          <div class="grid grid-cols-2 gap-6 border-t border-border/70 pt-8 sm:grid-cols-4">
+            {
+              stats.map(([value, label]) => (
+                <div>
+                  <div class="font-mono text-2xl font-medium tracking-tight text-foreground">
+                    {value}
+                  </div>
+                  <div class="mt-1 font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
+                    {label}
+                  </div>
+                </div>
+              ))
+            }
+          </div>
+        </div>
+
+        <div class="flex flex-col gap-4 lg:col-span-5">
+          {
+            profile.what.map((w, i) => {
+              const accent = WHAT_ACCENTS[w.icon] ?? WHAT_ACCENTS.server;
+              const offset = i === 1 ? "lg:translate-x-6" : "";
+              const learning = showLearningSignal(w);
+              return (
+                <div
+                  class:list={[
+                    "group rounded-2xl border border-border bg-card/40 p-5 backdrop-blur transition-all hover:-translate-y-0.5",
+                    accent.hoverBorder,
+                    offset,
+                  ]}
+                >
+                  <div class="flex items-start justify-between">
+                    <div
+                      class:list={[
+                        "flex h-10 w-10 shrink-0 items-center justify-center rounded-lg",
+                        accent.iconBg,
+                      ]}
+                    >
+                      <UiIcon
+                        name={whatIcon(w.icon)}
+                        className={`h-5 w-5 ${accent.iconText}`}
+                        size={20}
+                      />
+                    </div>
+                    <span class="font-mono text-[10px] uppercase tracking-widest text-muted-foreground/60">
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
+                  </div>
+                  <div class="mt-4 flex flex-wrap items-center gap-2">
+                    <h2 class="text-base font-medium text-foreground">{w.label}</h2>
+                    {learning && (
+                      <span class="inline-flex rounded border border-border/60 bg-transparent px-1.5 py-0.5 font-mono text-[10px] uppercase tracking-wider text-muted-foreground/65">
+                        Learning
+                      </span>
+                    )}
+                  </div>
+                  <div class="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1 font-mono text-[11px] text-muted-foreground">
+                    {w.deliverables.map((d, j) => (
+                      <span class="inline-flex items-center gap-2">
+                        {j > 0 && (
+                          <span class="text-border" aria-hidden>
+                            ·
+                          </span>
+                        )}
+                        <span>{d}</span>
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              );
+            })
+          }
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured projects -->
+  <section class="mx-auto max-w-6xl px-6 py-24">
+    <div class="flex items-end justify-between">
+      <div>
+        <div class="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
+          /featured
+        </div>
+        <h2 class="mt-2 text-2xl font-medium tracking-tight">Recent projects</h2>
+      </div>
+      <a
+        href={withBase("/projects")}
+        class="hidden text-sm text-muted-foreground hover:text-foreground sm:inline"
+      >
+        All projects →
+      </a>
+    </div>
+
+    <div
+      class="mt-8 -mx-6 overflow-x-auto px-6 pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+    >
+      <div
+        class="grid snap-x snap-mandatory auto-cols-[minmax(320px,1fr)] grid-flow-col gap-4 md:grid-cols-3 md:grid-flow-row"
+      >
+        {
+          featured.map((p) => (
+            <div class="snap-start">
+              <ProjectCard project={p} previewImage={featuredPreviewImages[p.id]} />
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- Experience timeline -->
+  <section class="mx-auto max-w-6xl px-6 py-24">
+    <div>
+      <div class="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
+        /experience
+      </div>
+      <h2 class="mt-2 text-2xl font-medium tracking-tight">Where I've worked</h2>
+    </div>
+
+    <div class="relative mt-10">
+      <div class="absolute bottom-0 left-[11px] top-0 w-px bg-border md:hidden"></div>
+      <div class="absolute inset-x-0 top-3 hidden h-px bg-border md:block"></div>
+      <div class="grid gap-8 md:grid-cols-3">
+        {
+          timeline.map((e, i) => (
+            <div class="relative pl-8 md:pl-0">
+              <div class="flex items-center gap-2">
+                <span
+                  class:list={[
+                    "absolute left-1.5 top-0.5 h-2.5 w-2.5 rounded-full ring-4 ring-background md:static",
+                    i === timeline.length - 1 ? "bg-primary" : "bg-muted-foreground",
+                  ]}
+                />
+                <span class="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
+                  {e.start.split("-")[0]} — {e.end === "Present" ? "now" : e.end.split("-")[0]}
+                </span>
+              </div>
+              <h3 class="mt-4 text-base font-medium text-foreground">{e.role}</h3>
+              <p class="text-sm text-muted-foreground">
+                {[e.company, e.location].filter(Boolean).join(" · ")}
+              </p>
+              <p class="mt-2 text-sm text-muted-foreground/80">{e.summary}</p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact CTA -->
+  <section class="border-t border-border">
+    <div class="mx-auto max-w-6xl px-6 py-24 text-center">
+      <div class="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">/contact</div>
+      <h2 class="mt-3 text-3xl font-medium tracking-tight sm:text-4xl">
+        Let's build something reliable.
+      </h2>
+      <p class="mx-auto mt-4 max-w-lg text-sm text-muted-foreground">
+        I take on a small number of platform, MLOps, and full-stack engagements each quarter. Say hi
+        with a paragraph about what you're building.
+      </p>
+      <div class="mt-8 flex items-center justify-center">
+        <a
+          href={`mailto:${profile.email}`}
+          class="inline-flex items-center gap-2 rounded-md bg-foreground px-5 py-2.5 text-sm font-medium text-background transition-opacity hover:opacity-90"
+        >
+          <UiIcon name="mail" className="h-4 w-4" size={16} />
+          Get in touch
+        </a>
+      </div>
+    </div>
+  </section>
+</Layout>
