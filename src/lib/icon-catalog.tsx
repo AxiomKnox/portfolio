@@ -10,6 +10,7 @@ import IconBun from "~icons/devicon/bun";
 import IconCloudflare from "~icons/devicon/cloudflare";
 import IconDuckdb from "~icons/devicon/duckdb";
 import IconFastapi from "~icons/devicon/fastapi";
+import IconFlask from "~icons/devicon/flask";
 import IconGithubActions from "~icons/devicon/githubactions";
 import IconGo from "~icons/devicon/go";
 import IconGrafana from "~icons/devicon/grafana";
@@ -19,14 +20,17 @@ import IconJupyter from "~icons/devicon/jupyter";
 import IconKubernetes from "~icons/devicon/kubernetes";
 import IconLinux from "~icons/devicon/linux";
 import IconMatplotlib from "~icons/devicon/matplotlib";
+import IconMongodb from "~icons/devicon/mongodb";
 import IconNextjs from "~icons/devicon/nextjs";
 import IconNodejs from "~icons/devicon/nodejs";
 import IconNumpy from "~icons/devicon/numpy";
+import IconOllama from "~icons/devicon/ollama";
 import IconPandas from "~icons/devicon/pandas";
 import IconPostgresql from "~icons/devicon/postgresql";
 import IconPrometheus from "~icons/devicon/prometheus";
 import IconPython from "~icons/devicon/python";
 import IconPytorch from "~icons/devicon/pytorch";
+import IconPyQt5 from "~icons/devicon/qt";
 import IconReact from "~icons/devicon/react";
 import IconRust from "~icons/devicon/rust";
 import IconScikitLearn from "~icons/devicon/scikitlearn";
@@ -42,6 +46,9 @@ import IconGoogleCloud from "~icons/logos/google-cloud";
 import IconGmail from "~icons/logos/google-gmail";
 import IconLinkedin from "~icons/logos/linkedin-icon";
 import IconX from "~icons/logos/x";
+import IconLoki from "~icons/selfhst/loki"; 
+import IconTailscale from "~icons/simple-icons/tailscale"; 
+import IconOpenlayers from "~icons/simple-icons/openlayers";
 
 // --- Lucide icons ---
 import IconActivity from "~icons/lucide/activity";
@@ -145,6 +152,11 @@ export const BRAND_ICONS = {
   tailwind: { icon: IconTailwind },
   tailwindcss: { icon: IconTailwind },
   astro: { icon: IconAstro },
+  pyqt5: { icon: IconPyQt5 },
+  mongodb: { icon: IconMongodb },
+  flask: { icon: IconFlask },
+  transformers: { icon: IconOpenlayers },
+  ollama: { icon: IconOllama },
 
   // Data / ML
   postgresql: { icon: IconPostgresql, darkModeGrayscale: true },
@@ -160,6 +172,7 @@ export const BRAND_ICONS = {
   matplotlib: { icon: IconMatplotlib, darkModeGrayscale: true },
   duckdb: { icon: IconDuckdb, darkModeGrayscale: true },
   huggingface: { icon: IconHuggingFace, darkModeGrayscale: true },
+  "hugging face": { icon: IconHuggingFace, darkModeGrayscale: true },
   mlflow: { icon: IconMlflow, lightModeOverrideColor: "#0194E2" },
 
   // Infra / DevOps
@@ -168,7 +181,7 @@ export const BRAND_ICONS = {
   terraform: { icon: IconTerraform },
   aws: { icon: IconAws },
   gcp: { icon: IconGoogleCloud },
-  cloudflare: { icon: IconCloudflare },
+  cloudflare: { icon: IconCloudflare, darkModeGrayscale: true },
   vercel: { icon: IconVercel },
   github: { icon: IconGithub },
   "github actions": { icon: IconGithubActions },
@@ -177,6 +190,8 @@ export const BRAND_ICONS = {
   nginx: { icon: IconNginx, lightModeOverrideColor: "#009639" },
   prometheus: { icon: IconPrometheus },
   grafana: { icon: IconGrafana },
+  loki: { icon: IconLoki },
+  tailscale: { icon: IconTailscale },
 
   // Social / contact (profile links)
   linkedin: { icon: IconLinkedin },

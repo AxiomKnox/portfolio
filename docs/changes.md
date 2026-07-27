@@ -15,6 +15,16 @@ Slim, agent-maintained log of **material** decisions and why. Not a full git cha
 
 ---
 
+## 2026-07-27 — Homepage featured fill + sparse timeline
+- **What:** Homepage projects use `selectHomepageProjects` (featured first, fill to 3 by recency; else 3 most recent). Experience timeline grid adapts for 1–2 entries (narrower frame, hide rail when alone).
+- **Why:** Featured preference without an empty strip; one Fresher role no longer sits in a lonely 3-col timeline.
+- **Refs:** `src/content/homepage-projects.ts`, `src/pages/index.astro`, `getFeaturedProjects`
+
+## 2026-07-27 — Icon slot overflow (About / skills)
+- **What:** `UiIcon` / `BrandIcon` render in fixed `icon-slot` boxes with `overflow: visible`; About skills icons bumped to 16px; learning cards only use `overflow-hidden` when blurred.
+- **Why:** Glyphs were clipped by line-box / card overflow on the About skills list.
+- **Refs:** `src/lib/icon-renderers.tsx`, `src/pages/about.astro`, `src/styles.css`
+
 ## 2026-07-27 — HMR ignores for local graph indexes
 - **What:** Vite `server.watch.ignored` excludes `.codegraph/`, `.gitnexus/`, `graphify-out/`.
 - **Why:** Those dirs churn while indexing; they are gitignored and must not force Astro HMR.

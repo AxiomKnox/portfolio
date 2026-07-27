@@ -177,6 +177,19 @@
     font-family: var(--font-mono);
   }
 
+  /* Icon slots: keep glyphs from baseline/line-box clipping */
+  .icon-slot {
+    line-height: 0;
+    vertical-align: middle;
+  }
+
+  .brand-icon,
+  .ui-icon {
+    display: block;
+    overflow: visible;
+    flex-shrink: 0;
+  }
+
   /* Brand icons: coloured in light; dark = muted fill, or grayscale opt-in */
   .dark .brand-icon[data-dark-mode-grayscale] {
     filter: grayscale(1);
