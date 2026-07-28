@@ -179,7 +179,10 @@ describe("runDevSync modes", () => {
         repoRoot: root,
         fetchImpl: async (input) => {
           const url = String(input);
-          if (url.includes("/repos/acme/personal/") && url.includes("/contents/profile/profile.md")) {
+          if (
+            url.includes("/repos/acme/personal/") &&
+            url.includes("/contents/profile/profile.md")
+          ) {
             return new Response(remoteProfile, { status: 200 });
           }
           if (url.includes("/repos/acme/personal/")) {
