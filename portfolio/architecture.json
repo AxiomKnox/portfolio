@@ -1,0 +1,42 @@
+{
+  "nodes": [
+    { "id": "s1", "label": "GitHub remotes", "x": 40, "y": 120 },
+    { "id": "s2", "label": "Sync script", "x": 240, "y": 200 },
+    { "id": "s3", "label": "Collections", "x": 440, "y": 120 },
+    { "id": "s4", "label": "Astro pages", "x": 640, "y": 200 },
+    { "id": "s5", "label": "GitHub Pages", "x": 840, "y": 120 }
+  ],
+  "edges": [
+    { "from": "s1", "to": "s2" },
+    { "from": "s2", "to": "s3" },
+    { "from": "s3", "to": "s4" },
+    { "from": "s4", "to": "s5" }
+  ],
+  "steps": [
+    {
+      "id": "s1",
+      "title": "GitHub remotes",
+      "detail": "Each project (and profile) keeps a portfolio/ folder with project.md plus optional architecture.json and preview image; listed in sync.config.ts."
+    },
+    {
+      "id": "s2",
+      "title": "Sync script",
+      "detail": "bun run sync pulls known files into live src/content/projects|profile and writes git-meta.json from semver tags (fail-closed on bad remotes)."
+    },
+    {
+      "id": "s3",
+      "title": "Collections",
+      "detail": "Astro Content Collection loaders assemble typed Project/Profile domain objects; pages read only through src/content/adapter.ts."
+    },
+    {
+      "id": "s4",
+      "title": "Astro pages",
+      "detail": "SSG routes render the shell; React islands handle filters, search, and architecture diagrams over Tailwind/Starwind/shadcn UI."
+    },
+    {
+      "id": "s5",
+      "title": "GitHub Pages",
+      "detail": "CI deploy syncs then builds static output to Pages with ASTRO_SITE/ASTRO_BASE and a token for private content remotes."
+    }
+  ]
+}

@@ -66,6 +66,24 @@ const config: SyncConfig = {
       repo: "Data-Science-Internship",
       path: "portfolio",
     },
+    {
+      id: "push-based-cicd",
+      owner: "MysteryMan11",
+      repo: "Push-Based-CICD-to-Linode",
+      path: "portfolio",
+    },
+    {
+      id: "food-image-classification",
+      owner: "MysteryMan11",
+      repo: "Food_Image_Classification",
+      path: "portfolio",
+    },
+    {
+      id: "portfolio",
+      owner: "MysteryMan11",
+      repo: "portfolio",
+      path: "portfolio",
+    },
   ],
 };
 
