@@ -44,10 +44,10 @@ describe("resolveTagDate", () => {
     });
 
     const date = await client.resolveTagDate({
-      owner: "MysteryMan11",
-      repo: "Data-Science-Internship",
+      owner: "acme",
+      repo: "atlas",
       tag: "v1.0.0",
-      source: "project:data-science-internship",
+      source: "project:atlas-deploy",
     });
 
     expect(date).toBe("2023-10-25T16:40:18Z");

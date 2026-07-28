@@ -18,7 +18,6 @@ const config: DevSyncConfig = {
     { id: "quill-search", path: "projects/quill-search" },
     { id: "signal-forge", path: "projects/signal-forge" },
     { id: "tessera", path: "projects/tessera" },
-    { id: "data-science-internship", path: "projects/data-science-internship" },
   ],
 };
 

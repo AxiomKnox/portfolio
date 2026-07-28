@@ -58,9 +58,9 @@ describe("gitMetaFromTags", () => {
         // Target commit committer.date (light or peeled annotated); not tagger/sync-now.
         resolveTagDate: async () => "2023-10-25T16:40:18Z",
       }),
-      owner: "MysteryMan11",
-      repo: "Data-Science-Internship",
-      source: "project:data-science-internship",
+      owner: "acme",
+      repo: "atlas",
+      source: "project:atlas-deploy",
       now: new Date("2026-07-25T15:29:23.000Z"),
     });
     expect(meta).toEqual({
