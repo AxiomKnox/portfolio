@@ -38,7 +38,7 @@ and [`docs/additional-info/deferred-data-input-astro-starwind-grouped.md`](../ad
 | Command | What it does |
 | --- | --- |
 | `bun run sync:dev` | Wipe live roots → copy fixtures from `placeholder/` via `sync.config.dev.ts` (no GitHub) |
-| `bun run sync:dev:all` | Fixtures, then project remotes from `sync.config.ts` (profile stays fixture; remote wins on id) |
+| `bun run sync:dev:all` | Fixtures, then remotes from `sync.config.ts` (projects + profile when set; remote wins on overlap) |
 | `bun run sync` | Prod only: wipe → fetch remotes from `sync.config.ts` |
 
 **CI**

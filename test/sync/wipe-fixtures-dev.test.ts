@@ -166,6 +166,7 @@ describe("runDevSync modes", () => {
     try {
       await seedPlaceholder(root);
       const remoteMd = projectMd("atlas-deploy", "Remote Atlas");
+      const remoteProfile = "---\nfullName: Remote Person\n---\n";
 
       const result = await runDevSync({
         mode: "dev:all",
@@ -178,8 +179,15 @@ describe("runDevSync modes", () => {
         repoRoot: root,
         fetchImpl: async (input) => {
           const url = String(input);
+          if (url.includes("/repos/acme/personal/") && url.includes("/contents/profile/profile.md")) {
+            return new Response(remoteProfile, { status: 200 });
+          }
           if (url.includes("/repos/acme/personal/")) {
-            throw new Error(`prod profile must not be fetched in sync:dev:all: ${url}`);
+            // Optional profile sidecars absent.
+            return new Response(JSON.stringify({ message: "Not Found" }), {
+              status: 404,
+              headers: { "Content-Type": "application/json" },
+            });
           }
           if (url.includes("/contents/project.md")) {
             return new Response(remoteMd, { status: 200 });
@@ -211,7 +219,50 @@ describe("runDevSync modes", () => {
       const tessera = await readFile(join(root, "src/content/projects/tessera/project.md"), "utf8");
       expect(tessera).toContain("Fixture Tessera");
 
-      // Profile stays fixture (prod profile ignored).
+      // Prod profile remote overwrites fixture profile.
+      const profile = await readFile(join(root, "src/content/profile/profile.md"), "utf8");
+      expect(profile).toContain("Remote Person");
+      expect(profile).not.toContain("Fixture Person");
+    } finally {
+      await rm(root, { recursive: true, force: true });
+    }
+  });
+
+  test("sync:dev:all keeps fixture profile when prod profile is omitted", async () => {
+    const root = await mkdtemp(join(tmpdir(), "portfolio-devall-noprof-"));
+    try {
+      await seedPlaceholder(root);
+      const remoteMd = projectMd("atlas-deploy", "Remote Atlas");
+
+      await runDevSync({
+        mode: "dev:all",
+        fixtureConfig,
+        prodConfig: {
+          projects: [{ id: "atlas-deploy", owner: "acme", repo: "atlas", path: "" }],
+        },
+        token: "fake-token",
+        repoRoot: root,
+        fetchImpl: async (input) => {
+          const url = String(input);
+          if (url.includes("/repos/acme/personal/")) {
+            throw new Error(`prod profile must not be fetched when omitted: ${url}`);
+          }
+          if (url.includes("/contents/project.md")) {
+            return new Response(remoteMd, { status: 200 });
+          }
+          if (url.includes("/tags?")) {
+            return new Response(JSON.stringify([]), {
+              status: 200,
+              headers: { "Content-Type": "application/json" },
+            });
+          }
+          return new Response(JSON.stringify({ message: "Not Found" }), {
+            status: 404,
+            headers: { "Content-Type": "application/json" },
+          });
+        },
+      });
+
       const profile = await readFile(join(root, "src/content/profile/profile.md"), "utf8");
       expect(profile).toContain("Fixture Person");
     } finally {

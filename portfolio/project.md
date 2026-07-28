@@ -7,12 +7,12 @@ category: web
 type: Static site
 status: prod
 techStack:
-  - TypeScript
   - Astro
-  - React
-  - Tailwind
   - Bun
   - GitHub Actions
+  - React
+  - Tailwind
+  - TypeScript
 featured: true
 links:
   github: https://github.com/MysteryMan11/portfolio

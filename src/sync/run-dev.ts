@@ -12,7 +12,7 @@ export type RunDevSyncOptions = {
   mode: RunDevSyncMode;
   /** Raw `sync.config.dev.ts` export. */
   fixtureConfig: unknown;
-  /** Raw `sync.config.ts` export — required for `dev:all` (projects only). */
+  /** Raw `sync.config.ts` export — required for `dev:all` (projects + profile when set). */
   prodConfig?: unknown;
   token?: string;
   repoRoot?: string;
@@ -32,8 +32,8 @@ export type RunDevSyncResult = {
 /**
  * Dev sync family:
  * - `dev` — wipe live roots → materialize fixtures from `sync.config.dev.ts` (no GitHub).
- * - `dev:all` — same, then sync project remotes from `sync.config.ts` (profile stays fixture).
- *   Id overlap: remote wins (written after fixtures). Warns when remotes need a token and none is set.
+ * - `dev:all` — same, then sync remotes from `sync.config.ts` (projects + profile when present).
+ *   Overlap: remote wins (written after fixtures). Warns when remotes need a token and none is set.
  */
 export async function runDevSync(options: RunDevSyncOptions): Promise<RunDevSyncResult> {
   const warn = options.warn ?? console.warn;
@@ -60,14 +60,16 @@ export async function runDevSync(options: RunDevSyncOptions): Promise<RunDevSync
     };
   }
 
-  // `dev:all` — auto-import project remotes from prod config; ignore prod profile.
+  // `dev:all` — auto-import remotes from prod config (projects + real profile when set).
   if (options.prodConfig === undefined) {
     throw new Error("sync:dev:all requires prod sync.config.ts (projects remotes)");
   }
   const prod = parseSyncConfig(options.prodConfig);
   const fixtureRoots = 1 + fixtures.projects.length;
+  const hasRemoteProfile = Boolean(prod.profile);
+  const hasRemoteProjects = prod.projects.length > 0;
 
-  if (prod.projects.length === 0) {
+  if (!hasRemoteProfile && !hasRemoteProjects) {
     return {
       mode: "dev:all",
       fixtureRoots,
@@ -79,7 +81,7 @@ export async function runDevSync(options: RunDevSyncOptions): Promise<RunDevSync
   const token = options.token ?? process.env.GITHUB_TOKEN;
   if (!token || token.trim().length === 0) {
     warn(
-      "WARNING: GITHUB_TOKEN is not set — live project remotes will fail closed (fixtures already materialized)",
+      "WARNING: GITHUB_TOKEN is not set — live remotes will fail closed (fixtures already materialized)",
     );
     throw new Error("GITHUB_TOKEN is required (set in .env or CI job secret) — fail-closed");
   }
@@ -90,7 +92,10 @@ export async function runDevSync(options: RunDevSyncOptions): Promise<RunDevSync
   });
   const plan = await buildSyncPlan({
     client,
-    config: { projects: prod.projects },
+    config: {
+      ...(prod.profile ? { profile: prod.profile } : {}),
+      projects: prod.projects,
+    },
   });
 
   if (!options.dryRun) {

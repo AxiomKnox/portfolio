@@ -2,7 +2,8 @@ import type { SyncConfig } from "./src/sync/types.ts";
 
 /**
  * Prod sync remotes (no secrets). Auth via `GITHUB_TOKEN` in `.env` / CI.
- * Used by `bun run sync` and project remotes in `bun run sync:dev:all`.
+ * Used by `bun run sync` and remotes in `bun run sync:dev:all`
+ * (projects + profile when set; remote wins over fixtures).
  *
  * Fill TODO owner/repo (and path/ref as needed) with the real private remotes
  * that hold profile + per-project portfolio folders. Project `id` is the live

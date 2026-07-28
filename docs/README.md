@@ -27,7 +27,7 @@ Committed fixtures live in `src/content/placeholder/`. Pages read only through
 - **Prod remotes** — configure `sync.config.ts` + `GITHUB_TOKEN`, then
   `bun run sync` (wipes live roots, fetches remotes). Deploy CI uses this only.
 - **Mixed local** — `bun run sync:dev:all` materializes fixtures, then overlays
-  project remotes from `sync.config.ts` (remote wins on id clash; profile stays fixture).
+  remotes from `sync.config.ts` (remote wins on id/path overlap; profile remote used when configured).
 - Pages and chrome (`Layout`, Navbar, Footer, titles) read identity via
   `getProfile()` — do not hardcode the person’s name in page templates.
 - Visual tokens live in `src/styles.css`. Never hardcode colors in

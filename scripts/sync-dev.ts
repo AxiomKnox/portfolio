@@ -3,7 +3,7 @@
  *
  * Usage:
  *   bun run sync:dev          # fixtures only (no GitHub)
- *   bun run sync:dev:all      # fixtures, then project remotes from sync.config.ts
+ *   bun run sync:dev:all      # fixtures, then remotes from sync.config.ts (projects + profile)
  */
 import { resolve } from "node:path";
 import { runDevSync } from "../src/sync/run-dev.ts";
@@ -26,7 +26,7 @@ try {
     );
   } else {
     console.log(
-      `Dev sync (all) complete: materialized ${result.fixtureRoots} fixture root(s); wrote ${result.remoteFileCount} remote file(s); removed ${result.remoteDeleteCount} stale optional path(s). Profile stayed fixture-only.`,
+      `Dev sync (all) complete: materialized ${result.fixtureRoots} fixture root(s); wrote ${result.remoteFileCount} remote file(s); removed ${result.remoteDeleteCount} stale optional path(s). Remotes overwrite fixtures on id/path overlap (incl. profile when configured).`,
     );
   }
 } catch (err) {

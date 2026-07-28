@@ -41,7 +41,10 @@ async function requireFile(
     source: `${source}:${relative}`,
   });
   if (!bytes) {
-    throw new Error(`${source}: required file missing remotely: ${path || relative}`);
+    throw new Error(
+      `${source}: required file missing remotely: ${path || relative} ` +
+        `(404 — file absent on the default branch/ref, or GITHUB_TOKEN cannot read this private repo)`,
+    );
   }
   return bytes;
 }

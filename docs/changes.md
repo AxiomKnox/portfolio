@@ -15,6 +15,11 @@ Slim, agent-maintained log of **material** decisions and why. Not a full git cha
 
 ---
 
+## 2026-07-29 — sync:dev:all uses remote profile when configured
+- **What:** `sync:dev:all` passes prod `profile` into `buildSyncPlan` when set; remote profile/projects overwrite fixtures. Clearer 404 copy when a required remote file is missing (token/private-repo hint).
+- **Why:** Mixed local sync should prefer real remotes over placeholder profile, matching project remotes.
+- **Refs:** `src/sync/run-dev.ts`, `scripts/sync-dev.ts`, ADR 0003
+
 ## 2026-07-27 — Homepage featured fill + sparse timeline
 - **What:** Homepage projects use `selectHomepageProjects` (featured first, fill to 3 by recency; else 3 most recent). Experience timeline grid adapts for 1–2 entries (narrower frame, hide rail when alone).
 - **Why:** Featured preference without an empty strip; one Fresher role no longer sits in a lonely 3-col timeline.

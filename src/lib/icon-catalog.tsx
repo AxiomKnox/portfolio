@@ -14,6 +14,7 @@ import IconFlask from "~icons/devicon/flask";
 import IconGithubActions from "~icons/devicon/githubactions";
 import IconGo from "~icons/devicon/go";
 import IconGrafana from "~icons/devicon/grafana";
+import IconHelm from "~icons/devicon/helm";
 import IconHuggingFace from "~icons/devicon/huggingface";
 import IconJavascript from "~icons/devicon/javascript";
 import IconJupyter from "~icons/devicon/jupyter";
@@ -35,6 +36,7 @@ import IconReact from "~icons/devicon/react";
 import IconRust from "~icons/devicon/rust";
 import IconScikitLearn from "~icons/devicon/scikitlearn";
 import IconSeaborn from "~icons/devicon/seaborn";
+import IconSQLite from "~icons/devicon/sqlite";
 import IconTailwind from "~icons/devicon/tailwindcss";
 import IconTensorflow from "~icons/devicon/tensorflow";
 import IconTerraform from "~icons/devicon/terraform";
@@ -137,7 +139,7 @@ export const BRAND_ICONS = {
   python: { icon: IconPython },
   go: { icon: IconGo, darkModeGrayscale: true },
   rust: { icon: IconRust },
-  bun: { icon: IconBun },
+  bun: { icon: IconBun, darkModeGrayscale: true },
   node: { icon: IconNodejs, darkModeGrayscale: true },
   "node.js": { icon: IconNodejs, darkModeGrayscale: true },
   nodejs: { icon: IconNodejs, darkModeGrayscale: true },
@@ -173,6 +175,7 @@ export const BRAND_ICONS = {
   huggingface: { icon: IconHuggingFace, darkModeGrayscale: true },
   "hugging face": { icon: IconHuggingFace, darkModeGrayscale: true },
   mlflow: { icon: IconMlflow, lightModeOverrideColor: "#0194E2" },
+  sqlite: { icon: IconSQLite },
 
   // Infra / DevOps
   docker: { icon: IconDocker, lightModeOverrideColor: "#2496ED" },
@@ -191,6 +194,7 @@ export const BRAND_ICONS = {
   grafana: { icon: IconGrafana },
   loki: { icon: IconLoki },
   tailscale: { icon: IconTailscale },
+  helm: { icon: IconHelm },
 
   // Social / contact (profile links)
   linkedin: { icon: IconLinkedin },

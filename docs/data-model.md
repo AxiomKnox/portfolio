@@ -13,7 +13,8 @@ Committed fixtures live under `src/content/placeholder/` and are copied in by
 | Projects | `src/content/placeholder/projects/<id>/` | `src/content/projects/<id>/` | `projects` |
 
 Sync: `bun run sync` (prod remotes), `bun run sync:dev` (fixtures only),
-`bun run sync:dev:all` (fixtures then project remotes; remote wins on id clash).
+`bun run sync:dev:all` (fixtures then remotes from `sync.config.ts` — projects +
+profile when set; remote wins on id/path overlap).
 Domain types live in `src/content/types/`. See
 [ADR 0003](../.agents/codebase/adr/0003-content-collections-and-sync.md).
 

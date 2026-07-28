@@ -56,7 +56,7 @@ Normative schema and algorithm detail is **not** duplicated here; follow PROG-75
 - **Do not** import `astro:content` from `.astro` pages — use the adapter getters.
 - **Do not** put `version` / `releaseDate` in `project.md` frontmatter; status stays in FM.
 - **Default content path:** edit fixtures under `src/content/placeholder/`, then `bun run sync:dev`; live trees are `src/content/projects/<id>/` and `src/content/profile/profile.md` (generated).
-- **Sync:** prod `bun run sync` requires `GITHUB_TOKEN` (fail-closed except zero-tag write per PROG-80). Local fixtures: `sync:dev` (no token) / `sync:dev:all` (fixtures + project remotes; profile stays fixture). Deploy CI: `bun run sync` only; PR CI: `sync:dev`.
+- **Sync:** prod `bun run sync` requires `GITHUB_TOKEN` (fail-closed except zero-tag write per PROG-80). Local fixtures: `sync:dev` (no token) / `sync:dev:all` (fixtures + remotes from `sync.config.ts`; remote profile/projects overwrite fixtures when configured). Deploy CI: `bun run sync` only; PR CI: `sync:dev`.
 - Domain types: import from `@/content/types` (or via adapter for values + helpers).
 
 ## Notes
