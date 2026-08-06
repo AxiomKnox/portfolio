@@ -15,8 +15,8 @@ techStack:
   - TypeScript
 featured: true
 links:
-  github: https://github.com/MysteryMan11/portfolio
-  live: https://mysteryman11.github.io/portfolio
+  github: https://github.com/AxiomKnox/portfolio
+  live: https://axiomknox.github.io/portfolio
 preview: grad-4
 ---
 
