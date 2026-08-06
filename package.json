@@ -4,17 +4,23 @@
   "sideEffects": false,
   "type": "module",
   "scripts": {
-    "dev": "astro dev",
-    "build": "astro build",
-    "preview": "astro preview",
-    "check": "astro check",
-    "test": "bun test",
     "sync": "bun run scripts/sync.ts",
     "sync:dev": "bun run scripts/sync-dev.ts",
     "sync:dev:all": "bun run scripts/sync-dev.ts --all",
+
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+
+    "check": "astro check",
     "lint": "biome check .",
     "lint:fix": "biome check --write .",
-    "format": "biome format --write ."
+    "format": "biome format --write .",
+
+    "predeploy": "bun run check && bun run lint:fix && bun run format",
+    "deploy": "bun run sync && bun run build",
+
+    "test": "bun test"
   },
   "dependencies": {
     "@astrojs/react": "^6.0.1",
