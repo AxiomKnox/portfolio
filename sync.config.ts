@@ -17,73 +17,35 @@ import type { SyncConfig } from "./src/sync/types.ts";
  */
 const config: SyncConfig = {
   profile: {
-    // TODO: real GitHub owner/repo for the profile content remote
-    owner: "MysteryMan11",
-    repo: "mysteryman11",
+    owner: "AxiomKnox",
+    repo: "axiomknox",
     path: "portfolio",
     // ref: "main",
   },
   projects: [
-    // {
-    //   id: "atlas-deploy",
-    //   // TODO: real owner/repo for this project's portfolio folder
-    //   owner: "TODO",
-    //   repo: "TODO",
-    //   path: "",
-    // },
-    // {
-    //   id: "ember-portfolio",
-    //   owner: "TODO",
-    //   repo: "TODO",
-    //   path: "",
-    // },
-    // {
-    //   id: "harbor-mlops",
-    //   owner: "TODO",
-    //   repo: "TODO",
-    //   path: "",
-    // },
-    // {
-    //   id: "quill-search",
-    //   owner: "TODO",
-    //   repo: "TODO",
-    //   path: "",
-    // },
-    // {
-    //   id: "signal-forge",
-    //   owner: "TODO",
-    //   repo: "TODO",
-    //   path: "",
-    // },
-    // {
-    //   id: "tessera",
-    //   owner: "TODO",
-    //   repo: "TODO",
-    //   path: "",
-    // },
     {
       id: "data-science-internship",
-      owner: "MysteryMan11",
+      owner: "AxiomKnox",
       repo: "Data-Science-Internship",
-      path: "portfolio",
+      path: ".portfolio",
     },
     {
       id: "push-based-cicd",
-      owner: "MysteryMan11",
+      owner: "AxiomKnox",
       repo: "Push-Based-CICD-to-Linode",
-      path: "portfolio",
+      path: ".portfolio",
     },
     {
       id: "food-image-classification",
-      owner: "MysteryMan11",
+      owner: "AxiomKnox",
       repo: "Food_Image_Classification",
-      path: "portfolio",
+      path: ".portfolio",
     },
     {
       id: "portfolio",
-      owner: "MysteryMan11",
+      owner: "AxiomKnox",
       repo: "portfolio",
-      path: "portfolio",
+      path: ".portfolio",
     },
   ],
 };
