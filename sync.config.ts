@@ -19,7 +19,7 @@ const config: SyncConfig = {
   profile: {
     owner: "AxiomKnox",
     repo: "axiomknox",
-    path: "portfolio",
+    path: ".portfolio",
     // ref: "main",
   },
   projects: [
