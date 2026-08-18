@@ -5,7 +5,7 @@ summary: A static Astro portfolio that syncs project and profile content from
   GitHub remotes at build time and ships to GitHub Pages.
 category: web
 type: Static site
-status: prod
+status: beta
 techStack:
   - Astro
   - Bun
