@@ -98,6 +98,7 @@ export function assembleProfile(input: ProfileAssembleInput): Profile {
     email: fm.email,
     avatar: fm.avatar,
     ...(input.hasProfilePhoto ? { profilePhoto: "profile_photo.png" as const } : {}),
+    ...(input.existingRelativeFiles.has("resume.pdf") ? { resume: "resume.pdf" as const } : {}),
     what: fm.what,
     links: fm.links,
     skills: fm.skills,

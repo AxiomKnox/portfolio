@@ -49,6 +49,8 @@ export interface Profile {
   avatar: string;
   /** Set when `profile_photo.png` exists; UI prefers photo over `avatar`. */
   profilePhoto?: "profile_photo.png";
+  /** Set when `resume.pdf` exists under the profile root. */
+  resume?: "resume.pdf";
   what: ProfileWhatItem[];
   links: ProfileLink[];
   skills: ProfileSkillGroup[];

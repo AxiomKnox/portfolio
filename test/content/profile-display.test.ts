@@ -4,6 +4,7 @@ import {
   experienceTimelineEntries,
   parseLearningSignalsEnabled,
   shouldShowCertifications,
+  shouldShowResume,
   showLearningSignal,
 } from "@/content/profile-display";
 
@@ -43,6 +44,14 @@ describe("shouldShowCertifications", () => {
 
   test("hides empty lists", () => {
     expect(shouldShowCertifications([])).toBe(false);
+  });
+});
+
+describe("shouldShowResume", () => {
+  test("shows only when assemble recorded resume.pdf", () => {
+    expect(shouldShowResume({ resume: "resume.pdf" })).toBe(true);
+    expect(shouldShowResume({})).toBe(false);
+    expect(shouldShowResume({ resume: "cv.pdf" })).toBe(false);
   });
 });
 

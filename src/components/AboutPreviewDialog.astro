@@ -19,6 +19,8 @@ interface Props {
   contentClassName?: string;
   iconSize?: "sm" | "md" | "lg";
   showTriggerIcon?: boolean;
+  /** When set, embed this PDF instead of the dashed placeholder. */
+  pdfSrc?: string;
 }
 
 const {
@@ -28,6 +30,7 @@ const {
   contentClassName = "max-w-2xl",
   iconSize = "sm",
   showTriggerIcon = false,
+  pdfSrc,
 } = Astro.props;
 
 const iconPx = iconSize === "sm" ? 32 : 40;
@@ -46,21 +49,41 @@ const iconPx = iconSize === "sm" ? 32 : 40;
     <DialogHeader>
       <DialogTitle class="text-sm font-medium text-foreground">{title}</DialogTitle>
     </DialogHeader>
-    <div
-      class="flex aspect-[3/4] items-center justify-center rounded-md border border-dashed border-border bg-muted/40"
-    >
-      <div class="text-center">
-        <UiIcon
-          name="file-text"
-          className="mx-auto text-muted-foreground"
-          size={iconPx}
-        />
-        <p
-          class="mt-2 font-mono text-[10px] uppercase tracking-wider text-muted-foreground"
+    {
+      pdfSrc ? (
+        <div class="space-y-3">
+          <iframe
+            src={pdfSrc}
+            title={title}
+            class="aspect-[3/4] w-full rounded-md border border-border bg-background"
+          />
+          <a
+            href={pdfSrc}
+            download
+            class="inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
+          >
+            <UiIcon name="file-text" className="h-4 w-4" size={16} />
+            Download PDF
+          </a>
+        </div>
+      ) : (
+        <div
+          class="flex aspect-[3/4] items-center justify-center rounded-md border border-dashed border-border bg-muted/40"
         >
-          PDF preview placeholder
-        </p>
-      </div>
-    </div>
+          <div class="text-center">
+            <UiIcon
+              name="file-text"
+              className="mx-auto text-muted-foreground"
+              size={iconPx}
+            />
+            <p
+              class="mt-2 font-mono text-[10px] uppercase tracking-wider text-muted-foreground"
+            >
+              PDF preview placeholder
+            </p>
+          </div>
+        </div>
+      )
+    }
   </DialogContent>
 </Dialog>

@@ -18,6 +18,7 @@ const domainProfileSchema = z.object({
   email: z.string(),
   avatar: z.string(),
   profilePhoto: z.literal("profile_photo.png").optional(),
+  resume: z.literal("resume.pdf").optional(),
   what: z.array(
     z.object({
       label: z.string(),

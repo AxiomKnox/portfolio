@@ -86,4 +86,20 @@ describe("assembleProfile", () => {
     });
     expect(profile.profilePhoto).toBeUndefined();
   });
+
+  test("records resume.pdf when present on disk and omits it otherwise", () => {
+    const withResume = assembleProfile({
+      frontmatter: baseFm,
+      existingRelativeFiles: new Set(["resume.pdf"]),
+      hasProfilePhoto: false,
+    });
+    expect(withResume.resume).toBe("resume.pdf");
+
+    const withoutResume = assembleProfile({
+      frontmatter: baseFm,
+      existingRelativeFiles: new Set(),
+      hasProfilePhoto: false,
+    });
+    expect(withoutResume.resume).toBeUndefined();
+  });
 });

@@ -16,6 +16,12 @@ const profilePhotoModules = import.meta.glob<{ default: ImageMetadata }>(
   { eager: true },
 );
 
+const resumePdfModules = import.meta.glob<string>("/src/content/profile/resume.pdf", {
+  eager: true,
+  query: "?url",
+  import: "default",
+});
+
 export function getProjectPreviewMetadata(
   projectId: string,
   preview: string,
@@ -30,6 +36,18 @@ export function getProfilePhotoMetadata(
 ): ImageMetadata | undefined {
   if (profilePhoto !== "profile_photo.png") return undefined;
   return profilePhotoModules["/src/content/profile/profile_photo.png"]?.default;
+}
+
+/** Build URL for synced `resume.pdf`, or undefined when the file is absent. */
+export function getResumePdfUrl(resume: string | undefined): string | undefined {
+  if (resume !== "resume.pdf") return undefined;
+  const mod = resumePdfModules["/src/content/profile/resume.pdf"] as unknown;
+  if (typeof mod === "string" && mod.length > 0) return mod;
+  if (mod && typeof mod === "object" && "default" in mod) {
+    const url = (mod as { default: unknown }).default;
+    if (typeof url === "string" && url.length > 0) return url;
+  }
+  return undefined;
 }
 
 export async function optimizeProjectPreview(

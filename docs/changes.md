@@ -15,6 +15,11 @@ Slim, agent-maintained log of **material** decisions and why. Not a full git cha
 
 ---
 
+## 2026-08-22 — About shows synced resume.pdf
+- **What:** Assemble records `resume` when `resume.pdf` is on the profile root. About previews and downloads that file and hides `/resume` when it is missing. `AboutPreviewDialog` embeds a PDF when `pdfSrc` is set.
+- **Why:** Sync already copied `.portfolio/resume.pdf` from the profile remote. The domain object never kept that file, and the About dialog was a dashed placeholder, so the resume never appeared on the site.
+- **Refs:** `src/content/assemble/profile.ts`, `src/pages/about.astro`, `src/components/AboutPreviewDialog.astro`
+
 ## 2026-07-29 — sync:dev:all uses remote profile when configured
 - **What:** `sync:dev:all` passes prod `profile` into `buildSyncPlan` when set; remote profile/projects overwrite fixtures. Clearer 404 copy when a required remote file is missing (token/private-repo hint).
 - **Why:** Mixed local sync should prefer real remotes over placeholder profile, matching project remotes.

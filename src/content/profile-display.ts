@@ -28,6 +28,11 @@ export function shouldShowCertifications(certifications: readonly unknown[]): bo
   return certifications.length > 0;
 }
 
+/** Hide the About resume block unless `resume.pdf` was assembled from the profile root. */
+export function shouldShowResume(profile: { resume?: string }): boolean {
+  return profile.resume === "resume.pdf";
+}
+
 /**
  * Content marker (`learning: true`) gated by the build-time flag.
  * Pass `enabled` from {@link LEARNING_SIGNALS_ENABLED} (`astro:env/server`).
