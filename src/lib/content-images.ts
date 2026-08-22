@@ -22,6 +22,13 @@ const resumePdfModules = import.meta.glob<string>("/src/content/profile/resume.p
   import: "default",
 });
 
+/**
+ * Retrieves metadata for a project's preview image.
+ *
+ * @param projectId - The project's identifier
+ * @param preview - The preview image filename
+ * @returns The preview image metadata, or `undefined` when the filename is invalid or the image cannot be found
+ */
 export function getProjectPreviewMetadata(
   projectId: string,
   preview: string,
@@ -31,6 +38,12 @@ export function getProjectPreviewMetadata(
   return projectPreviewModules[key]?.default;
 }
 
+/**
+ * Resolves metadata for the profile photo.
+ *
+ * @param profilePhoto - The profile photo filename.
+ * @returns The profile photo metadata when `profilePhoto` is `profile_photo.png`, `undefined` otherwise.
+ */
 export function getProfilePhotoMetadata(
   profilePhoto: string | undefined,
 ): ImageMetadata | undefined {
@@ -38,7 +51,12 @@ export function getProfilePhotoMetadata(
   return profilePhotoModules["/src/content/profile/profile_photo.png"]?.default;
 }
 
-/** Build URL for synced `resume.pdf`, or undefined when the file is absent. */
+/**
+ * Resolves the synced resume PDF to its URL.
+ *
+ * @param resume - The resume filename to resolve
+ * @returns The resume URL if `resume` is `resume.pdf` and a non-empty URL is available, `undefined` otherwise
+ */
 export function getResumePdfUrl(resume: string | undefined): string | undefined {
   if (resume !== "resume.pdf") return undefined;
   const mod = resumePdfModules["/src/content/profile/resume.pdf"] as unknown;
@@ -50,6 +68,14 @@ export function getResumePdfUrl(resume: string | undefined): string | undefined 
   return undefined;
 }
 
+/**
+ * Optimizes a project preview image to the requested dimensions.
+ *
+ * @param projectId - The project identifier used to locate the preview image
+ * @param preview - The preview filename
+ * @param opts - The target image dimensions
+ * @returns Optimized image attributes, or `undefined` when the preview cannot be resolved
+ */
 export async function optimizeProjectPreview(
   projectId: string,
   preview: string,

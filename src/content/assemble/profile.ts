@@ -62,8 +62,14 @@ export type ProfileAssembleInput = {
 };
 
 /**
- * Assemble domain Profile. Prefer cert `file` when both file and href are set.
- * Dangling `file` paths fail-closed. Photo presence recorded for PROG-84; avatar token kept.
+ * Assembles a validated domain profile from frontmatter and available files.
+ *
+ * Certification file paths are normalized and take precedence over certification links.
+ * Profile photos and resumes are included when the corresponding files are available.
+ *
+ * @param input - Profile frontmatter and available file metadata
+ * @returns The assembled domain profile
+ * @throws If the frontmatter is invalid or a referenced certification file is missing
  */
 export function assembleProfile(input: ProfileAssembleInput): Profile {
   const fm = profileFrontmatterSchema.parse(input.frontmatter);
