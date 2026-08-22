@@ -1,7 +1,8 @@
 ---
 /**
- * Static PDF-preview dialog for the about page (Starwind + vanilla JS).
- * Replaces the previous React dialog island.
+ * Placeholder preview dialog for About certifications (Starwind + vanilla JS).
+ * Do not embed PDFs here: Firefox-family browsers download iframe/object/embed
+ * PDF src as soon as the markup is in the DOM, even while the dialog is closed.
  */
 import {
   Dialog,
@@ -19,8 +20,6 @@ interface Props {
   contentClassName?: string;
   iconSize?: "sm" | "md" | "lg";
   showTriggerIcon?: boolean;
-  /** When set, embed this PDF instead of the dashed placeholder. */
-  pdfSrc?: string;
 }
 
 const {
@@ -30,7 +29,6 @@ const {
   contentClassName = "max-w-2xl",
   iconSize = "sm",
   showTriggerIcon = false,
-  pdfSrc,
 } = Astro.props;
 
 const iconPx = iconSize === "sm" ? 32 : 40;
@@ -49,41 +47,21 @@ const iconPx = iconSize === "sm" ? 32 : 40;
     <DialogHeader>
       <DialogTitle class="text-sm font-medium text-foreground">{title}</DialogTitle>
     </DialogHeader>
-    {
-      pdfSrc ? (
-        <div class="space-y-3">
-          <iframe
-            src={pdfSrc}
-            title={title}
-            class="aspect-[3/4] w-full rounded-md border border-border bg-background"
-          />
-          <a
-            href={pdfSrc}
-            download
-            class="inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
-          >
-            <UiIcon name="file-text" className="h-4 w-4" size={16} />
-            Download PDF
-          </a>
-        </div>
-      ) : (
-        <div
-          class="flex aspect-[3/4] items-center justify-center rounded-md border border-dashed border-border bg-muted/40"
+    <div
+      class="flex aspect-[3/4] items-center justify-center rounded-md border border-dashed border-border bg-muted/40"
+    >
+      <div class="text-center">
+        <UiIcon
+          name="file-text"
+          className="mx-auto text-muted-foreground"
+          size={iconPx}
+        />
+        <p
+          class="mt-2 font-mono text-[10px] uppercase tracking-wider text-muted-foreground"
         >
-          <div class="text-center">
-            <UiIcon
-              name="file-text"
-              className="mx-auto text-muted-foreground"
-              size={iconPx}
-            />
-            <p
-              class="mt-2 font-mono text-[10px] uppercase tracking-wider text-muted-foreground"
-            >
-              PDF preview placeholder
-            </p>
-          </div>
-        </div>
-      )
-    }
+          PDF preview placeholder
+        </p>
+      </div>
+    </div>
   </DialogContent>
 </Dialog>

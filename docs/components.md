@@ -21,6 +21,17 @@ Name, one-paragraph credit line, copyright with current year, and social
 icons rendered as `<BrandIcon>` inside 9x9 rounded borders. Data comes from
 `profile.links`.
 
+## `AboutPreviewDialog` — `src/components/AboutPreviewDialog.astro`
+
+Starwind dialog for certification rows on `/about`. It shows a dashed
+placeholder pane, not a PDF. Do not pass a PDF URL into this dialog:
+Firefox-family browsers download `iframe` / `object` / `embed` of
+`application/pdf` as soon as that markup is in the DOM.
+
+Resume Preview and Download on `/about` are ordinary links that share the
+same outlined secondary classes as the other About actions. Preview opens
+the file (`target="_blank"`). Download uses the `download` attribute.
+
 ## `ThemeToggle` / `MotionToggle` / `AmbientToggle`
 
 Astro markup in `src/components/*Toggle.astro`. Click handlers and icon

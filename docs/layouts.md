@@ -129,7 +129,7 @@ open the matching step, or click a step to highlight the node.
 │ /certifications — rows with FileText tile + Preview btn  │
 │   Preview opens a Dialog with a placeholder PDF pane     │
 ├──────────────────────────────────────────────────────────┤
-│ /resume — preview/download when resume.pdf exists; hidden otherwise     │
+│ /resume — Preview (new tab) + Download when resume.pdf exists; hidden otherwise │
 ├──────────────────────────────────────────────────────────┤
 │ /contact — centered CTA, Get in touch (mailto)           │
 └──────────────────────────────────────────────────────────┘

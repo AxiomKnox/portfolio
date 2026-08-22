@@ -155,4 +155,4 @@ Field-to-render map:
 | `links` | Footer + `/about` link row |
 | `email` | `/about` contact mailto CTA |
 | `avatar` / `profilePhoto` | `/about` — photo via `content-images` when present, else GradientPreview |
-| `resume` | `/about` — preview/download when `resume.pdf` exists; section hidden otherwise |
+| `resume` | `/about` — Preview (new tab) and Download when `resume.pdf` exists; section hidden otherwise |

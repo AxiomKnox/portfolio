@@ -143,16 +143,23 @@ describe("resume from remote .portfolio/ appears on the site", () => {
     expect(shouldShowResume(profile)).toBe(false);
   });
 
-  test("About page only renders the resume preview when a PDF src exists", () => {
+  test("About page only renders the resume actions when a PDF src exists", () => {
     const about = readFileSync(join(ROOT, "src/pages/about.astro"), "utf8");
     expect(about).toContain("shouldShowResume");
-    expect(about).toContain("pdfSrc");
+    expect(about).toContain("getResumePdfUrl");
     expect(about).toMatch(/showResume/);
+    expect(about).toMatch(/href=\{resumePdf\}/);
+    expect(about).toMatch(/download="resume\.pdf"/);
   });
 
-  test("preview dialog embeds the PDF instead of the dashed placeholder when pdfSrc is set", () => {
+  test("resume preview is a same-origin link, not an iframe/object/embed (Firefox downloads those on load)", () => {
+    const about = readFileSync(join(ROOT, "src/pages/about.astro"), "utf8");
     const dialog = readFileSync(join(ROOT, "src/components/AboutPreviewDialog.astro"), "utf8");
-    expect(dialog).toContain("pdfSrc");
-    expect(dialog).toMatch(/<iframe/);
+    expect(about).not.toMatch(/<(iframe|embed|object)\b/i);
+    expect(dialog).not.toMatch(/<(iframe|embed|object)\b/i);
+    expect(about).not.toContain("pdfSrc");
+    expect(dialog).not.toContain("pdfSrc");
+    expect(about).toMatch(/href=\{resumePdf\}[\s\S]*?target="_blank"/);
+    expect(about).toMatch(/href=\{resumePdf\}[\s\S]*?download="resume\.pdf"/);
   });
 });

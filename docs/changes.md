@@ -15,6 +15,11 @@ Slim, agent-maintained log of **material** decisions and why. Not a full git cha
 
 ---
 
+## 2026-08-23 — About resume is a pair of links, not an iframe
+- **What:** `/about` Preview and Download are the same outlined secondary actions as the other About chips. Preview opens the PDF in a new tab. `AboutPreviewDialog` no longer takes `pdfSrc` or embeds `<iframe>`/`<object>`/`<embed>`.
+- **Why:** Firefox-family browsers (LibreWolf, Zen) treat a PDF iframe src as a download as soon as it is in the DOM, even inside a closed dialog. That also left Preview as a black pane.
+- **Refs:** `src/pages/about.astro`, `src/components/AboutPreviewDialog.astro`, `test/content/profile-resume.test.ts`
+
 ## 2026-08-22 — ASTRO_SITE uses repository owner
 - **What:** CI and deploy set `ASTRO_SITE` from `github.repository_owner` instead of `github.actor`. Contract tests match that.
 - **Why:** CodeRabbit and other bots become `github.actor` on PRs, so the site URL would be wrong and CI would fail. The owner login is the GitHub Pages host.

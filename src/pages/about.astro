@@ -246,23 +246,24 @@ const profilePhoto = getProfilePhotoMetadata(profile.profilePhoto);
           </div>
           <h2 class="mt-2 text-2xl font-medium tracking-tight">Resume</h2>
           <p class="mx-auto mt-3 max-w-2xl text-sm text-muted-foreground">
-            Prefer a single-page PDF? Preview or download it below.
+            Prefer a single-page PDF? Open or download it below.
           </p>
           <div class="mt-6 flex justify-center gap-3">
-            <AboutPreviewDialog
-              title={`${profile.fullName} — Resume`}
-              triggerLabel="Preview resume"
-              triggerClassName="inline-flex items-center gap-2 rounded-md border border-border bg-card px-4 py-2 text-sm text-foreground transition-colors hover:border-foreground/40"
-              contentClassName="max-w-3xl"
-              iconSize="md"
-              showTriggerIcon={true}
-              pdfSrc={resumePdf}
-            />
+            <a
+              href={resumePdf}
+              target="_blank"
+              rel="noreferrer"
+              class="inline-flex items-center gap-2 rounded-md border border-border px-4 py-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
+            >
+              <UiIcon name="file-text" className="h-4 w-4" size={16} />
+              Preview
+            </a>
             <a
               href={resumePdf}
               download="resume.pdf"
               class="inline-flex items-center gap-2 rounded-md border border-border px-4 py-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
             >
+              <UiIcon name="download" className="h-4 w-4" size={16} />
               Download
             </a>
           </div>
