@@ -21,7 +21,7 @@ describe("ci.yml PR verify", () => {
 
     expect(yaml).toMatch(/pull_request:/);
     expect(yaml).toContain('ASTRO_TELEMETRY_DISABLED: "1"');
-    expect(yaml).toContain("github.actor");
+    expect(yaml).toContain("github.repository_owner");
     expect(yaml).toContain("github.event.repository.name");
     expect(yaml).not.toContain("vars.ASTRO_SITE");
     expect(yaml).not.toContain("vars.ASTRO_BASE");

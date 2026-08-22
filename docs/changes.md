@@ -15,6 +15,11 @@ Slim, agent-maintained log of **material** decisions and why. Not a full git cha
 
 ---
 
+## 2026-08-22 — ASTRO_SITE uses repository owner
+- **What:** CI and deploy set `ASTRO_SITE` from `github.repository_owner` instead of `github.actor`. Contract tests match that.
+- **Why:** CodeRabbit and other bots become `github.actor` on PRs, so the site URL would be wrong and CI would fail. The owner login is the GitHub Pages host.
+- **Refs:** `.github/workflows/ci.yml`, `.github/workflows/deploy.yml`, `test/ci/`
+
 ## 2026-08-22 — About shows synced resume.pdf
 - **What:** Assemble records `resume` when `resume.pdf` is on the profile root. About previews and downloads that file and hides `/resume` when it is missing. `AboutPreviewDialog` embeds a PDF when `pdfSrc` is set.
 - **Why:** Sync already copied `.portfolio/resume.pdf` from the profile remote. The domain object never kept that file, and the About dialog was a dashed placeholder, so the resume never appeared on the site.

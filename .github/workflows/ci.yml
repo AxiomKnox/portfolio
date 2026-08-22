@@ -20,7 +20,7 @@ jobs:
   verify:
     runs-on: ubuntu-latest
     env:
-      ASTRO_SITE: https://${{ github.actor }}.github.io
+      ASTRO_SITE: https://${{ github.repository_owner }}.github.io
       ASTRO_BASE: /${{ github.event.repository.name }}
       ASTRO_TELEMETRY_DISABLED: "1"
     steps:
