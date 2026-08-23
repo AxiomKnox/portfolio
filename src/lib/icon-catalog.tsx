@@ -3,6 +3,7 @@
  * UI = curated Lucide chrome; Brand = tech/social glyphs + coverage helpers.
  * Colors are manual overrides only — never read hex metadata from packages.
  */
+// biome-ignore-all assist/source/organizeImports: grouped by icon local name, not module path
 // --- Devicon icons ---
 import type { ComponentType, SVGProps } from "react";
 import IconAstro from "~icons/devicon/astro";
