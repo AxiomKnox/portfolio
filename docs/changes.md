@@ -35,6 +35,11 @@ Slim, agent-maintained log of **material** decisions and why. Not a full git cha
 - **Why:** Sync already copied `.portfolio/resume.pdf` from the profile remote. The domain object never kept that file, and the About dialog was a dashed placeholder, so the resume never appeared on the site.
 - **Refs:** `src/content/assemble/profile.ts`, `src/pages/about.astro`, `src/components/AboutPreviewDialog.astro`
 
+## 2026-08-21 — Date filter without DayPicker popover (experiment)
+- **What:** Projects toolbar release-date filter is year chips + masked from/to fields only. Removed shadcn Calendar, `ui/button`, `react-day-picker`, `date-fns`, and `class-variance-authority`.
+- **Why:** The picker duplicated state the text fields already commit. This branch is for trying that UX, not for merging the dep prune.
+- **Refs:** `src/components/projects-toolbar/ReleaseDateSection.tsx`, `docs/research/package-replacement-audit.md` (on main worktree)
+
 ## 2026-07-29 — sync:dev:all uses remote profile when configured
 - **What:** `sync:dev:all` passes prod `profile` into `buildSyncPlan` when set; remote profile/projects overwrite fixtures. Clearer 404 copy when a required remote file is missing (token/private-repo hint).
 - **Why:** Mixed local sync should prefer real remotes over placeholder profile, matching project remotes.

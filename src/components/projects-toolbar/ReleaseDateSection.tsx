@@ -1,61 +1,10 @@
-import { addMonths, format, startOfMonth } from "date-fns";
-import { Component, lazy, type ReactNode, Suspense, useEffect, useState } from "react";
-import type { DateRange } from "react-day-picker";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { UiIcon } from "@/lib/icon-renderers";
+import { useEffect, useState } from "react";
 import {
   displayToISO,
   isoToDisplay,
   maskDisplayDate,
   type ToolbarState,
 } from "@/lib/project-discovery";
-
-function loadCalendar() {
-  return import("@/components/ui/calendar")
-    .then((m) => ({ default: m.Calendar }))
-    .catch(async () => {
-      await new Promise((r) => setTimeout(r, 350));
-      return import("@/components/ui/calendar").then((m) => ({ default: m.Calendar }));
-    });
-}
-
-class CalendarLoadBoundary extends Component<
-  { children: ReactNode; onRetry: () => void },
-  { failed: boolean }
-> {
-  state = { failed: false };
-
-  static getDerivedStateFromError() {
-    return { failed: true };
-  }
-
-  render() {
-    if (this.state.failed) {
-      return (
-        <div className="flex h-[280px] w-[260px] flex-col items-center justify-center gap-2 px-4 sm:w-[500px]">
-          <p className="text-center font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
-            Calendar failed to load
-          </p>
-          <button
-            type="button"
-            className="font-mono text-[10px] text-foreground underline-offset-2 hover:underline"
-            onClick={() => {
-              this.setState({ failed: false });
-              this.props.onRetry();
-            }}
-          >
-            Retry
-          </button>
-        </div>
-      );
-    }
-    return this.props.children;
-  }
-}
-
-function toISODate(d: Date): string {
-  return format(d, "yyyy-MM-dd");
-}
 
 export function SectionHeader({ label, onClear }: { label: string; onClear?: () => void }) {
   return (
@@ -87,22 +36,9 @@ export function ReleaseDateSection({
 }) {
   const [fromInput, setFromInput] = useState(isoToDisplay(state.dateFrom));
   const [toInput, setToInput] = useState(isoToDisplay(state.dateTo));
-  const [pickerOpen, setPickerOpen] = useState(false);
-  const [Calendar, setCalendar] = useState(() => lazy(loadCalendar));
-  const retryCalendar = () => setCalendar(() => lazy(loadCalendar));
-  const [leftMonth, setLeftMonth] = useState(() => startOfMonth(new Date()));
-  const [rightMonth, setRightMonth] = useState(() => startOfMonth(addMonths(new Date(), 1)));
 
   useEffect(() => setFromInput(isoToDisplay(state.dateFrom)), [state.dateFrom]);
   useEffect(() => setToInput(isoToDisplay(state.dateTo)), [state.dateTo]);
-
-  const seedPaneMonths = () => {
-    const left = startOfMonth(state.dateFrom ? new Date(state.dateFrom) : new Date());
-    let right = startOfMonth(state.dateTo ? new Date(state.dateTo) : addMonths(left, 1));
-    if (right.getTime() === left.getTime()) right = startOfMonth(addMonths(left, 1));
-    setLeftMonth(left);
-    setRightMonth(right);
-  };
 
   const activeYear = (() => {
     if (!state.dateFrom || !state.dateTo) return null;
@@ -129,20 +65,6 @@ export function ReleaseDateSection({
     const iso = displayToISO(v);
     if (iso) setState({ dateTo: iso });
   };
-
-  const dateRange: DateRange | undefined =
-    state.dateFrom || state.dateTo
-      ? {
-          from: state.dateFrom ? new Date(state.dateFrom) : undefined,
-          to: state.dateTo ? new Date(state.dateTo) : undefined,
-        }
-      : undefined;
-
-  const onRangeSelect = (range: DateRange | undefined) =>
-    setState({
-      dateFrom: range?.from ? toISODate(range.from) : undefined,
-      dateTo: range?.to ? toISODate(range.to) : undefined,
-    });
 
   return (
     <div>
@@ -194,56 +116,6 @@ export function ReleaseDateSection({
           placeholder="dd-mm-yyyy"
           aria-label="To date"
         />
-        <Popover
-          open={pickerOpen}
-          onOpenChange={(open) => {
-            setPickerOpen(open);
-            if (open) seedPaneMonths();
-          }}
-        >
-          <PopoverTrigger
-            aria-label="Open calendar"
-            className={`flex h-7 w-7 items-center justify-center rounded-md border border-border text-muted-foreground transition-colors hover:text-foreground ${
-              pickerOpen ? "bg-muted text-foreground" : "bg-background"
-            }`}
-          >
-            <UiIcon name="calendar" size={14} />
-          </PopoverTrigger>
-          <PopoverContent side="right" align="start" sideOffset={12} className="w-auto p-0">
-            {pickerOpen ? (
-              <CalendarLoadBoundary onRetry={retryCalendar}>
-                <Suspense
-                  fallback={
-                    <div className="flex h-[280px] w-[260px] items-center justify-center sm:w-[500px]">
-                      <p className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
-                        Loading calendar…
-                      </p>
-                    </div>
-                  }
-                >
-                  <div className="pointer-events-auto flex flex-col gap-3 p-2 md:flex-row">
-                    <Calendar
-                      mode="range"
-                      captionLayout="dropdown"
-                      month={leftMonth}
-                      onMonthChange={setLeftMonth}
-                      selected={dateRange}
-                      onSelect={onRangeSelect}
-                    />
-                    <Calendar
-                      mode="range"
-                      captionLayout="dropdown"
-                      month={rightMonth}
-                      onMonthChange={setRightMonth}
-                      selected={dateRange}
-                      onSelect={onRangeSelect}
-                    />
-                  </div>
-                </Suspense>
-              </CalendarLoadBoundary>
-            ) : null}
-          </PopoverContent>
-        </Popover>
       </div>
     </div>
   );

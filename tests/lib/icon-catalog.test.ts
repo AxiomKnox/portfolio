@@ -108,7 +108,6 @@ describe("icon layout contract (4→2)", () => {
       "src/components/ProjectCard.tsx",
       "src/components/ProjectsToolbar.tsx",
       "src/components/ui/accordion.tsx",
-      "src/components/ui/calendar.tsx",
       "src/components/ui/dropdown-menu.tsx",
     ];
     for (const file of files) {

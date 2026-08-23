@@ -35,11 +35,6 @@ export default defineConfig({
     }),
   ],
   vite: {
-    // Prebundle calendar deps so the first Filter → calendar open does not race
-    // Vite's "Outdated Optimize Dep" (504) and crash the projects island.
-    optimizeDeps: {
-      include: ["react-day-picker", "date-fns"],
-    },
     // Local graph indexes (also in .gitignore) — churn must not trigger HMR.
     server: {
       watch: {
