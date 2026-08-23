@@ -18,7 +18,7 @@ Human design docs (layouts, components, tokens) live in [`docs/`](docs/README.md
 
 **Changes log:** after material changes, append a short entry to [`docs/changes.md`](docs/changes.md) (what + why; newest first). Skip typos/formatting. This is a repo changelog for agents — not Cursor/Claude `MEMORY.md` (those are tool-local session memory).
 
-**Tests:** all unit/contract tests live under root [`test/`](test/), mirroring `src/` areas (e.g. `src/lib/site.ts` → `test/lib/site.test.ts`, `src/content/profile-display.ts` → `test/content/profile-display.test.ts`). Import app code via `@/` aliases — do not co-locate `*.test.ts` under `src/`. Run with `bun test` (or `bun run test`).
+**Tests:** all unit/contract tests live under root [`tests/`](tests/), mirroring `src/` areas (e.g. `src/lib/site.ts` → `tests/lib/site.test.ts`, `src/content/profile-display.ts` → `tests/content/profile-display.test.ts`). Import app code via `@/` aliases — do not co-locate `*.test.ts` under `src/`. Run with `bun test` (or `bun run test`).
 
 ### Knowledge graphs
 

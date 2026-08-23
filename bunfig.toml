@@ -5,5 +5,5 @@ minimumReleaseAge = 86400
 # before adding any.
 
 [test]
-# Unit/contract tests live under root test/, mirroring src/ areas (see AGENTS.md).
-root = "test"
+# Unit/contract tests live under root tests/, mirroring src/ areas (see AGENTS.md).
+root = "tests"
