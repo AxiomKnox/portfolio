@@ -38,7 +38,7 @@ This site — a content-driven personal portfolio compiled as a static Astro app
 
 ## Tooling & ship
 
-- Package manager: **Bun**. Lint/format with Biome; unit tests under root `test/` (`bun test`).
+- Package manager: **Bun**. Lint/format with Biome; unit tests under root `tests/` (`bun test`).
 - CI on PR / catch-up pushes; deploy workflow syncs then builds to Pages (`ASTRO_SITE` / `ASTRO_BASE`, token for private remotes).
 
 ## Design goals

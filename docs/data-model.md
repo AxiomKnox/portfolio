@@ -118,6 +118,7 @@ interface Profile {
   email: string;
   avatar: string;           // GradientPreview token when no photo
   profilePhoto?: "profile_photo.png"; // set when file exists on disk
+  resume?: "resume.pdf"; // set when file exists on disk
 
   what: {
     label: string;
@@ -154,3 +155,4 @@ Field-to-render map:
 | `links` | Footer + `/about` link row |
 | `email` | `/about` contact mailto CTA |
 | `avatar` / `profilePhoto` | `/about` — photo via `content-images` when present, else GradientPreview |
+| `resume` | `/about` — Preview (new tab) and Download when `resume.pdf` exists; section hidden otherwise |

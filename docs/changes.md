@@ -15,6 +15,26 @@ Slim, agent-maintained log of **material** decisions and why. Not a full git cha
 
 ---
 
+## 2026-08-23 — About resume is a pair of links, not an iframe
+- **What:** `/about` Preview and Download are the same outlined secondary actions as the other About chips. Preview opens the PDF in a new tab. `AboutPreviewDialog` no longer takes `pdfSrc` or embeds `<iframe>`/`<object>`/`<embed>`.
+- **Why:** Firefox-family browsers (LibreWolf, Zen) treat a PDF iframe src as a download as soon as it is in the DOM, even inside a closed dialog. That also left Preview as a black pane.
+- **Refs:** `src/pages/about.astro`, `src/components/AboutPreviewDialog.astro`, `tests/content/profile-resume.test.ts`
+
+## 2026-08-23 — Tests live under tests/
+- **What:** Moved unit/contract tests from `test/` to `tests/`. Same layout, same `@/` imports, same `bun test`.
+- **Why:** Agents and humans still opened the old path.
+- **Refs:** `tests/`, `bunfig.toml`, `tsconfig.json`, `AGENTS.md`
+
+## 2026-08-22 — ASTRO_SITE uses repository owner
+- **What:** CI and deploy set `ASTRO_SITE` from `github.repository_owner` instead of `github.actor`. Contract tests match that.
+- **Why:** CodeRabbit and other bots become `github.actor` on PRs, so the site URL would be wrong and CI would fail. The owner login is the GitHub Pages host.
+- **Refs:** `.github/workflows/ci.yml`, `.github/workflows/deploy.yml`, `tests/ci/`
+
+## 2026-08-22 — About shows synced resume.pdf
+- **What:** Assemble records `resume` when `resume.pdf` is on the profile root. About previews and downloads that file and hides `/resume` when it is missing. `AboutPreviewDialog` embeds a PDF when `pdfSrc` is set.
+- **Why:** Sync already copied `.portfolio/resume.pdf` from the profile remote. The domain object never kept that file, and the About dialog was a dashed placeholder, so the resume never appeared on the site.
+- **Refs:** `src/content/assemble/profile.ts`, `src/pages/about.astro`, `src/components/AboutPreviewDialog.astro`
+
 ## 2026-07-29 — sync:dev:all uses remote profile when configured
 - **What:** `sync:dev:all` passes prod `profile` into `buildSyncPlan` when set; remote profile/projects overwrite fixtures. Clearer 404 copy when a required remote file is missing (token/private-repo hint).
 - **Why:** Mixed local sync should prefer real remotes over placeholder profile, matching project remotes.

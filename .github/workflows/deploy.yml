@@ -21,7 +21,7 @@ jobs:
       github.event_name == 'workflow_dispatch' ||
       contains(github.event.head_commit.message, 'deploy')
     env:
-      ASTRO_SITE: https://${{ github.actor }}.github.io
+      ASTRO_SITE: https://${{ github.repository_owner }}.github.io
       ASTRO_BASE: /${{ github.event.repository.name }}
       ASTRO_TELEMETRY_DISABLED: "1"
       LEARNING_SIGNALS_ENABLED: true

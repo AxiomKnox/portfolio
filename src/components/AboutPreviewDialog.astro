@@ -1,7 +1,8 @@
 ---
 /**
- * Static PDF-preview dialog for the about page (Starwind + vanilla JS).
- * Replaces the previous React dialog island.
+ * Placeholder preview dialog for About certifications (Starwind + vanilla JS).
+ * Do not embed PDFs here: Firefox-family browsers download iframe/object/embed
+ * PDF src as soon as the markup is in the DOM, even while the dialog is closed.
  */
 import {
   Dialog,

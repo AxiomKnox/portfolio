@@ -3,14 +3,18 @@
  * UI = curated Lucide chrome; Brand = tech/social glyphs + coverage helpers.
  * Colors are manual overrides only — never read hex metadata from packages.
  */
+// biome-ignore-all assist/source/organizeImports: grouped by icon local name, not module path
 // --- Devicon icons ---
 import type { ComponentType, SVGProps } from "react";
 import IconAstro from "~icons/devicon/astro";
+import IconAws from "~icons/logos/aws";
 import IconBun from "~icons/devicon/bun";
 import IconCloudflare from "~icons/devicon/cloudflare";
+import IconDocker from "~icons/simple-icons/docker";
 import IconDuckdb from "~icons/devicon/duckdb";
 import IconFastapi from "~icons/devicon/fastapi";
 import IconFlask from "~icons/devicon/flask";
+import IconGithub from "~icons/logos/github-icon";
 import IconGithubActions from "~icons/devicon/githubactions";
 import IconGo from "~icons/devicon/go";
 import IconGrafana from "~icons/devicon/grafana";
@@ -20,33 +24,38 @@ import IconJavascript from "~icons/devicon/javascript";
 import IconJupyter from "~icons/devicon/jupyter";
 import IconKubernetes from "~icons/devicon/kubernetes";
 import IconLinux from "~icons/devicon/linux";
+import IconLinkedin from "~icons/logos/linkedin-icon";
+import IconLoki from "~icons/selfhst/loki";
 import IconMatplotlib from "~icons/devicon/matplotlib";
+import IconMlflow from "~icons/simple-icons/mlflow";
 import IconMongodb from "~icons/devicon/mongodb";
 import IconNextjs from "~icons/devicon/nextjs";
+import IconNginx from "~icons/simple-icons/nginx";
 import IconNodejs from "~icons/devicon/nodejs";
 import IconNumpy from "~icons/devicon/numpy";
 import IconOllama from "~icons/devicon/ollama";
+import IconOpenlayers from "~icons/simple-icons/openlayers";
 import IconPandas from "~icons/devicon/pandas";
 import IconPostgresql from "~icons/devicon/postgresql";
 import IconPrometheus from "~icons/devicon/prometheus";
+import IconPyQt5 from "~icons/devicon/qt";
 import IconPython from "~icons/devicon/python";
 import IconPytorch from "~icons/devicon/pytorch";
-import IconPyQt5 from "~icons/devicon/qt";
 import IconReact from "~icons/devicon/react";
+import IconRedis from "~icons/simple-icons/redis";
 import IconRust from "~icons/devicon/rust";
 import IconScikitLearn from "~icons/devicon/scikitlearn";
 import IconSeaborn from "~icons/devicon/seaborn";
 import IconSQLite from "~icons/devicon/sqlite";
 import IconTailwind from "~icons/devicon/tailwindcss";
+import IconTailscale from "~icons/simple-icons/tailscale";
 import IconTensorflow from "~icons/devicon/tensorflow";
 import IconTerraform from "~icons/devicon/terraform";
 import IconTypescript from "~icons/devicon/typescript";
 import IconVercel from "~icons/devicon/vercel";
-import IconAws from "~icons/logos/aws";
-import IconGithub from "~icons/logos/github-icon";
-import IconGoogleCloud from "~icons/logos/google-cloud";
+import IconVite from "~icons/simple-icons/vite";
 import IconGmail from "~icons/logos/google-gmail";
-import IconLinkedin from "~icons/logos/linkedin-icon";
+import IconGoogleCloud from "~icons/logos/google-cloud";
 import IconX from "~icons/logos/x";
 // --- Lucide icons ---
 import IconActivity from "~icons/lucide/activity";
@@ -58,6 +67,7 @@ import IconCalendar from "~icons/lucide/calendar";
 import IconCircleDashed from "~icons/lucide/circle-dashed";
 import IconClock from "~icons/lucide/clock";
 import IconCloud from "~icons/lucide/cloud";
+import IconDownload from "~icons/lucide/download";
 import IconExternalLink from "~icons/lucide/external-link";
 import IconFileText from "~icons/lucide/file-text";
 import IconFilter from "~icons/lucide/filter";
@@ -75,14 +85,6 @@ import IconSparkles from "~icons/lucide/sparkles";
 import IconTag from "~icons/lucide/tag";
 import IconWaves from "~icons/lucide/waves";
 import IconXLucide from "~icons/lucide/x";
-import IconLoki from "~icons/selfhst/loki";
-import IconDocker from "~icons/simple-icons/docker";
-import IconMlflow from "~icons/simple-icons/mlflow";
-import IconNginx from "~icons/simple-icons/nginx";
-import IconOpenlayers from "~icons/simple-icons/openlayers";
-import IconRedis from "~icons/simple-icons/redis";
-import IconTailscale from "~icons/simple-icons/tailscale";
-import IconVite from "~icons/simple-icons/vite";
 
 export type IconComponent = ComponentType<SVGProps<SVGSVGElement>>;
 
@@ -98,6 +100,7 @@ export const UI_ICONS = {
   "circle-dashed": IconCircleDashed,
   clock: IconClock,
   cloud: IconCloud,
+  download: IconDownload,
   "external-link": IconExternalLink,
   "file-text": IconFileText,
   filter: IconFilter,

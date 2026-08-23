@@ -211,7 +211,7 @@ Portfolio recipes — **documented in place** (paths stay put; no
 | Gradient preview | `GradientPreview.tsx` | Tokenized preview/avatar swatch (Foundations paint) |
 | Hero grid | `HeroGrid.tsx` | Home hero composition |
 | Steps accordion | `StepsAccordion.*` | Multi-step disclosure on relevant pages |
-| About preview dialogs | `AboutPreviewDialog.astro` | Starwind dialog wrappers for cert/resume |
+| About preview dialogs | `AboutPreviewDialog.astro` | Starwind dialog for cert placeholders; resume uses links, not a PDF embed |
 
 When a pattern already needs a behavioral change, updating its entry here
 (and in `components.md`) is enough — do not big-bang relocate files for

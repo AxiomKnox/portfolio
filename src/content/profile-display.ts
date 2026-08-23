@@ -23,9 +23,24 @@ export interface ExperienceEntry {
   summary: string;
 }
 
-/** Hide certifications section when the list is empty. */
+/**
+ * Determines whether the certifications section should be displayed.
+ *
+ * @param certifications - The certifications to evaluate
+ * @returns `true` if at least one certification is present, `false` otherwise
+ */
 export function shouldShowCertifications(certifications: readonly unknown[]): boolean {
   return certifications.length > 0;
+}
+
+/**
+ * Determines whether the profile's resume should be displayed.
+ *
+ * @param profile - The profile containing the resume filename
+ * @returns `true` if the resume is `resume.pdf`, `false` otherwise.
+ */
+export function shouldShowResume(profile: { resume?: string }): boolean {
+  return profile.resume === "resume.pdf";
 }
 
 /**

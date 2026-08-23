@@ -19,6 +19,7 @@ export {
   experienceHeadline,
   experienceTimelineEntries,
   shouldShowCertifications,
+  shouldShowResume,
 } from "@/content/profile-display";
 export type {
   ArchEdge,

@@ -163,6 +163,7 @@ Verify:
 
 1. `src/content/profile/profile.md` updated from the remote.
 2. Optional `resume.pdf` / `profile_photo.png` present only if remote has them.
+   About `/resume` shows Preview (opens the PDF) and Download when `resume.pdf` is present, and hides that block when it is not.
 3. PDFs under `src/content/profile/certifications/` match remote listing.
 4. Every cert with `file:` resolves; dangling paths fail at content load.
 5. Dev/build loads a single profile entry (`id` = `profile`).

@@ -8,16 +8,19 @@ import {
   experienceTimelineEntries,
   getProfile,
   shouldShowCertifications,
+  shouldShowResume,
   showLearningSignal,
 } from "@/content/adapter";
 import AboutPreviewDialog from "@/components/AboutPreviewDialog.astro";
-import { getProfilePhotoMetadata } from "@/lib/content-images";
+import { getProfilePhotoMetadata, getResumePdfUrl } from "@/lib/content-images";
 import { personJsonLd } from "@/lib/jsonld";
 
 const profile = await getProfile();
 const headline = experienceHeadline(profile.experience);
 const experienceEntries = experienceTimelineEntries(profile.experience);
 const showCertifications = shouldShowCertifications(profile.certifications);
+const showResume = shouldShowResume(profile);
+const resumePdf = getResumePdfUrl(profile.resume);
 const pageTitle = `About — ${profile.fullName} — DevOps, Web & MLOps engineer`;
 const jsonLd = personJsonLd(profile, Astro.site);
 const profilePhoto = getProfilePhotoMetadata(profile.profilePhoto);
@@ -234,26 +237,40 @@ const profilePhoto = getProfilePhotoMetadata(profile.profilePhoto);
     )
   }
 
-  <!-- Resume -->
-  <section class="border-t border-border">
-    <div class="mx-auto max-w-6xl px-6 py-20 text-center">
-      <div class="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">/resume</div>
-      <h2 class="mt-2 text-2xl font-medium tracking-tight">Resume</h2>
-      <p class="mx-auto mt-3 max-w-2xl text-sm text-muted-foreground">
-        Prefer a single-page PDF? Preview or download it below.
-      </p>
-      <div class="mt-6 flex justify-center">
-        <AboutPreviewDialog
-          title={`${profile.fullName} — Resume`}
-          triggerLabel="Preview resume"
-          triggerClassName="inline-flex items-center gap-2 rounded-md border border-border bg-card px-4 py-2 text-sm text-foreground transition-colors hover:border-foreground/40"
-          contentClassName="max-w-3xl"
-          iconSize="md"
-          showTriggerIcon={true}
-        />
-      </div>
-    </div>
-  </section>
+  {
+    showResume && resumePdf && (
+      <section class="border-t border-border">
+        <div class="mx-auto max-w-6xl px-6 py-20 text-center">
+          <div class="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
+            /resume
+          </div>
+          <h2 class="mt-2 text-2xl font-medium tracking-tight">Resume</h2>
+          <p class="mx-auto mt-3 max-w-2xl text-sm text-muted-foreground">
+            Prefer a single-page PDF? Open or download it below.
+          </p>
+          <div class="mt-6 flex justify-center gap-3">
+            <a
+              href={resumePdf}
+              target="_blank"
+              rel="noreferrer"
+              class="inline-flex items-center gap-2 rounded-md border border-border px-4 py-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
+            >
+              <UiIcon name="file-text" className="h-4 w-4" size={16} />
+              Preview
+            </a>
+            <a
+              href={resumePdf}
+              download="resume.pdf"
+              class="inline-flex items-center gap-2 rounded-md border border-border px-4 py-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
+            >
+              <UiIcon name="download" className="h-4 w-4" size={16} />
+              Download
+            </a>
+          </div>
+        </div>
+      </section>
+    )
+  }
 
   <!-- Work together -->
   <section class="border-t border-border">
